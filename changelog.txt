@@ -1,0 +1,10 @@
+b07:
+- fix a bug when more than 22 files are in a directory (filer)...
+- add "autobootfix" option to config.cfg file 
+
+b06:
+- added colored ui
+- alphasort files/dirs in filer
+- filter out .3dsx, .bin, .dat in filer
+- fix 3dsx loading (was broken after multiple launch)
+- few fix and improvments
