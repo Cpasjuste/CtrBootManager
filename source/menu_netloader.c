@@ -49,7 +49,7 @@ static int netloader_draw_progress(void) {
 	//gfxSwapBuffers();
 	//gspWaitForVBlank();
     gfxClear();
-    gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontDefault, 8, 8, "%s: %s", netloadedPath, progress );
+    gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontTitle, 48, 48, "%s: %s", netloadedPath, progress );
     gfxSwap();
 
 	return 0;
@@ -436,19 +436,18 @@ int menu_netloader() {
     }
 
     char msg[256];
-		u32 ip = gethostid();
-		sprintf(msg,
-			"    NetLoader Active - waiting for 3dslink\n"
-			"    IP: %lu.%lu.%lu.%lu, Port: %d\n\n"
-			"    Press B to cancel\n",
-			ip & 0xFF, (ip>>8)&0xFF, (ip>>16)&0xFF, (ip>>24)&0xFF, NETLOADER_PORT);
+    u32 ip = gethostid();
+    sprintf(msg,
+        "NetLoader Active - waiting for 3dslink\n\n"
+        "IP: %lu.%lu.%lu.%lu, Port: %d\n\n"
+        "Press B to cancel\n",
+        ip & 0xFF, (ip>>8)&0xFF, (ip>>16)&0xFF, (ip>>24)&0xFF, NETLOADER_PORT);
 
+    gfxClear();
+    gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontTitle, 48, 48, msg);
+    gfxSwap();
 
     while(aptMainLoop()) {
-
-        gfxClear();
-        gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontDefault, msg, 8, 8 );
-        gfxSwap();
 
         hidScanInput();
 		u32 kDown = hidKeysDown();
@@ -471,7 +470,5 @@ int menu_netloader() {
         return load_3dsx(netloadedPath);
     }
 
-    //gfxClear();
-    gfxSwap();
     return -1;
 }
