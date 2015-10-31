@@ -2,13 +2,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdarg.h>
-#include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/dirent.h>
 
 #include "gfx.h"
 #include "picker.h"
+#include "utility.h"
+
 #define MAX_LINE 11
 
 picker_s *picker;
@@ -27,8 +27,8 @@ const char *get_filename_ext(const char *filename)
 
 int alphasort(const void *p, const void *q)
 {
-    file_s *a = p;
-    file_s *b = q;
+    const file_s *a = p;
+	const file_s *b = q;
 
     if((a->isDir && b->isDir)
         || (!a->isDir && !b->isDir))
@@ -60,7 +60,7 @@ void get_dir(const char *path)
         if (!strcmp (file->d_name, ".."))
             continue;
         if(file->d_type != DT_DIR) {
-            char *ext = get_filename_ext(file->d_name);
+            const char *ext = get_filename_ext(file->d_name);
             if(strcmp(ext, "bin") != 0
                 && strcmp(ext, "BIN") != 0
                 && strcmp(ext, "dat") != 0
@@ -88,7 +88,7 @@ void get_dir(const char *path)
 			// file size
 			struct stat st;
 			stat(picker->files[picker->file_count].path, &st);
-			picker->files[picker->file_count].size = st.st_size;
+			picker->files[picker->file_count].size = (u64) st.st_size;
 		} else {
 			picker->files[picker->file_count].isDir = true;
 		}
@@ -97,7 +97,7 @@ void get_dir(const char *path)
 
 	if(picker->file_count>1)
 	{
-        qsort(picker->files, picker->file_count,
+		qsort(picker->files, picker->file_count,
             sizeof(*picker->files), alphasort);
     }
 
@@ -110,7 +110,7 @@ void pick_file(file_s *picked, const char *path)
 	get_dir(path);
 
     // key repeat timer
-	int t_start, t_end, t_elapsed;
+	time_t t_start, t_end, t_elapsed;
 
 	while (aptMainLoop())
 	{
@@ -138,7 +138,7 @@ void pick_file(file_s *picked, const char *path)
                 picker->file_index++;
                 if(picker->file_index >= picker->file_count)
                     picker->file_index = 0;
-                sleep(100);
+				svcSleep(100);
             }
 		}
 
@@ -158,7 +158,7 @@ void pick_file(file_s *picked, const char *path)
                 picker->file_index--;
                 if(picker->file_index < 0)
                     picker->file_index = picker->file_count-1;
-                sleep(100);
+				svcSleep(100);
             }
 		}
 

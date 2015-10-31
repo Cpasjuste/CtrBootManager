@@ -1,10 +1,9 @@
 #include <3ds.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/time.h>
+#include <time.h>
+
 #include "gfx.h"
 #include "config.h"
+#include "loader.h"
 
 bool timer = true;
 
@@ -22,8 +21,8 @@ int autoBootFix() {
 
 int menu_boot() {
 
-	int start, end;
-	int elapsed;
+    time_t start, end;
+    time_t elapsed;
 	time(&start);
 
     //debug("timeout: %i", boot_config->timeout);

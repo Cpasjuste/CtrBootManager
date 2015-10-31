@@ -1,3 +1,11 @@
+b08:
+- fix broken wifi on a lot of 3dsx
+- fix booting some 3dsx
+- added 3dsx descriptor support (xml)
+- fix 3dsx netload
+- updated to latest ctrulib
+- move to cmake build system
+
 b07:
 - fix a bug when more than 22 files are in a directory (filer)...
 - add "autobootfix" option to config.cfg file 

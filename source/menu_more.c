@@ -57,7 +57,7 @@ int menu_more() {
             } else if(menu_index == 2) {
                 reboot();
             } else if(menu_index == 3) {
-                shutdown();
+				poweroff();
             }
 		}
 

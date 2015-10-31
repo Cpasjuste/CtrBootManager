@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "scanner.h"
+#include "utility.h"
 
 #define _3DSX_MAGIC 0x58534433 // '3DSX'
 
@@ -18,12 +19,13 @@ typedef struct
 } _3DSX_Header;
 
 const char* servicesThatMatter[] =
-{
-	"soc:U",
-	"csnd:SND",
-	"qtm:s",
-	"nfc:u"
-};
+		{
+				"soc:U",
+				"csnd:SND",
+				"qtm:s",
+				"nfc:u",
+				"http:C"
+		};
 
 void initMetadata(executableMetadata_s* em)
 {
@@ -124,8 +126,41 @@ void scanExecutable(executableMetadata_s* em, char* path)
 {
 	if(!em || !path || em->scanned)return;
 
-	Result ret = scan3dsx(path, (char**)servicesThatMatter, 4, em->sectionSizes, (bool*)em->servicesThatMatter);
+	Result ret = scan3dsx(path, (char**)servicesThatMatter, NUM_SERVICESTHATMATTER, em->sectionSizes, (bool*)em->servicesThatMatter);
 
 	if(!ret)em->scanned = true;
 	else em->scanned = false;
+}
+
+void scanMenuEntry(menuEntry_s* me)
+{
+	if(!me)return;
+
+	executableMetadata_s* em = &me->descriptor.executableMetadata;
+
+	static char tmp[0x200];
+	snprintf(tmp, 0x200, "sdmc:%s", me->executablePath);
+
+	if(me->descriptor.autodetectServices)
+	{
+		// if autodetection is enabled (default), we just scan the 3dsx for service names (not ideal but whatchagonnado)
+		scanExecutable(em, tmp);
+	}else{
+		// if it's disabled, then we just populate the metadata structure with section sizes and requested services from descriptor
+		int i, j;
+		scan3dsx(tmp, NULL, 0, em->sectionSizes, NULL);
+
+		for(i=0; i<me->descriptor.numRequestedServices; i++)
+		{
+			for(j=0; j<NUM_SERVICESTHATMATTER; j++)
+			{
+				if(!strcmp(me->descriptor.requestedServices[i].name, servicesThatMatter[j]))
+				{
+					em->servicesThatMatter[j] = me->descriptor.requestedServices[i].priority;
+					break;
+				}
+			}
+		}
+		em->scanned = true;
+	}
 }

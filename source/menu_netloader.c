@@ -1,7 +1,6 @@
 #include <3ds.h>
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#include <netinet/in.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <malloc.h>
@@ -14,6 +13,8 @@
 #define ZLIB_CHUNK (16 * 1024)
 
 #include "menu_netloader.h"
+#include "utility.h"
+#include "loader.h"
 
 char *netloadedPath = NULL;
 char *netloaded_commandline = NULL;
@@ -176,7 +177,7 @@ int netloader_draw_error(void) {
 int netloader_init(void) {
 	SOC_buffer = memalign(0x1000, 0x100000);
 	if(SOC_buffer == NULL) {
-        debug("Err: SOC_buffer");
+        //debug("Err: SOC_buffer");
 		return -1;
     }
 
@@ -187,7 +188,7 @@ int netloader_init(void) {
 		SOC_Shutdown();
 		free(SOC_buffer);
 		SOC_buffer = NULL;
-		debug("Err: SOC_Initialize");
+		//debug("Err: SOC_Initialize");
 		return -1;
 	}
 	return 0;
@@ -425,11 +426,6 @@ int netloader_exit(void) {
 
 int menu_netloader() {
 
-    if( netloader_init() != 0 ) {
-        debug("Err: netloader_init");
-        return -1;
-    }
-
     if(netloader_activate() != 0 ) {
         debug("Err: netloader_activate");
         return -1;
@@ -452,22 +448,19 @@ int menu_netloader() {
         hidScanInput();
 		u32 kDown = hidKeysDown();
 
-        if(kDown & KEY_B)
-            return -1;
+        if(kDown & KEY_B) {
+			netloader_deactivate();
+			return -1;
+		}
 
         int rc = netloader_loop();
         if(rc > 0) {
-            netloader_boot = true;
-            break;
+			netloader_boot = true;
+			return load_3dsx(netloadedPath);
         } else if(rc < 0) {
             netloader_draw_error();
             break;
         }
-    }
-
-    netloader_exit();
-    if(netloader_boot) {
-        return load_3dsx(netloadedPath);
     }
 
     return -1;

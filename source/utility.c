@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
+#include <CakeBrah/source/libkhax/khax.h>
 
 #include "gfx.h"
 
@@ -17,7 +18,7 @@ void closeSDArchive() {
 	FSUSER_CloseArchive(NULL, &sdmcArchive);
 }
 
-void sleep(u32 millis) {
+void svcSleep(u32 millis) {
     u64 nano = millis*1000000;
     svcSleepThread(nano);
 }
@@ -80,7 +81,7 @@ void reboot() {
     aptExit();
 }
 
-void shutdown() {
+void poweroff() {
 
     if(khaxInit() != 0) {
         debug("Err: khaxInit");
