@@ -7,19 +7,24 @@ extern "C" {
 
 #include "descriptor.h"
 
-typedef struct menuEntry_s
-{
-    char executablePath[128+1];
-    char arg[64+1];
+typedef struct menuEntry_s {
+    char executablePath[128 + 1];
+    char arg[64 + 1];
     descriptor_s descriptor;
 } menuEntry_s;
 
 void openSDArchive();
+
 void closeSDArchive();
-bool fileExists(char* path);
+
+bool fileExists(char *path);
+
 void svcSleep(u32 millis);
+
 void debug(const char *fmt, ...);
+
 void reboot();
+
 void poweroff();
 
 #ifdef __cplusplus

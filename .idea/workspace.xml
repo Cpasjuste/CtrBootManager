@@ -19,39 +19,35 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fe979d0f-ff0b-4a98-8ab2-c84c7bfc35bd" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/.name" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/CMakeLists.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/CtrBootManager.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/DevkitArm3DS.cmake" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cmake/FindCTRULIB.cmake" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cmake/FindLIBCTRSHELL.cmake" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cmake/FindLIBKAIRY.cmake" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cmake/FindSF2D.cmake" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cmake/Tools3DS.cmake" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cmake/bin2s_header.h.in" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/source/descriptor.cpp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/source/descriptor.h" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/source/tinyxml2.cpp" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/source/tinyxml2.h" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CtrBootManager.cbp" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/CtrBootManager.layout" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/Makefile" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/boot.c" afterPath="$PROJECT_DIR$/source/boot.c" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/changelog.txt" afterPath="$PROJECT_DIR$/changelog.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/config.c" afterPath="$PROJECT_DIR$/source/config.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/config.h" afterPath="$PROJECT_DIR$/source/config.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/costable.h" afterPath="$PROJECT_DIR$/source/costable.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/descriptor.cpp" afterPath="$PROJECT_DIR$/source/descriptor.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/descriptor.h" afterPath="$PROJECT_DIR$/source/descriptor.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/font.c" afterPath="$PROJECT_DIR$/source/font.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/font.h" afterPath="$PROJECT_DIR$/source/font.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/font1.c" afterPath="$PROJECT_DIR$/source/font1.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/font2.c" afterPath="$PROJECT_DIR$/source/font2.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/gfx.c" afterPath="$PROJECT_DIR$/source/gfx.c" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/gfx.h" afterPath="$PROJECT_DIR$/source/gfx.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/hooks.c" afterPath="$PROJECT_DIR$/source/hooks.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/loader.c" afterPath="$PROJECT_DIR$/source/loader.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/loader.h" afterPath="$PROJECT_DIR$/source/loader.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/main.c" afterPath="$PROJECT_DIR$/source/main.c" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/menu_boot.c" afterPath="$PROJECT_DIR$/source/menu_boot.c" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/menu_more.c" afterPath="$PROJECT_DIR$/source/menu_more.c" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/menu_netloader.c" afterPath="$PROJECT_DIR$/source/menu_netloader.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/menu_netloader.h" afterPath="$PROJECT_DIR$/source/menu_netloader.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/menu_picker.c" afterPath="$PROJECT_DIR$/source/menu_picker.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/picker.h" afterPath="$PROJECT_DIR$/source/picker.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/scanner.c" afterPath="$PROJECT_DIR$/source/scanner.c" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/scanner.h" afterPath="$PROJECT_DIR$/source/scanner.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/smdh.h" afterPath="$PROJECT_DIR$/source/smdh.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/text.c" afterPath="$PROJECT_DIR$/source/text.c" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/text.h" afterPath="$PROJECT_DIR$/source/text.h" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/tinyxml2.cpp" afterPath="$PROJECT_DIR$/source/tinyxml2.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/tinyxml2.h" afterPath="$PROJECT_DIR$/source/tinyxml2.h" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/utility.c" afterPath="$PROJECT_DIR$/source/utility.c" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/source/utility.h" afterPath="$PROJECT_DIR$/source/utility.h" />
     </list>
@@ -74,46 +70,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="main.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/source/main.c">
+      <file leaf-file-name="menu_boot.c" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/source/menu_boot.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-21.275862">
-              <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
-              <folding>
-                <element signature="e#0#16#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="menu_netloader.c" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/source/menu_netloader.c">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-5.4">
-              <caret line="190" column="10" selection-start-line="190" selection-start-column="10" selection-end-line="190" selection-end-column="10" />
-              <folding>
-                <element signature="e#0#16#0" expanded="true" />
-                <element signature="e#230#257#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="changelog.txt" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/changelog.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.20769231">
-              <caret line="6" column="28" selection-start-line="1" selection-start-column="0" selection-end-line="6" selection-end-column="28" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="134" column="0" selection-start-line="134" selection-start-column="0" selection-end-line="134" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="soc.h" pinned="false" current-in-tab="false">
-        <entry file="file:///opt/devkitpro/libctru/include/3ds/services/soc.h">
+      <file leaf-file-name="menu_more.c" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/source/menu_more.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="14" column="21" selection-start-line="14" selection-start-column="7" selection-end-line="14" selection-end-column="21" />
+            <state vertical-scroll-proportion="1.5344262">
+              <caret line="60" column="13" selection-start-line="60" selection-start-column="13" selection-end-line="60" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -151,10 +122,12 @@
         <option value="$PROJECT_DIR$/source/scanner.h" />
         <option value="$PROJECT_DIR$/source/utility.h" />
         <option value="$PROJECT_DIR$/source/scanner.c" />
-        <option value="$PROJECT_DIR$/source/boot.c" />
         <option value="$PROJECT_DIR$/source/main.c" />
         <option value="$PROJECT_DIR$/source/menu_netloader.c" />
         <option value="$PROJECT_DIR$/changelog.txt" />
+        <option value="$PROJECT_DIR$/source/boot.c" />
+        <option value="$PROJECT_DIR$/source/config.c" />
+        <option value="$PROJECT_DIR$/source/config.h" />
       </list>
     </option>
   </component>
@@ -167,10 +140,10 @@
   </component>
   <component name="OCFindUsagesOptions" text="true" ivars="false" properties="true" derivedClasses="false" />
   <component name="ProjectFrameBounds">
-    <option name="x" value="88" />
-    <option name="y" value="120" />
-    <option name="width" value="1381" />
-    <option name="height" value="948" />
+    <option name="x" value="53" />
+    <option name="y" value="24" />
+    <option name="width" value="1627" />
+    <option name="height" value="1026" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -299,15 +272,15 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="88" y="120" width="1381" height="948" extended-state="0" />
+    <frame x="53" y="24" width="1627" height="1026" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.18682115" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.15857406" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.37142858" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.34102833" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33436215" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32938388" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32843652" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.22037914" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -390,20 +363,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/source/config.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/config.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.64458805">
-          <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="29" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///opt/devkitpro/libctru/include/3ds/gfx.h">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33279485">
@@ -427,26 +386,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/source/menu_more.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="60" column="13" selection-start-line="60" selection-start-column="13" selection-end-line="60" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/source/menu_picker.c">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="160" column="30" selection-start-line="160" selection-start-column="30" selection-end-line="160" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/menu_boot.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="4.026201">
-          <caret line="135" column="18" selection-start-line="135" selection-start-column="8" selection-end-line="135" selection-end-column="18" />
           <folding />
         </state>
       </provider>
@@ -456,7 +399,7 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="58" column="16" selection-start-line="58" selection-start-column="16" selection-end-line="58" selection-end-column="16" />
           <folding>
-            <element signature="e#0#16#0" expanded="true" />
+            <element signature="e#0#16#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -490,17 +433,7 @@
         <state vertical-scroll-proportion="-2.6323528">
           <caret line="134" column="0" selection-start-line="134" selection-start-column="0" selection-end-line="134" selection-end-column="35" />
           <folding>
-            <element signature="e#0#16#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/boot.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-13.451612">
-          <caret line="153" column="25" selection-start-line="153" selection-start-column="25" selection-end-line="153" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#16#0" expanded="true" />
+            <element signature="e#0#16#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -513,31 +446,81 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/source/main.c">
+    <entry file="file://$PROJECT_DIR$/source/boot.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-21.275862">
-          <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+        <state vertical-scroll-proportion="-2.61204">
+          <caret line="49" column="25" selection-start-line="49" selection-start-column="25" selection-end-line="49" selection-end-column="25" />
           <folding>
             <element signature="e#0#16#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/source/menu_netloader.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.4">
-          <caret line="190" column="10" selection-start-line="190" selection-start-column="10" selection-end-line="190" selection-end-column="10" />
-          <folding>
-            <element signature="e#0#16#0" expanded="true" />
-            <element signature="e#230#257#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/changelog.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.20769231">
-          <caret line="6" column="28" selection-start-line="1" selection-start-column="0" selection-end-line="6" selection-end-column="28" />
+        <state vertical-scroll-proportion="0.030100334">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="6" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/menu_netloader.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6022305">
+          <caret line="190" column="10" selection-start-line="190" selection-start-column="10" selection-end-line="190" selection-end-column="10" />
+          <folding>
+            <element signature="e#0#16#0" expanded="false" />
+            <element signature="e#230#257#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/main.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.0843586">
+          <caret line="59" column="0" selection-start-line="59" selection-start-column="0" selection-end-line="59" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#16#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/config.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.8428094">
+          <caret line="28" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/config.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.1070234">
+          <caret line="22" column="22" selection-start-line="22" selection-start-column="22" selection-end-line="22" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/menu_boot.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="134" column="0" selection-start-line="134" selection-start-column="0" selection-end-line="134" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.43373495">
+          <caret line="14" column="4" selection-start-line="14" selection-start-column="4" selection-end-line="14" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/source/menu_more.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.5344262">
+          <caret line="60" column="13" selection-start-line="60" selection-start-column="13" selection-end-line="60" selection-end-column="13" />
           <folding />
         </state>
       </provider>

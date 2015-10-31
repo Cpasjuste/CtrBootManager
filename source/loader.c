@@ -33,21 +33,21 @@ int load_bin(const char *path, long offset) {
     // Load the arm9 payload into memory
     FILE *file = fopen(path, "r");
     if (!file) {
-        debug("Err: Couldn't open %s...\n", path );
+        debug("Err: Couldn't open %s...\n", path);
         return -1;
     }
 
-    if(offset > 0) {
+    if (offset > 0) {
         rc = fseek(file, offset, SEEK_SET);
         if (rc != 0) {
-            debug("Err: Couldn't seek %s...\n", path );
+            debug("Err: Couldn't seek %s...\n", path);
             return -1;
         }
     }
 
     fread(payload, payload_size, 1, file);
     if (ferror(file) != 0) {
-        debug("Err: Couldn't read %s...\n", path );
+        debug("Err: Couldn't read %s...\n", path);
         return -1;
     }
     fclose(file);
@@ -55,7 +55,7 @@ int load_bin(const char *path, long offset) {
     if (brahma_init()) {
         rc = load_arm9_payload_from_mem(payload, payload_size);
         if (rc != 1) {
-            debug("Err: Couldn't load arm9 payload...\n" );
+            debug("Err: Couldn't load arm9 payload...\n");
             return -1;
         }
 
@@ -74,7 +74,7 @@ int load_bin(const char *path, long offset) {
         brahma_exit();
 
     } else {
-        debug("Err: Couldn't init brahma...\n" );
+        debug("Err: Couldn't init brahma...\n");
         return -1;
     }
     free(payload);
@@ -82,17 +82,17 @@ int load_bin(const char *path, long offset) {
 }
 
 int load(const char *path, long offset) {
-	char *ext = get_filename_ext(path);
-	if(strcmp(ext, "bin") == 0
-		|| strcmp(ext, "BIN") == 0
-		|| strcmp(ext, "dat") == 0
-		|| strcmp(ext, "DAT") == 0) {
-		return load_bin(path, offset);
-	} else if(strcmp(ext, "3dsx") == 0
-		|| strcmp(ext, "3DSX") == 0 ) {
-		return load_3dsx(path);
-	} else {
-		debug("Invalid file: %s\n", path);
-		return -1;
-	}
+    char *ext = get_filename_ext(path);
+    if (strcmp(ext, "bin") == 0
+        || strcmp(ext, "BIN") == 0
+        || strcmp(ext, "dat") == 0
+        || strcmp(ext, "DAT") == 0) {
+        return load_bin(path, offset);
+    } else if (strcmp(ext, "3dsx") == 0
+               || strcmp(ext, "3DSX") == 0) {
+        return load_3dsx(path);
+    } else {
+        debug("Invalid file: %s\n", path);
+        return -1;
+    }
 }
