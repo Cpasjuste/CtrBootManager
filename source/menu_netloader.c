@@ -401,10 +401,6 @@ int netloader_loop(void) {
 }
 
 int netloader_exit(void) {
-    if (SOC_buffer) {
-        free(SOC_buffer);
-        SOC_buffer = NULL;
-    }
     Result ret = SOC_Shutdown();
     if (ret != 0)
         return -1;
@@ -449,6 +445,5 @@ int menu_netloader() {
             break;
         }
     }
-
     return -1;
 }

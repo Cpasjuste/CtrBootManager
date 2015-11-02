@@ -1,18 +1,15 @@
 #include <3ds.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <sys/time.h>
 
 #include "gfx.h"
 #include "utility.h"
 #include "picker.h"
+#include "loader.h"
+#include "menu.h"
 
-//char menu_item[5][512] = { "Browse for a file to boot", "Netload 3dsx", "Load HomeMenu", "Reboot", "PowerOff" };
-//int menu_count = 5;
-char menu_item[4][512] = {"Browse for a file to boot", "Netload 3dsx", "Reboot", "PowerOff"};
-int menu_count = 4;
-int menu_index = 0;
+static char menu_item[5][512] = {"Browse for a file to boot", "Netload 3dsx", "Settings", "Reboot", "PowerOff"};
+static int menu_count = 5;
+static int menu_index = 0;
 
 int menu_choose() {
 
@@ -52,11 +49,11 @@ int menu_more() {
                 return 0;
             } else if (menu_index == 1 && menu_netloader() == 0) {
                 return 0;
-                //} else if(menu_index == 2) {
-                //    load_homemenu();
-            } else if (menu_index == 2) {
-                reboot();
+            } else if(menu_index == 2) {
+                menu_config();
             } else if (menu_index == 3) {
+                reboot();
+            } else if (menu_index == 4) {
                 poweroff();
             }
         }

@@ -6,20 +6,13 @@
 #include "config.h"
 #include "scanner.h"
 #include "utility.h"
+#include "menu.h"
 
 extern char boot_app[512];
 extern bool boot_app_enabled;
-
 extern void scanMenuEntry(menuEntry_s *me);
-
 int bootApp(char *executablePath, executableMetadata_s *em, char *arg);
-
-extern int menu_more();
-
-extern int menu_boot();
-
 extern int netloader_init(void);
-
 extern int netloader_exit(void);
 
 int main() {
@@ -49,6 +42,14 @@ int main() {
     aptCloseSession();
     srand(svcGetSystemTick());
 
+    /*
+    configInit();
+    while (aptMainLoop()) {
+        if (menu_config() == 0)
+            break;
+    }
+    */
+
     if (!boot_app_enabled) { // fix SOC_Initialize
 
         if (configInit() != 0) { // recovery .. should change to sysnand reboot
@@ -76,10 +77,11 @@ int main() {
     xmlPath[l - 4] = 'x';
     if (fileExists(xmlPath))
         loadDescriptor(&me->descriptor, xmlPath);
+
     scanMenuEntry(me);
 
-    configExit();
     netloader_exit();
+    configExit();
     amExit();
     ptmExit();
     acExit();

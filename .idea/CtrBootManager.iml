@@ -21,7 +21,6 @@
       <sourceFolder url="file://$MODULE_DIR$/source/CakeBrah/source/libkhax/khax.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/source/CakeBrah/source/libkhax/khaxinit.cpp" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/source/CakeBrah/source/libkhax/khaxinternal.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/source/CakeBrah/source/libkhax/khaxinternal.h~" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/source/CakeBrah/source/utils.s" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/source/CakeBrah/tools/client.py" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/source/boot.c" isTestSource="false" />
@@ -41,7 +40,9 @@
       <sourceFolder url="file://$MODULE_DIR$/source/loader.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/source/loader.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/source/main.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/source/menu.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/source/menu_boot.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/source/menu_config.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/source/menu_more.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/source/menu_netloader.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/source/menu_netloader.h" isTestSource="false" />
@@ -92,7 +93,6 @@
           <root url="file://$MODULE_DIR$/source/CakeBrah/source/libkhax/khaxinit.cpp" />
           <root url="file://$MODULE_DIR$/source/CakeBrah/source/libkhax/khax.h" />
           <root url="file://$MODULE_DIR$/source/CakeBrah/source/libkhax/khaxinternal.h" />
-          <root url="file://$MODULE_DIR$/source/CakeBrah/source/libkhax/khaxinternal.h~" />
           <root url="file://$MODULE_DIR$/source/CakeBrah/source/brahma.c" />
           <root url="file://$MODULE_DIR$/source/CakeBrah/source/arm11.s" />
           <root url="file://$MODULE_DIR$/source/CakeBrah/source/utils.s" />
@@ -101,6 +101,7 @@
           <root url="file://$MODULE_DIR$/source/CakeBrah/icon.png" />
           <root url="file://$MODULE_DIR$/source/CakeBrah/Makefile" />
           <root url="file://$MODULE_DIR$/source/CakeBrah/README-brahma" />
+          <root url="file://$MODULE_DIR$/source/menu_config.c" />
           <root url="file://$MODULE_DIR$/source/picker.h" />
           <root url="file://$MODULE_DIR$/source/scanner.h" />
           <root url="file://$MODULE_DIR$/source/gfx.c" />
@@ -108,7 +109,7 @@
           <root url="file://$MODULE_DIR$/source/scanner.c" />
           <root url="file://$MODULE_DIR$/source/menu_picker.c" />
           <root url="file://$MODULE_DIR$/source/boot.c" />
-          <root url="file://$MODULE_DIR$/source/hooks.h" />
+          <root url="file://$MODULE_DIR$/source/menu.h" />
           <root url="file://$MODULE_DIR$/source/gfx.h" />
           <root url="file://$MODULE_DIR$/source/utility.c" />
           <root url="file://$MODULE_DIR$/source/main.c" />
@@ -132,6 +133,7 @@
           <root url="file://$MODULE_DIR$/source/tinyxml2.h" />
           <root url="file://$MODULE_DIR$/source/descriptor.cpp" />
           <root url="file://$MODULE_DIR$/source/descriptor.h" />
+          <root url="file://$MODULE_DIR$/source/hooks.h" />
           <root url="file://$MODULE_DIR$/source/tinyxml2.cpp" />
           <root url="file://$MODULE_DIR$/source/CakeBrah/include/utils.h" />
           <root url="file://$MODULE_DIR$/source/CakeBrah/include/brahma.h" />

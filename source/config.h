@@ -5,6 +5,8 @@
 extern "C" {
 #endif
 
+#define BIT(n) (1U<<(n))
+
 typedef struct {
     char title[512];
     char path[512];
@@ -15,7 +17,7 @@ typedef struct {
     int timeout;
     int autobootfix;
     int index;
-    u32 recovery;
+    int recovery;
     int count;
     boot_entry_s entries[16];
 } boot_config_s;
@@ -23,7 +25,7 @@ typedef struct {
 boot_config_s *boot_config;
 
 int configInit();
-
+void configSave();
 void configExit();
 
 #ifdef __cplusplus

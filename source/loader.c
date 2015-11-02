@@ -8,6 +8,8 @@
 #include "gfx.h"
 #include "picker.h"
 #include "config.h"
+#include "utility.h"
+#include "menu_netloader.h"
 
 char boot_app[512];
 bool boot_app_enabled;
@@ -60,12 +62,14 @@ int load_bin(const char *path, long offset) {
         }
 
         configExit();
+        netloader_exit();
+        amExit();
         ptmExit();
         acExit();
-        irrstExit();
         hidExit();
-        //gfxExit(); // hang
+        //gfxExit();
         closeSDArchive();
+        sdmcExit();
         fsExit();
         aptExit();
         srvExit();
@@ -82,14 +86,11 @@ int load_bin(const char *path, long offset) {
 }
 
 int load(const char *path, long offset) {
-    char *ext = get_filename_ext(path);
-    if (strcmp(ext, "bin") == 0
-        || strcmp(ext, "BIN") == 0
-        || strcmp(ext, "dat") == 0
-        || strcmp(ext, "DAT") == 0) {
+    const char *ext = get_filename_ext(path);
+    if (strcasecmp(ext, "bin") == 0
+        || strcasecmp(ext, "dat") == 0) {
         return load_bin(path, offset);
-    } else if (strcmp(ext, "3dsx") == 0
-               || strcmp(ext, "3DSX") == 0) {
+    } else if (strcasecmp(ext, "3dsx") == 0) {
         return load_3dsx(path);
     } else {
         debug("Invalid file: %s\n", path);

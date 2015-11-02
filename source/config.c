@@ -6,13 +6,12 @@
 
 #include <libconfig.h>
 #include "config.h"
+#include "utility.h"
 
-#define BIT(n) (1U<<(n))
+config_t cfg;
+config_setting_t *setting_boot = NULL;
 
 int configInit() {
-
-    config_t cfg;
-    config_setting_t *setting;
 
     boot_config = malloc(sizeof(boot_config_s));
     memset(boot_config, 0, sizeof(boot_config_s));
@@ -23,32 +22,33 @@ int configInit() {
     config_init(&cfg);
 
     if (!config_read_file(&cfg, "/boot.cfg")) {
-        printf("%s:%d - %s\n", config_error_file(&cfg),
+        debug("%s:%d - %s\n", config_error_file(&cfg),
                config_error_line(&cfg), config_error_text(&cfg));
+        boot_config = NULL;
         config_destroy(&cfg);
         return -1;
     }
 
-    setting = config_lookup(&cfg, "boot_config");
-    if (setting != NULL) {
+    setting_boot = config_lookup(&cfg, "boot_config");
+    if (setting_boot != NULL) {
         int timeout = 3, index = 0, autobootfix = 100;
-        u32 recovery = BIT(2); //SELECT
+        int recovery = 2; //SELECT
 
-        if (config_setting_lookup_int(setting, "timeout", &timeout)) {
+        if (config_setting_lookup_int(setting_boot, "timeout", &timeout)) {
             boot_config->timeout = timeout;
         }
-        if (config_setting_lookup_int(setting, "autobootfix", &autobootfix)) {
+        if (config_setting_lookup_int(setting_boot, "autobootfix", &autobootfix)) {
             boot_config->autobootfix = autobootfix;
         }
-        if (config_setting_lookup_int(setting, "default", &index)) {
+        if (config_setting_lookup_int(setting_boot, "default", &index)) {
             boot_config->index = index;
         }
-        if (config_setting_lookup_int(setting, "recovery", &recovery)) {
-            boot_config->recovery = BIT(recovery);
+        if (config_setting_lookup_int(setting_boot, "recovery", &recovery)) {
+            boot_config->recovery = recovery;
         }
     }
 
-    setting = config_lookup(&cfg, "boot_config.entries");
+    config_setting_t *setting = config_lookup(&cfg, "boot_config.entries");
     if (setting != NULL) {
         int count = config_setting_length(setting);
         if (count > 11) count = 11;
@@ -75,12 +75,53 @@ int configInit() {
         }
     }
 
-    config_destroy(&cfg);
     return 0;
+}
+
+void configSave() {
+
+    if (setting_boot) {
+
+        config_setting_t *s = config_lookup(&setting_boot, "timeout");
+        if (s) {
+            config_setting_set_int(s, boot_config->timeout);
+        } else {
+            debug("Error: timeout setting not found\n");
+        }
+
+        s = config_lookup(&setting_boot, "autobootfix");
+        if (s) {
+            config_setting_set_int(s, boot_config->autobootfix);
+        }
+        else {
+            debug("Error: autobootfix setting not found\n");
+        }
+
+        s = config_lookup(&setting_boot, "default");
+        if (s) {
+            config_setting_set_int(s, boot_config->index);
+        }
+        else {
+            debug("Error: default setting not found\n");
+        }
+
+        s = config_lookup(&setting_boot, "recovery");
+        if (s) {
+            config_setting_set_int(s, boot_config->recovery);
+        }
+        else {
+            debug("Error: recovery setting not found\n");
+        }
+
+        if (!config_write_file(&cfg, "/boot.cfg")) {
+            debug("Error while writing config file:\n.%s\n", "/boot.cfg");
+        }
+    }
 }
 
 void configExit() {
     if (boot_config) {
+        config_destroy(&cfg);
         free(boot_config);
     }
 }

@@ -49,18 +49,13 @@ void get_dir(const char *path) {
     strncpy(picker->now_path, new_path, 512);
 
     while ((file = readdir(fd))) {
-        if (!strcmp(file->d_name, "."))
-            continue;
-        if (!strcmp(file->d_name, ".."))
+        if (!strcmp(file->d_name, ".") || !strcmp(file->d_name, ".."))
             continue;
         if (file->d_type != DT_DIR) {
             const char *ext = get_filename_ext(file->d_name);
-            if (strcmp(ext, "bin") != 0
-                && strcmp(ext, "BIN") != 0
-                && strcmp(ext, "dat") != 0
-                && strcmp(ext, "DAT") != 0
-                && strcmp(ext, "3dsx") != 0
-                && strcmp(ext, "3DSX") != 0)
+            if (strcasecmp(ext, "bin") != 0
+                && strcasecmp(ext, "dat") != 0
+                && strcasecmp(ext, "3dsx") != 0)
                 continue;
         }
 
@@ -90,7 +85,7 @@ void get_dir(const char *path) {
     }
 
     if (picker->file_count > 1) {
-        qsort(picker->files, picker->file_count,
+        qsort(picker->files, (size_t) picker->file_count,
               sizeof(*picker->files), alphasort);
     }
 
@@ -98,28 +93,29 @@ void get_dir(const char *path) {
 }
 
 void pick_file(file_s *picked, const char *path) {
+
     picker = malloc(sizeof(picker_s));
     get_dir(path);
 
     // key repeat timer
-    time_t t_start, t_end, t_elapsed;
+    static time_t t_start = 0, t_end = 0, t_elapsed = 0;
 
     while (aptMainLoop()) {
-        hidScanInput();
 
+        hidScanInput();
         u32 kHeld = hidKeysHeld();
         u32 kDown = hidKeysDown();
 
-        if (hidKeysUp())
+        if (hidKeysUp()) {
             time(&t_start); // reset held timer
+        }
 
         if (kDown & KEY_DOWN) {
             picker->file_index++;
             if (picker->file_index >= picker->file_count)
                 picker->file_index = 0;
             time(&t_start);
-        }
-        else if (kHeld & KEY_DOWN) {
+        } else if (kHeld & KEY_DOWN) {
             time(&t_end);
             t_elapsed = t_end - t_start;
             if (t_elapsed > 0) {
@@ -135,8 +131,7 @@ void pick_file(file_s *picked, const char *path) {
             if (picker->file_index < 0)
                 picker->file_index = picker->file_count - 1;
             time(&t_start);
-        }
-        else if (kHeld & KEY_UP) {
+        } else if (kHeld & KEY_UP) {
             time(&t_end);
             t_elapsed = t_end - t_start;
             if (t_elapsed > 0) {
@@ -187,7 +182,7 @@ void pick_file(file_s *picked, const char *path) {
         int maxX = 400 - 16;
         int minY = 32;
         int maxY = 240 - 16;
-        drawRect(GFX_TOP, GFX_LEFT, minX, minY, maxX, maxY, 0xFF, 0xFF, 0xFF);
+        drawRect(GFX_TOP, GFX_LEFT, minX, minY, maxX, maxY, (u8) 0xFF, (u8) 0xFF, (u8) 0xFF);
         minY += 20;
 
         int i, y = 0;
@@ -199,7 +194,6 @@ void pick_file(file_s *picked, const char *path) {
             if (i == picker->file_index) {
                 gfxDrawRectangle(GFX_TOP, GFX_LEFT, (u8[]) {0xDC, 0xDC, 0xDC}, minX + 4, minY + 16 * y, maxX - 23, 15);
                 gfxDrawTextN(GFX_TOP, GFX_LEFT, &fontSelected, picker->files[i].name, 47, minX + 6, minY + 16 * y);
-                //gfxDrawTextf(GFX_BOTTOM, GFX_LEFT, &fontSelected, minX+6, 32, "page:%i index:%i", page, i);
             }
             else
                 gfxDrawTextN(GFX_TOP, GFX_LEFT, &fontDefault, picker->files[i].name, 47, minX + 6, minY + 16 * y);
