@@ -21,7 +21,11 @@ bool fileExists(char *path);
 
 void svcSleep(u32 millis);
 
+char *get_button(int button);
+
 void debug(const char *fmt, ...);
+
+bool confirm(int confirmButton, const char *fmt, ...);
 
 void reboot();
 

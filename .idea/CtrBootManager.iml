@@ -35,8 +35,6 @@
       <sourceFolder url="file://$MODULE_DIR$/source/font2.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/source/gfx.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/source/gfx.h" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/source/hooks.c" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/source/hooks.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/source/loader.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/source/loader.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/source/main.c" isTestSource="false" />
@@ -48,6 +46,8 @@
       <sourceFolder url="file://$MODULE_DIR$/source/menu_netloader.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/source/menu_picker.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/source/picker.h" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/source/pngloader.c" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/source/pngloader.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/source/scanner.c" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/source/scanner.h" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/source/smdh.h" isTestSource="false" />
@@ -113,7 +113,6 @@
           <root url="file://$MODULE_DIR$/source/gfx.h" />
           <root url="file://$MODULE_DIR$/source/utility.c" />
           <root url="file://$MODULE_DIR$/source/main.c" />
-          <root url="file://$MODULE_DIR$/source/hooks.c" />
           <root url="file://$MODULE_DIR$/source/menu_boot.c" />
           <root url="file://$MODULE_DIR$/source/utility.h" />
           <root url="file://$MODULE_DIR$/source/text.h" />
@@ -133,7 +132,8 @@
           <root url="file://$MODULE_DIR$/source/tinyxml2.h" />
           <root url="file://$MODULE_DIR$/source/descriptor.cpp" />
           <root url="file://$MODULE_DIR$/source/descriptor.h" />
-          <root url="file://$MODULE_DIR$/source/hooks.h" />
+          <root url="file://$MODULE_DIR$/source/pngloader.c" />
+          <root url="file://$MODULE_DIR$/source/pngloader.h" />
           <root url="file://$MODULE_DIR$/source/tinyxml2.cpp" />
           <root url="file://$MODULE_DIR$/source/CakeBrah/include/utils.h" />
           <root url="file://$MODULE_DIR$/source/CakeBrah/include/brahma.h" />

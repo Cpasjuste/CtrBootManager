@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 2.8)
 project(CtrBootManager)
 enable_language(ASM)
 
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DKA_SUGGESTED_C_FLAGS} -DSFMT_MEXP=19937") # Use the devkitArm suggested flags. This is not mandatory.
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DKA_SUGGESTED_CXX_FLAGS} -DSFMT_MEXP=19937")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DKA_SUGGESTED_C_FLAGS} -O2 -DSFMT_MEXP=19937") # Use the devkitArm suggested flags. This is not mandatory.
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DKA_SUGGESTED_CXX_FLAGS} -O2 -DSFMT_MEXP=19937")
 
 # Note that you must copy the cmake folder and the DevkitArm3DS.cmake file in this directory
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake) # Add the cmake folder to the modules paths, so that we can use the tools and find_package for ctrulib
@@ -20,6 +20,7 @@ target_link_libraries(CtrBootManager ${LIBCTRU_LIBRARIES}) # Link ctrulib
 target_include_directories(CtrBootManager PUBLIC ${LIBCTRU_INCLUDE_DIRS}) # Add the ctrulib include folder
 
 target_include_directories(CtrBootManager PUBLIC ${DEVKITPRO}/portlibs/armv6k/include)
+#target_link_libraries(CtrBootManager ${DEVKITPRO}/portlibs/armv6k/lib/libpng.a)
 target_link_libraries(CtrBootManager ${DEVKITPRO}/portlibs/armv6k/lib/libz.a)
 target_link_libraries(CtrBootManager ${DEVKITPRO}/portlibs/armv6k/lib/libconfig.a)
 

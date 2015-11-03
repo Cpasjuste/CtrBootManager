@@ -66,7 +66,7 @@ void drawStringN(u8 *fb, font_s *f, char *str, u16 length, s16 x, s16 y, u16 w, 
         dx += drawCharacter(fb, f, str[k], x + dx, y + dy, w, h);
         if (str[k] == '\n') {
             dx = 0;
-            dy -= 8;
+            dy -= 16;
         }
     }
     if (cut) {

@@ -5,72 +5,28 @@
 #include "gfx.h"
 #include "utility.h"
 
-char *get_button(int button) {
-
-    switch (BIT(button)) {
-        case KEY_A:
-            return "A";
-
-        case KEY_B:
-            return "B";
-
-        case KEY_SELECT:
-            return "SELECT";
-
-        case KEY_START:
-            return "START";
-
-        case KEY_DRIGHT:
-            return "D-PAD RIGHT";
-
-        case KEY_DLEFT:
-            return "D-PAD LEFT";
-
-        case KEY_DUP:
-            return "D-PAD UP";
-
-        case KEY_DDOWN:
-            return "D-PAD DOWN";
-
-        case KEY_R:
-            return "R";
-
-        case KEY_L:
-            return "L";
-
-        case KEY_X:
-            return "X";
-
-        case KEY_Y:
-            return "Y";
-
-        default:
-            return "Invalid button";
-    }
-}
-
 void keyLeft(int index) {
 
     switch (index) {
         case 0:
-            if (boot_config->timeout > -1)
-                boot_config->timeout--;
+            if (config->timeout > -1)
+                config->timeout--;
             break;
         case 1:
-            if (boot_config->index > 0)
-                boot_config->index--;
+            if (config->index > 0)
+                config->index--;
             else
-                boot_config->index = boot_config->count - 1;
+                config->index = config->count - 1;
             break;
         case 2:
-            if (boot_config->autobootfix > 0)
-                boot_config->autobootfix--;
+            if (config->autobootfix > 0)
+                config->autobootfix--;
             break;
         case 3:
-            if (boot_config->recovery > 0)
-                boot_config->recovery--;
+            if (config->recovery > 0)
+                config->recovery--;
             else
-                boot_config->recovery = 11;
+                config->recovery = 11;
             break;
     }
 }
@@ -79,30 +35,29 @@ void keyRight(int index) {
 
     switch (index) {
         case 0:
-            boot_config->timeout++;
+            config->timeout++;
             break;
         case 1:
-            if (boot_config->index < boot_config->count - 1)
-                boot_config->index++;
+            if (config->index < config->count - 1)
+                config->index++;
             else
-                boot_config->index = 0;
+                config->index = 0;
             break;
         case 2:
-            boot_config->autobootfix++;
+            config->autobootfix++;
             break;
         case 3:
-            if (boot_config->recovery < 11)
-                boot_config->recovery++;
+            if (config->recovery < 11)
+                config->recovery++;
             else
-                boot_config->recovery = 0;
+                config->recovery = 0;
             break;
     }
 }
 
 int menu_config() {
 
-    int menu_count = 4;
-    int menu_index = 0;
+    int menu_count = 4, menu_index = 0;
     // key repeat timer
     time_t t_start = 0, t_end = 0, t_elapsed = 0;
 
@@ -152,7 +107,7 @@ int menu_config() {
         }
 
         if (kDown & KEY_B) {
-            configSave();
+            configUpdateSettings();
             return 0;
         }
 
@@ -169,13 +124,13 @@ int menu_config() {
         gfxDrawRectangle(GFX_TOP, GFX_LEFT, (u8[]) {0xDC, 0xDC, 0xDC}, minX + 4, minY + (16 * menu_index), maxX - 23,
                          15);
         gfxDrawTextf(GFX_TOP, GFX_LEFT, menu_index == 0 ? &fontSelected : &fontDefault, minX + 6, minY,
-                     "Timeout:  %i", boot_config->timeout);
+                     "Timeout:  %i", config->timeout);
         gfxDrawTextf(GFX_TOP, GFX_LEFT, menu_index == 1 ? &fontSelected : &fontDefault, minX + 6, minY + 16,
-                     "Default:  %s", boot_config->entries[boot_config->index].title);
+                     "Default:  %s", config->entries[config->index].title);
         gfxDrawTextf(GFX_TOP, GFX_LEFT, menu_index == 2 ? &fontSelected : &fontDefault, minX + 6, minY + 32,
-                     "Bootfix:  %i", boot_config->autobootfix);
+                     "Bootfix:  %i", config->autobootfix);
         gfxDrawTextf(GFX_TOP, GFX_LEFT, menu_index == 3 ? &fontSelected : &fontDefault, minX + 6, minY + 48,
-                     "Recovery key:  %s", get_button(boot_config->recovery));
+                     "Recovery key:  %s", get_button(config->recovery));
 
         gfxSwap();
     }

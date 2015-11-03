@@ -7,7 +7,7 @@
 #include "loader.h"
 #include "menu.h"
 
-static char menu_item[5][512] = {"Browse for a file to boot", "Netload 3dsx", "Settings", "Reboot", "PowerOff"};
+static char menu_item[5][512] = {"File browser", "Netload 3dsx", "Settings", "Reboot", "PowerOff"};
 static int menu_count = 5;
 static int menu_index = 0;
 
@@ -49,7 +49,7 @@ int menu_more() {
                 return 0;
             } else if (menu_index == 1 && menu_netloader() == 0) {
                 return 0;
-            } else if(menu_index == 2) {
+            } else if (menu_index == 2) {
                 menu_config();
             } else if (menu_index == 3) {
                 reboot();
@@ -84,6 +84,39 @@ int menu_more() {
             else
                 gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, menu_item[i], minX + 6, minY + (16 * i));
         }
+
+        // draw "help"
+        gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontTitle, "Informations", minX + 6, 20);
+        switch (menu_index) {
+            case 0:
+                gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault,
+                            "Browse for a file to boot or add a boot entry", minX + 12, 40);
+                break;
+
+            case 1:
+                gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault,
+                            "Netload a file (3dsx) from the computer with 3dslink", minX + 12, 40);
+                break;
+
+            case 2:
+                gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault,
+                            "Edit boot settings", minX + 12, 40);
+                break;
+
+            case 3:
+                gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault,
+                            "Reboot the 3ds...", minX + 12, 40);
+                break;
+
+            case 4:
+                gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault,
+                            "Shutdown the 3ds...", minX + 12, 40);
+                break;
+
+            default:
+                break;
+        }
+
         gfxSwap();
     }
     return -1;

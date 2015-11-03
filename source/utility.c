@@ -23,6 +23,50 @@ void svcSleep(u32 millis) {
     svcSleepThread(nano);
 }
 
+char *get_button(int button) {
+
+    switch (BIT(button)) {
+        case KEY_A:
+            return "A";
+
+        case KEY_B:
+            return "B";
+
+        case KEY_SELECT:
+            return "SELECT";
+
+        case KEY_START:
+            return "START";
+
+        case KEY_DRIGHT:
+            return "D-PAD RIGHT";
+
+        case KEY_DLEFT:
+            return "D-PAD LEFT";
+
+        case KEY_DUP:
+            return "D-PAD UP";
+
+        case KEY_DDOWN:
+            return "D-PAD DOWN";
+
+        case KEY_R:
+            return "R";
+
+        case KEY_L:
+            return "L";
+
+        case KEY_X:
+            return "X";
+
+        case KEY_Y:
+            return "Y";
+
+        default:
+            return "Invalid button";
+    }
+}
+
 void debug(const char *fmt, ...) {
     char s[512];
     memset(s, 0, 512);
@@ -33,12 +77,37 @@ void debug(const char *fmt, ...) {
 
     while (aptMainLoop()) {
         hidScanInput();
-        if (hidKeysDown() & KEY_A)
+        if (hidKeysDown())
             break;
 
         gfxClear();
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontTitle, s, 8, 20);
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontTitle, "Press A to continue...", 8, 36);
+        gfxDrawText(GFX_TOP, GFX_LEFT, &fontTitle, s, 8, 32);
+        gfxDrawText(GFX_TOP, GFX_LEFT, &fontTitle, "Press any key to continue...", 8, 64);
+        gfxSwap();
+    }
+}
+
+bool confirm(int confirmButton, const char *fmt, ...) {
+    char s[512];
+    memset(s, 0, 512);
+    va_list args;
+    va_start(args, fmt);
+    vsprintf(s, fmt, args);
+    va_end(args);
+
+    while (aptMainLoop()) {
+        hidScanInput();
+        u32 key = hidKeysDown();
+        if (key & BIT(confirmButton)) {
+            return true;
+        } else if (key) {
+            return false;
+        }
+
+        gfxClear();
+        gfxDrawText(GFX_TOP, GFX_LEFT, &fontTitle, s, 8, 32);
+        gfxDrawText(GFX_TOP, GFX_LEFT, &fontTitle, "Press any key to cancel...", 8, 64);
+        gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontTitle, 8, 80, "Press (%s) to confirm...", get_button(confirmButton));
         gfxSwap();
     }
 }
