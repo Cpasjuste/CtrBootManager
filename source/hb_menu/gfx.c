@@ -291,10 +291,6 @@ void gfxFillColorGradient(gfxScreen_t screen, gfx3dSide_t side, u8 rgbColorStart
     }
 }
 
-void gfxDrawRectangle(gfxScreen_t screen, gfx3dSide_t side, u8 rgbColor[3], s16 x, s16 y, u16 width, u16 height) {
-    _gfxDrawRectangle(screen, side, rgbColor, 240 - y, x, height, width);
-}
-
 void _gfxDrawRectangle(gfxScreen_t screen, gfx3dSide_t side, u8 rgbColor[3], s16 x, s16 y, u16 width, u16 height) {
     u16 fbWidth, fbHeight;
     u8 *fbAdr = gfxGetFramebuffer(screen, side, &fbWidth, &fbHeight);
@@ -327,6 +323,10 @@ void _gfxDrawRectangle(gfxScreen_t screen, gfx3dSide_t side, u8 rgbColor[3], s16
         memcpy(&fbAdr[x * 3], colorLine, width * 3);
         fbAdr += fbWidth * 3;
     }
+}
+
+void gfxDrawRectangle(gfxScreen_t screen, gfx3dSide_t side, u8 rgbColor[3], s16 x, s16 y, u16 width, u16 height) {
+    _gfxDrawRectangle(screen, side, rgbColor, 240 - y, x, height, width);
 }
 
 void gfxFadeScreen(gfxScreen_t screen, gfx3dSide_t side, u32 f) {

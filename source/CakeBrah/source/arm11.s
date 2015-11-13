@@ -15,13 +15,13 @@ hook1:
 	BL              busy_spin
 
 	MOV             R0, #0
-	BL              pxi_send	
-	
+	BL              pxi_send
+
 	BL              pxi_sync
-	
+
 	MOV             R0, #0x10000
 	BL              pxi_send
-	
+
 	BL              pxi_recv
 	BL              pxi_recv
 	BL              pxi_recv
@@ -59,17 +59,17 @@ hook2:
 @ to take control over the arm9 core
 hijack_arm9:
 	@ init
-	LDR             R0, pa_arm11_code 
-	MOV             R1, #0 
+	LDR             R0, pa_arm11_code
+	MOV             R1, #0
 	STR             R1, [R0]
-	
+
 	@ load physical addresses
 	LDR             R10, pa_firm_header
 	LDR             R9, pa_arm9_payload
 	LDR             R8, pa_io_mem
-	
+
 	@ send pxi cmd 0x44846
-	LDR             R1, pa_pxi_regs 
+	LDR             R1, pa_pxi_regs
 	LDR             R2, some_pxi_cmd
 	STR             R2, [R1, #8]
 
@@ -77,15 +77,15 @@ wait_arm9_loop:
 	LDRB            R0, [R8]
 	ANDS            R0, R0, #1
 	BNE	            wait_arm9_loop
-	
+
 	@ overwrite orig entry point with FCRAM addr
 	@ this exploits the race condition bug
-	STR             R9, [R10, #0x0C] 	
+	STR             R9, [R10, #0x0C]
 
 	LDR             R0, pa_arm11_code
 wait_arm11_loop:
 	LDR	            R1, [r0]
-	CMP             R1, #0  
+	CMP             R1, #0
 	BEQ             wait_arm11_loop
 	BX              R1
 
@@ -126,14 +126,14 @@ busy_spin:
 	SUBS            R0, R0, #2
 	NOP
 	BGT             busy_spin
-	BX              LR 
+	BX              LR
 
 pdn_send:
 	LDR             R1, va_pdn_regs
 	STRB            R0, [R1, #0x230]
 	BX              LR
-	
-pxi_send:  
+
+pxi_send:
 	LDR             R1, va_pxi_regs
 loc_1020D0:
 	LDRH            R2, [R1,#4]
@@ -144,7 +144,7 @@ loc_1020D0:
 
 pxi_recv:
 	LDR             R0, va_pxi_regs
-loc_1020FC:                              
+loc_1020FC:
 	LDRH            R1, [R0,#4]
 	TST             R1, #0x100
 	BNE             loc_1020FC

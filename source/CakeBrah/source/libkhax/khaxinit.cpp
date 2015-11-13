@@ -210,8 +210,6 @@ namespace KHAX
 	// return a pointer to the outer structure.  Inspired by Windows macro.
 	template <typename Outer, typename Inner>
 	Outer *ContainingRecord(Inner *member, Inner Outer::*field);
-
-	bool inited = false;
 }
 
 
@@ -1077,9 +1075,6 @@ extern "C" Result khaxInit()
 {
 	using namespace KHAX;
 
-	if(inited)
-        return 0;
-
 #ifdef KHAX_DEBUG
 	bool isNew3DS;
 	IsNew3DS(&isNew3DS, 0);
@@ -1139,7 +1134,6 @@ extern "C" Result khaxInit()
 	}
 
 	KHAX_printf("khaxInit: done\n");
-	inited = true;
 	return 0;
 }
 

@@ -23,7 +23,7 @@ DisableInterrupts:
 	mrs r0, cpsr
 	CPSID I
 	bx lr
-	
+
 .global EnableInterrupts
 .type EnableInterrupts, %function
 EnableInterrupts:

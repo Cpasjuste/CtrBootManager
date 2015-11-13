@@ -20,11 +20,10 @@ target_link_libraries(CtrBootManager ${LIBCTRU_LIBRARIES}) # Link ctrulib
 target_include_directories(CtrBootManager PUBLIC ${LIBCTRU_INCLUDE_DIRS}) # Add the ctrulib include folder
 
 target_include_directories(CtrBootManager PUBLIC ${DEVKITPRO}/portlibs/armv6k/include)
-#target_link_libraries(CtrBootManager ${DEVKITPRO}/portlibs/armv6k/lib/libpng.a)
 target_link_libraries(CtrBootManager ${DEVKITPRO}/portlibs/armv6k/lib/libz.a)
 target_link_libraries(CtrBootManager ${DEVKITPRO}/portlibs/armv6k/lib/libconfig.a)
 
-target_include_directories(CtrBootManager PUBLIC source source/CakeBrah/include)
+target_include_directories(CtrBootManager PUBLIC source source/hb_menu source/CakeBrah/include)
 target_include_directories(CtrBootManager PUBLIC source/CakeBrah/source/libkhax)
 
 target_embed_file(CtrBootManager data/font.bin)
