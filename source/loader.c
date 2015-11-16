@@ -26,19 +26,6 @@ int load_bin(char *path, long offset) {
             return -1;
         }
 
-        configExit();
-        netloader_exit();
-        amExit();
-        ptmExit();
-        acExit();
-        hidExit();
-        //gfxExit();
-        closeSDArchive();
-        sdmcExit();
-        fsExit();
-        aptExit();
-        srvExit();
-
         firm_reboot();
         brahma_exit();
 

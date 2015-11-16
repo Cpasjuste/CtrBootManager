@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "hb_menu/netloader.h"
 #include "config.h"
 #include "scanner.h"
 #include "utility.h"
@@ -15,15 +16,9 @@ extern void scanMenuEntry(menuEntry_s *me);
 
 int bootApp(char *executablePath, executableMetadata_s *em, char *arg);
 
-extern int netloader_init(void);
-
-extern int netloader_exit(void);
-
-int main(int argc, char *argv[]) {
-
+void __appInit() {
     srvInit();
     aptInit();
-    gfxInitDefault();
     fsInit();
     sdmcInit();
     openSDArchive();
@@ -31,6 +26,25 @@ int main(int argc, char *argv[]) {
     acInit();
     ptmInit();
     amInit();
+}
+
+void __appExit() {
+    netloader_exit();
+    configExit();
+    amExit();
+    ptmExit();
+    acExit();
+    hidExit();
+    closeSDArchive();
+    sdmcExit();
+    fsExit();
+    aptExit();
+    srvExit();
+}
+
+int main(int argc, char *argv[]) {
+
+    gfxInitDefault();
 
     if (netloader_init() != 0) {
         // fix SOC_Initialize
@@ -74,18 +88,7 @@ int main(int argc, char *argv[]) {
         loadDescriptor(&me->descriptor, xmlPath);
     scanMenuEntry(me);
 
-    netloader_exit();
-    configExit();
-    amExit();
-    ptmExit();
-    acExit();
-    hidExit();
     gfxExit();
-    closeSDArchive();
-    sdmcExit();
-    fsExit();
-    aptExit();
-    srvExit();
 
     return bootApp(me->executablePath, &me->descriptor.executableMetadata, me->arg);
 }
