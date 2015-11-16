@@ -2,9 +2,7 @@
 #include <string.h>
 
 #include "brahma.h"
-#include "hb_menu/netloader.h"
 #include "picker.h"
-#include "config.h"
 #include "utility.h"
 
 char boot_app[512];

@@ -28,10 +28,19 @@ int menu_boot() {
 
     hidScanInput();
 
-    if (config->timeout < 0 || hidKeysHeld() & BIT(config->recovery)) { // disable autoboot
+    u32 k = hidKeysHeld();
+    if (config->timeout < 0 || k & BIT(config->recovery)) { // disable autoboot
         timer = false;
-    } else if (config->timeout == 0
-               && config->count > boot_index) { // autoboot
+    } else if (config->timeout == 0) { // autoboot
+        if(k) {
+            int i = 0;
+            for(i=0; i<config->count; i++) {
+                if(k & BIT(config->entries[i].key)) {
+                    boot_index = i;
+                    break;
+                }
+            }
+        }
         return autoBootFix(boot_index);
     }
 

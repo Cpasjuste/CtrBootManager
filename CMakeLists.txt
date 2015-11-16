@@ -30,6 +30,6 @@ target_embed_file(CtrBootManager data/font.bin)
 
 add_3dsx_target(CtrBootManager) # Generate the .3dsx and .smdh from the CtrBootManager target
 add_netload_target(CtrBootManager_3dslink CtrBootManager)
-
 add_citra_target(CtrBootManager_Citra CtrBootManager)
-set_target_properties(CtrBootManager PROPERTIES COMPILE_FLAGS "-DCITRA")
+
+#set_target_properties(CtrBootManager PROPERTIES COMPILE_FLAGS "-DCITRA")

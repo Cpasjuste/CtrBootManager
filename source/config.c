@@ -59,6 +59,7 @@ int configInit() {
         for (i = 0; i < count; ++i) {
             config_setting_t *entry = config_setting_get_elem(setting_entries, i);
             const char *title, *path, *offset;
+            int key = -1;
 
             if (!(config_setting_lookup_string(entry, "title", &title)
                   && config_setting_lookup_string(entry, "path", &path)))
@@ -66,6 +67,10 @@ int configInit() {
 
             strncpy(config->entries[i].title, title, 512);
             strncpy(config->entries[i].path, path, 512);
+            config->entries[i].key = -1;
+            if (config_setting_lookup_int(entry, "key", &key)) {
+                config->entries[i].key = key;
+            }
             if (config_setting_lookup_string(entry, "offset", &offset)) {
                 config->entries[i].offset = strtoul(offset, NULL, 16);
             }
@@ -128,6 +133,9 @@ int configAddEntry(char *title, char *path, long offset) {
     // add path
     setting = config_setting_add(entry, "path", CONFIG_TYPE_STRING);
     config_setting_set_string(setting, path);
+    // add key
+    setting = config_setting_add(entry, "key", CONFIG_TYPE_INT);
+    config_setting_set_int(setting, -1);
     // add offset
     if (offset > 0) {
     }
@@ -137,6 +145,7 @@ int configAddEntry(char *title, char *path, long offset) {
 
     strncpy(config->entries[config->count].title, title, 512);
     strncpy(config->entries[config->count].path, path, 512);
+    config->entries[config->count].key = -1;
     config->count++;
 
     return 0;

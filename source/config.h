@@ -11,6 +11,7 @@ extern "C" {
 typedef struct {
     char title[512];
     char path[512];
+    int key;
     long offset;
 } boot_entry_s;
 

@@ -26,9 +26,11 @@ void __appInit() {
     acInit();
     ptmInit();
     amInit();
+    gfxInitDefault();
 }
 
 void __appExit() {
+    gfxExit();
     netloader_exit();
     configExit();
     amExit();
@@ -43,8 +45,6 @@ void __appExit() {
 }
 
 int main(int argc, char *argv[]) {
-
-    gfxInitDefault();
 
     if (netloader_init() != 0) {
         // fix SOC_Initialize
@@ -87,8 +87,6 @@ int main(int argc, char *argv[]) {
     if (fileExists(xmlPath))
         loadDescriptor(&me->descriptor, xmlPath);
     scanMenuEntry(me);
-
-    gfxExit();
 
     return bootApp(me->executablePath, &me->descriptor.executableMetadata, me->arg);
 }
