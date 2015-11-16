@@ -23,6 +23,16 @@ void svcSleep(u32 millis) {
     svcSleepThread(nano);
 }
 
+bool end_with(const char *str, const char c) {
+    return (str && *str && str[strlen(str) - 1] == c) ? true : false;
+}
+
+const char *get_filename_ext(const char *filename) {
+    const char *dot = strrchr(filename, '.');
+    if (!dot || dot == filename) return "";
+    return dot + 1;
+}
+
 char *get_button(int button) {
 
     switch (BIT(button)) {
@@ -81,8 +91,8 @@ void debug(const char *fmt, ...) {
             break;
 
         gfxClear();
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontTitle, s, 8, 32);
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontTitle, "Press any key to continue...", 8, 64);
+        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, s, 8, 32);
+        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "Press any key to continue...", 8, 64);
         gfxSwap();
     }
 }
@@ -105,9 +115,9 @@ bool confirm(int confirmButton, const char *fmt, ...) {
         }
 
         gfxClear();
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontTitle, s, 8, 32);
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontTitle, "Press any key to cancel...", 8, 64);
-        gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontTitle, 8, 80, "Press (%s) to confirm...", get_button(confirmButton));
+        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, s, 8, 32);
+        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "Press any key to cancel...", 8, 64);
+        gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontDefault, 8, 80, "Press (%s) to confirm...", get_button(confirmButton));
         gfxSwap();
     }
 }

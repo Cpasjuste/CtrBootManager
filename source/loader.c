@@ -2,7 +2,6 @@
 #include <string.h>
 
 #include "brahma.h"
-#include "picker.h"
 #include "utility.h"
 
 char boot_app[512];

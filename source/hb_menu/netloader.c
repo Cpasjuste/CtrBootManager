@@ -53,7 +53,7 @@ static int netloader_draw_progress(void) {
     //gfxSwapBuffers();
     //gspWaitForVBlank();
     gfxClear();
-    gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontTitle, 48, 48, "%s: %s", netloadedPath, progress);
+    gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontDefault, 48, 48, "%s: %s", netloadedPath, progress);
     gfxSwap();
 
     return 0;

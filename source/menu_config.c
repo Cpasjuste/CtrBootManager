@@ -112,7 +112,7 @@ int menu_config() {
         }
 
         gfxClear();
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontTitle, "*** Boot configuration ***", 120, 20);
+        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Boot configuration ***", 120, 20);
 
         int minX = 16;
         int maxX = 400 - 16;

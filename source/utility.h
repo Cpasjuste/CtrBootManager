@@ -21,6 +21,10 @@ bool fileExists(char *path);
 
 void svcSleep(u32 millis);
 
+const char *get_filename_ext(const char *filename);
+
+bool end_with(const char *str, const char c);
+
 char *get_button(int button);
 
 void debug(const char *fmt, ...);

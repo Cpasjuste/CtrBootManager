@@ -14,16 +14,6 @@
 
 picker_s *picker;
 
-bool end_with(const char *str, const char c) {
-    return (str && *str && str[strlen(str) - 1] == c) ? true : false;
-}
-
-const char *get_filename_ext(const char *filename) {
-    const char *dot = strrchr(filename, '.');
-    if (!dot || dot == filename) return "";
-    return dot + 1;
-}
-
 int alphasort(const void *p, const void *q) {
     const file_s *a = p;
     const file_s *b = q;
@@ -144,18 +134,20 @@ void pick_file(file_s *picked, const char *path) {
         }
 
         if (kDown & KEY_A) {
-            int index = picker->file_index;
-            if (!picker->files[index].isDir) {
-                if (confirm(0, "Launch \"%s\" ?", picker->files[index].name)) {
-                    strncpy(picked->name, picker->files[index].name, 512);
-                    strncpy(picked->path, picker->files[index].path, 512);
-                    picked->isDir = picker->files[index].isDir;
-                    picked->size = picker->files[index].size;
-                    break;
+            if (picker->file_count > 0) {
+                int index = picker->file_index;
+                if (!picker->files[index].isDir) {
+                    if (confirm(0, "Launch \"%s\" ?", picker->files[index].name)) {
+                        strncpy(picked->name, picker->files[index].name, 512);
+                        strncpy(picked->path, picker->files[index].path, 512);
+                        picked->isDir = picker->files[index].isDir;
+                        picked->size = picker->files[index].size;
+                        break;
+                    }
                 }
-            }
-            else {
-                get_dir(picker->files[index].path);
+                else {
+                    get_dir(picker->files[index].path);
+                }
             }
         } else if (kDown & KEY_X) {
             int index = picker->file_index;
@@ -195,7 +187,7 @@ void pick_file(file_s *picked, const char *path) {
         }
 
         gfxClear();
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontTitle, "*** Select a file ***", 130, 20);
+        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Select a file ***", 150, 20);
 
         int minX = 16;
         int maxX = 400 - 16;
@@ -214,7 +206,7 @@ void pick_file(file_s *picked, const char *path) {
                 gfxDrawRectangle(GFX_TOP, GFX_LEFT, (u8[]) {0xDC, 0xDC, 0xDC}, minX + 4, minY + 16 * y, maxX - 23, 15);
                 gfxDrawTextN(GFX_TOP, GFX_LEFT, &fontSelected, picker->files[i].name, 47, minX + 6, minY + 16 * y);
                 if (!picker->files[i].isDir) {
-                    gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontTitle, "Informations", minX + 6, 20);
+                    gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault, "Informations", minX + 6, 20);
                     gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault,
                                 "Press (A) to launch\nPress (X) to add to boot menu", minX + 12, 40);
                 }

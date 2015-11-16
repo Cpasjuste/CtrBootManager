@@ -63,7 +63,7 @@ int menu_more() {
         }
 
         gfxClear();
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontTitle, "*** Select an option ***", 120, 20);
+        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Select an option ***", 140, 20);
 
         int minX = 16;
         int maxX = 400 - 16;
@@ -86,7 +86,7 @@ int menu_more() {
         }
 
         // draw "help"
-        gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontTitle, "Informations", minX + 6, 20);
+        gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault, "Informations", minX + 6, 20);
         switch (menu_index) {
             case 0:
                 gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault,

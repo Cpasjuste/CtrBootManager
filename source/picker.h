@@ -21,10 +21,6 @@ typedef struct {
 
 void pick_file(file_s *picked, const char *path);
 
-const char *get_filename_ext(const char *filename);
-
-bool end_with(const char *str, const char c);
-
 #ifdef __cplusplus
 }
 #endif // __cplusplus

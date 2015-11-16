@@ -100,9 +100,9 @@ int menu_boot() {
         gfxClear();
 
         if (!timer) {
-            gfxDrawText(GFX_TOP, GFX_LEFT, &fontTitle, "*** Select a boot entry ***", 120, 20);
+            gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Select a boot entry ***", 140, 20);
         } else {
-            gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontTitle, 100, 20,
+            gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontDefault, 100, 20,
                          "*** Booting %s in %i ***", config->entries[boot_index].title,
                          config->timeout - elapsed);
         }
@@ -123,7 +123,7 @@ int menu_boot() {
                 gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontSelected, minX + 6, minY + (16 * i), "%s",
                              config->entries[i].title);
 
-                gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontTitle, "Informations", minX + 6, 20);
+                gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault, "Informations", minX + 6, 20);
                 gfxDrawTextf(GFX_BOTTOM, GFX_LEFT, &fontDefault, minX + 12, 40,
                              "Name: %s\nPath: %s\nOffset: 0x%lx\n\n\nPress (A) to launch\nPress (X) to remove entry\n",
                              config->entries[i].title,
@@ -137,7 +137,7 @@ int menu_boot() {
         if (boot_index == config->count) {
             gfxDrawRectangle(GFX_TOP, GFX_LEFT, (u8[]) {0xDC, 0xDC, 0xDC}, minX + 4, minY + (16 * i), maxX - 23, 15);
             gfxDrawText(GFX_TOP, GFX_LEFT, &fontSelected, "More...", minX + 6, minY + (16 * i));
-            gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontTitle, "Informations", minX + 6, 20);
+            gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault, "Informations", minX + 6, 20);
             gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault, "Show more options ...", minX + 12, 40);
         }
         else
