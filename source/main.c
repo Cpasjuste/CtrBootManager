@@ -24,7 +24,7 @@ void __appInit() {
     openSDArchive();
     hidInit();
     acInit();
-    ptmInit();
+    ptmuInit();
     amInit();
     gfxInitDefault();
 }
@@ -34,7 +34,7 @@ void __appExit() {
     netloader_exit();
     configExit();
     amExit();
-    ptmExit();
+    ptmuExit();
     acExit();
     hidExit();
     closeSDArchive();
@@ -56,7 +56,7 @@ int main(int argc, char *argv[]) {
 
     // offset potential issues caused by homebrew that just ran (from hb_menu)
     aptOpenSession();
-    APT_SetAppCpuTimeLimit(NULL, 0);
+    APT_SetAppCpuTimeLimit(0); //According to http://3dbrew.org/APT:SetApplicationCpuTimeLimit, this is oh so wrong...
     aptCloseSession();
 
     if (!boot_app_enabled) { // fix SOC_Initialize

@@ -7,15 +7,15 @@
 
 #include "gfx.h"
 
-FS_archive sdmcArchive;
+FS_Archive sdmcArchive;
 
 void openSDArchive() {
-    sdmcArchive = (FS_archive) {0x00000009, (FS_path) {PATH_EMPTY, 1, (u8 *) ""}};
-    FSUSER_OpenArchive(NULL, &sdmcArchive);
+    sdmcArchive = (FS_Archive) {0x00000009, (FS_Path) {PATH_EMPTY, 1, (u8 *) ""}};
+    FSUSER_OpenArchive(&sdmcArchive);
 }
 
 void closeSDArchive() {
-    FSUSER_CloseArchive(NULL, &sdmcArchive);
+    FSUSER_CloseArchive(&sdmcArchive);
 }
 
 void svcSleep(u32 millis) {
@@ -128,8 +128,8 @@ bool fileExists(char *path) {
     Result ret;
     Handle fileHandle;
 
-    ret = FSUSER_OpenFile(NULL, &fileHandle, sdmcArchive, FS_makePath(PATH_CHAR, path), FS_OPEN_READ,
-                          FS_ATTRIBUTE_NONE);
+    ret = FSUSER_OpenFile(&fileHandle, sdmcArchive, fsMakePath(PATH_ASCII, path), FS_OPEN_READ,
+                          0);
     if (ret != 0)return false;
 
     ret = FSFILE_Close(fileHandle);
@@ -155,7 +155,7 @@ void load_homemenu() {
 void reboot() {
     aptInit();
     aptOpenSession();
-    APT_HardwareResetAsync(NULL);
+    APT_HardwareResetAsync();
     aptCloseSession();
     aptExit();
 }
