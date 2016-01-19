@@ -5,6 +5,8 @@ CtrBootManager is a boot manager for some 3DS homebrew applications, like HBL an
 ##Dependencies
 - devkitpro-4.5 at least (ctrulib-1.0 at least)
 - libconfig in portlibs (tried with v1.5)
+- CakeBrah 
+  - This is configured as a submodule, so just be sure to have git init and update the module.
 
 ##Building
 ###The recommended way:
