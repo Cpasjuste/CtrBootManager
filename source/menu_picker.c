@@ -4,8 +4,8 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/dirent.h>
+#include <gui/gui.h>
 
-#include "gfx.h"
 #include "picker.h"
 #include "utility.h"
 #include "config.h"
@@ -186,15 +186,15 @@ void pick_file(file_s *picked, const char *path) {
             get_dir(picker->now_path);
         }
 
-        gfxClear();
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Select a file ***", 150, 20);
+        // gui top
+        guiStart(GFX_TOP);
+        guiDrawBg();
 
-        int minX = 16;
-        int maxX = 400 - 16;
-        int minY = 32;
-        int maxY = 240 - 16;
-        drawRect(GFX_TOP, GFX_LEFT, minX, minY, maxX, maxY, (u8) 0xFF, (u8) 0xFF, (u8) 0xFF);
-        minY += 20;
+        guiDrawTextCenter(GFX_TOP, config->fntDef, 8, 14, "Select a file");
+
+        char info[1024]; memset(info, 0, 1024);
+        int minX = 16; int maxX = 400 - 16;
+        int minY = 40;
 
         int i, y = 0;
         int page = picker->file_index / MAX_LINE;
@@ -203,19 +203,27 @@ void pick_file(file_s *picked, const char *path) {
                 break;
 
             if (i == picker->file_index) {
-                gfxDrawRectangle(GFX_TOP, GFX_LEFT, (u8[]) {0xDC, 0xDC, 0xDC}, minX + 4, minY + 16 * y, maxX - 23, 15);
-                gfxDrawTextN(GFX_TOP, GFX_LEFT, &fontSelected, picker->files[i].name, 47, minX + 6, minY + 16 * y);
+                guiDrawRect(config->highlight, minX + 4, minY + (16 * y), maxX - 23, 17);
+                guiDrawText(config->fntSel, minX + 6, minY + (16 * y), 14, picker->files[i].name);
                 if (!picker->files[i].isDir) {
-                    gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault, "Informations", minX + 6, 20);
-                    gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault,
-                                "Press (A) to launch\nPress (X) to add to boot menu", minX + 12, 40);
+                    strncpy(info, "Press (A) to launch\nPress (X) to add to boot menu", 1024);
                 }
             } else {
-                gfxDrawTextN(GFX_TOP, GFX_LEFT, &fontDefault, picker->files[i].name, 47, minX + 6, minY + 16 * y);
+                guiDrawText(config->fntDef, minX + 6, minY + (16 * y), 14, picker->files[i].name);
             }
             y++;
         }
-        gfxSwap();
+        guiEnd();
+        // gui top
+
+        // gui bottom
+        guiStart(GFX_BOTTOM);
+        guiDrawTextCenter(GFX_BOTTOM, config->fntDef, 20, 14, "Informations");
+        guiDrawText(config->fntDef, minX + 6, 70, 14, info);
+        guiEnd();
+        // gui bottom
+
+        guiSwap();
     }
     free(picker);
 }

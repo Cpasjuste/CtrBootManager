@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <malloc.h>
 
 #include <libconfig.h>
 #include "config.h"
@@ -12,14 +11,20 @@
 config_t cfg;
 config_setting_t *setting_root = NULL, *setting_boot = NULL, *setting_entries = NULL;
 
+int configCreate();
+
+void configThemeInit();
+
 int configInit() {
 
     config = malloc(sizeof(boot_config_s));
     memset(config, 0, sizeof(boot_config_s));
+
     config->timeout = 3;
     config->autobootfix = 100;
     config->index = 0;
     config->recovery = 2;
+    configThemeInit();
 
     config_init(&cfg);
 
@@ -82,7 +87,40 @@ int configInit() {
         }
     }
 
+    // "theme"
+    config_setting_t *setting_theme = config_lookup(&cfg, "boot_config.theme");
+    if (setting_theme != NULL) {
+
+        const char *color;
+        if (config_setting_lookup_string(setting_theme, "bgTop", &color)) {
+            config->bgTop = strtoul(color, NULL, 16);
+        }
+        if (config_setting_lookup_string(setting_theme, "bgBottom", &color)) {
+            config->bgBot = strtoul(color, NULL, 16);
+        }
+        if (config_setting_lookup_string(setting_theme, "highlight", &color)) {
+            config->highlight = strtoul(color, NULL, 16);
+        }
+        if (config_setting_lookup_string(setting_theme, "borders", &color)) {
+            config->borders = strtoul(color, NULL, 16);
+        }
+        if (config_setting_lookup_string(setting_theme, "font1", &color)) {
+            config->fntDef = strtoul(color, NULL, 16);
+        }
+        if (config_setting_lookup_string(setting_theme, "font2", &color)) {
+            config->fntSel = strtoul(color, NULL, 16);
+        }
+    }
     return 0;
+}
+
+void configThemeInit() {
+    config->bgTop = 0x6F0149FF;
+    config->bgBot = 0x6F0149FF;
+    config->highlight = 0xDCDCDCFF;
+    config->borders = 0xFFFFFFFF;
+    config->fntDef = 0xFFFFFFFF;
+    config->fntSel = 0x000000FF;
 }
 
 int configCreate() {

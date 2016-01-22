@@ -1,10 +1,11 @@
 #include <3ds.h>
 #include <stdio.h>
+#include <gui/gui.h>
 
-#include "hb_menu/gfx.h"
 #include "netloader.h"
 #include "utility.h"
 #include "loader.h"
+#include "config.h"
 
 int menu_netloader() {
 
@@ -21,9 +22,12 @@ int menu_netloader() {
                     "Press B to cancel\n",
             ip & 0xFF, (ip >> 8) & 0xFF, (ip >> 16) & 0xFF, (ip >> 24) & 0xFF, NETLOADER_PORT);
 
-    gfxClear();
-    gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontDefault, 48, 48, msg);
-    gfxSwap();
+    // gui top
+    guiStart(GFX_TOP);
+    guiDrawBg();
+    guiDrawText(config->fntDef, 48, 48, 14, msg);
+    guiEnd();
+    guiSwap();
 
     while (aptMainLoop()) {
 

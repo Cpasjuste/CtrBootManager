@@ -7,4 +7,6 @@ int load_3dsx(char *path);
 
 int load_bin(char *path, long offset);
 
+extern void __appExit();
+
 #endif // _loader_h_

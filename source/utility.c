@@ -1,21 +1,21 @@
 #include <3ds.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
 #include <CakeBrah/source/libkhax/khax.h>
+#include <gui/gui.h>
+#include "utility.h"
+#include "config.h"
 
-#include "gfx.h"
-
-FS_archive sdmcArchive;
+FS_Archive sdmcArchive;
 
 void openSDArchive() {
-    sdmcArchive = (FS_archive) {0x00000009, (FS_path) {PATH_EMPTY, 1, (u8 *) ""}};
-    FSUSER_OpenArchive(NULL, &sdmcArchive);
+    sdmcArchive = (FS_Archive) {0x00000009, (FS_Path) {PATH_EMPTY, 1, (u8 *) ""}};
+    FSUSER_OpenArchive(&sdmcArchive);
 }
 
 void closeSDArchive() {
-    FSUSER_CloseArchive(NULL, &sdmcArchive);
+    FSUSER_CloseArchive(&sdmcArchive);
 }
 
 void svcSleep(u32 millis) {
@@ -90,10 +90,12 @@ void debug(const char *fmt, ...) {
         if (hidKeysDown())
             break;
 
-        gfxClear();
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, s, 8, 32);
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "Press any key to continue...", 8, 64);
-        gfxSwap();
+        guiStart(GFX_TOP);
+        guiDrawBg();
+        guiDrawText(config->fntDef, 48, 48, 14,
+                    "%s\n\n\"Press any key to continue...", s);
+        guiEnd();
+        guiSwap();
     }
 }
 
@@ -114,11 +116,13 @@ bool confirm(int confirmButton, const char *fmt, ...) {
             return false;
         }
 
-        gfxClear();
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, s, 8, 32);
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "Press any key to cancel...", 8, 64);
-        gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontDefault, 8, 80, "Press (%s) to confirm...", get_button(confirmButton));
-        gfxSwap();
+        guiStart(GFX_TOP);
+        guiDrawBg();
+        guiDrawText(config->fntDef, 48, 48, 14,
+                    "Press any key to cancel...\n\nPress (%s) to confirm..",
+                    get_button(confirmButton));
+        guiEnd();
+        guiSwap();
     }
 }
 
@@ -128,8 +132,8 @@ bool fileExists(char *path) {
     Result ret;
     Handle fileHandle;
 
-    ret = FSUSER_OpenFile(NULL, &fileHandle, sdmcArchive, FS_makePath(PATH_CHAR, path), FS_OPEN_READ,
-                          FS_ATTRIBUTE_NONE);
+    ret = FSUSER_OpenFile(&fileHandle, sdmcArchive, fsMakePath(PATH_ASCII, path),
+                          FS_OPEN_READ, FS_ATTRIBUTE_READ_ONLY);
     if (ret != 0)return false;
 
     ret = FSFILE_Close(fileHandle);
@@ -155,7 +159,7 @@ void load_homemenu() {
 void reboot() {
     aptInit();
     aptOpenSession();
-    APT_HardwareResetAsync(NULL);
+    APT_HardwareResetAsync();
     aptCloseSession();
     aptExit();
 }

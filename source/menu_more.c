@@ -1,11 +1,12 @@
 #include <3ds.h>
 #include <string.h>
+#include <gui/gui.h>
 
-#include "gfx.h"
 #include "utility.h"
 #include "picker.h"
 #include "loader.h"
 #include "menu.h"
+#include "config.h"
 
 static char menu_item[5][512] = {"File browser", "Netload 3dsx", "Settings", "Reboot", "PowerOff"};
 static int menu_count = 5;
@@ -62,62 +63,66 @@ int menu_more() {
             return -1;
         }
 
-        gfxClear();
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Select an option ***", 140, 20);
+        // gui top
+        guiStart(GFX_TOP);
+        guiDrawBg();
 
-        int minX = 16;
-        int maxX = 400 - 16;
-        int minY = 32;
-        int maxY = 240 - 16;
-        drawRect(GFX_TOP, GFX_LEFT, minX, minY, maxX, maxY, 0xFF, 0xFF, 0xFF);
-        minY += 20;
+        guiDrawTextCenter(GFX_TOP, config->fntDef, 8, 14, "Select an option");
+
+        int minX = 16; int maxX = 400 - 16;
+        int minY = 40;
 
         int i;
         for (i = 0; i < menu_count; i++) {
             if (i >= menu_count) break;
 
             if (i == menu_index) {
-                gfxDrawRectangle(GFX_TOP, GFX_LEFT, (u8[]) {0xDC, 0xDC, 0xDC}, minX + 4, minY + (16 * i), maxX - 23,
-                                 15);
-                gfxDrawText(GFX_TOP, GFX_LEFT, &fontSelected, menu_item[i], minX + 6, minY + (16 * i));
+                guiDrawRect(config->highlight, minX + 4, minY + (16 * i), maxX - 23, 17);
+                guiDrawText(config->fntSel, minX + 6, minY + (16 * i), 14, menu_item[i]);
             }
-            else
-                gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, menu_item[i], minX + 6, minY + (16 * i));
+            else {
+                guiDrawText(config->fntDef, minX + 6, minY + (16 * i), 14, menu_item[i]);
+            }
         }
+        guiEnd();
+        // gui top
 
-        // draw "help"
-        gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault, "Informations", minX + 6, 20);
+        // gui bottom
+        guiStart(GFX_BOTTOM);
+        guiDrawTextCenter(GFX_BOTTOM, config->fntDef, 20, 14, "Informations");
         switch (menu_index) {
             case 0:
-                gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault,
-                            "Browse for a file to boot or add a boot entry", minX + 12, 40);
+                guiDrawText(config->fntDef, minX + 6, 70, 14,
+                            "Browse for a file to boot or add a boot entry");
                 break;
 
             case 1:
-                gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault,
-                            "Netload a file (3dsx) from the computer with 3dslink", minX + 12, 40);
+                guiDrawText(config->fntDef, minX + 6, 70, 14,
+                            "Netload a file (3dsx) from the computer\nwith 3dslink");
                 break;
 
             case 2:
-                gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault,
-                            "Edit boot settings", minX + 12, 40);
+                guiDrawText(config->fntDef, minX + 6, 70, 14,
+                            "Edit boot settings");
                 break;
 
             case 3:
-                gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault,
-                            "Reboot the 3ds...", minX + 12, 40);
+                guiDrawText(config->fntDef, minX + 6, 70, 14,
+                            "Reboot the 3ds...");
                 break;
 
             case 4:
-                gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault,
-                            "Shutdown the 3ds...", minX + 12, 40);
+                guiDrawText(config->fntDef, minX + 6, 70, 14,
+                            "Shutdown the 3ds...");
                 break;
 
             default:
                 break;
         }
+        guiEnd();
+        // gui bottom
 
-        gfxSwap();
+        guiSwap();
     }
     return -1;
 }

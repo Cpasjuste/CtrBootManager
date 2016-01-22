@@ -8,6 +8,7 @@
 #include "scanner.h"
 #include "utility.h"
 #include "menu.h"
+#include "gui.h"
 
 extern char boot_app[512];
 extern bool boot_app_enabled;
@@ -24,17 +25,15 @@ void __appInit() {
     openSDArchive();
     hidInit();
     acInit();
-    ptmInit();
+    ptmuInit();
     amInit();
-    gfxInitDefault();
 }
 
 void __appExit() {
-    gfxExit();
     netloader_exit();
     configExit();
     amExit();
-    ptmExit();
+    ptmuExit();
     acExit();
     hidExit();
     closeSDArchive();
@@ -56,8 +55,10 @@ int main(int argc, char *argv[]) {
 
     // offset potential issues caused by homebrew that just ran (from hb_menu)
     aptOpenSession();
-    APT_SetAppCpuTimeLimit(NULL, 0);
+    APT_SetAppCpuTimeLimit(0);
     aptCloseSession();
+
+    guiInit();
 
     if (!boot_app_enabled) { // fix SOC_Initialize
 
@@ -73,6 +74,8 @@ int main(int argc, char *argv[]) {
             }
         }
     }
+
+    guiExit();
 
     menuEntry_s *me = malloc(sizeof(menuEntry_s));
     strncpy(me->executablePath, boot_app, 128);

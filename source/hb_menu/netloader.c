@@ -12,7 +12,8 @@
 #include <stdio.h>
 
 #include <zlib.h>
-#include "gfx.h"
+#include <gui/gui.h>
+#include <config.h>
 
 #define ZLIB_CHUNK (16 * 1024)
 
@@ -52,9 +53,12 @@ static int netloader_draw_progress(void) {
     //gfxFlushBuffers();
     //gfxSwapBuffers();
     //gspWaitForVBlank();
-    gfxClear();
-    gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontDefault, 48, 48, "%s: %s", netloadedPath, progress);
-    gfxSwap();
+
+    guiStart(GFX_TOP);
+    guiDrawBg();
+    guiDrawText(config->fntDef, 48, 48, 14, "%s: %s", netloadedPath, progress);
+    guiEnd();
+    guiSwap();
 
     return 0;
 }
@@ -180,17 +184,14 @@ int netloader_draw_error(void) {
 int netloader_init(void) {
     SOC_buffer = memalign(0x1000, 0x100000);
     if (SOC_buffer == NULL) {
-        //debug("Err: SOC_buffer");
         return -1;
     }
 
-    Result ret = SOC_Initialize(SOC_buffer, 0x100000);
+    Result ret = socInit(SOC_buffer, 0x100000);
     if (ret != 0) {
-        // need to free the shared memory block if something goes wrong
-        SOC_Shutdown();
+        socExit();
         free(SOC_buffer);
         SOC_buffer = NULL;
-        //debug("Err: SOC_Initialize");
         return -1;
     }
     return 0;
@@ -404,7 +405,7 @@ int netloader_loop(void) {
 }
 
 int netloader_exit(void) {
-    Result ret = SOC_Shutdown();
+    Result ret = socExit();
     if (ret != 0)
         return -1;
     return 0;

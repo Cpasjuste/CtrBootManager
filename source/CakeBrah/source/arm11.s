@@ -11,8 +11,8 @@ arm11_start:
 hook1:
 	STMFD           SP!, {R0-R12,LR}
 
-	MOV             R0, #1000
-	BL              busy_spin
+	MOV             R0, #64
+	BL              delay
 
 	MOV             R0, #0
 	BL              pxi_send
@@ -29,14 +29,8 @@ hook1:
 	MOV             R0, #2
 	BL              pdn_send
 
-	MOV             R0, #16
-	BL              busy_spin
-
 	MOV             R0, #0
 	BL              pdn_send
-
-	MOV             R0, #16
-	BL              busy_spin
 
 	LDMFD           SP!, {R0-R12,LR}
 
@@ -53,6 +47,10 @@ hook2:
 	LDR             R2, pa_hijack_arm9_dst
 	MOV             R4, R2
 	BL              copy_mem
+	MOV		r0, #0
+	MCR		p15, 0, r0, c7, c10, 0	@ Clean data cache
+	MCR		p15, 0, r0, c7, c10, 4	@ Drain write buffer
+	MCR		p15, 0, r0, c7, c5, 0	@ Flush instruction cache
 	BX              R4
 
 @ exploits a race condition in order
@@ -122,12 +120,6 @@ loc_FFFF0AA8:
 locret_FFFF0AC0:
 	BX              LR
 
-busy_spin:
-	SUBS            R0, R0, #2
-	NOP
-	BGT             busy_spin
-	BX              LR
-
 pdn_send:
 	LDR             R1, va_pdn_regs
 	STRB            R0, [R1, #0x230]
@@ -140,6 +132,15 @@ loc_1020D0:
 	TST             R2, #2
 	BNE             loc_1020D0
 	STR             R0, [R1,#8]
+
+	MOV             R0, #4
+delay:
+	MOV             R1, #0
+        MCR             p15, 0, r1, c7, c10, 0
+	MCR             p15, 0, r1, c7, c10, 4
+loop:
+	SUBS            R0, #1
+	BGT             loop
 	BX              LR
 
 pxi_recv:

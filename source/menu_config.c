@@ -1,8 +1,8 @@
 #include <3ds.h>
 #include <time.h>
+#include <gui/gui.h>
 
 #include "config.h"
-#include "gfx.h"
 #include "utility.h"
 
 void keyLeft(int index) {
@@ -111,28 +111,32 @@ int menu_config() {
             return 0;
         }
 
-        gfxClear();
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Boot configuration ***", 120, 20);
+        // gui top
+        guiStart(GFX_TOP);
+        guiDrawBg();
+        guiDrawTextCenter(GFX_TOP, config->fntDef, 8, 14, "Boot configuration");
 
-        int minX = 16;
-        int maxX = 400 - 16;
-        int minY = 32;
-        int maxY = 240 - 16;
-        drawRect(GFX_TOP, GFX_LEFT, minX, minY, maxX, maxY, (u8) 0xFF, (u8) 0xFF, (u8) 0xFF);
-        minY += 20;
+        int minX = 16; int maxX = 400 - 16;
+        int minY = 40;
 
-        gfxDrawRectangle(GFX_TOP, GFX_LEFT, (u8[]) {0xDC, 0xDC, 0xDC}, minX + 4, minY + (16 * menu_index), maxX - 23,
-                         15);
-        gfxDrawTextf(GFX_TOP, GFX_LEFT, menu_index == 0 ? &fontSelected : &fontDefault, minX + 6, minY,
-                     "Timeout:  %i", config->timeout);
-        gfxDrawTextf(GFX_TOP, GFX_LEFT, menu_index == 1 ? &fontSelected : &fontDefault, minX + 6, minY + 16,
-                     "Default:  %s", config->entries[config->index].title);
-        gfxDrawTextf(GFX_TOP, GFX_LEFT, menu_index == 2 ? &fontSelected : &fontDefault, minX + 6, minY + 32,
-                     "Bootfix:  %i", config->autobootfix);
-        gfxDrawTextf(GFX_TOP, GFX_LEFT, menu_index == 3 ? &fontSelected : &fontDefault, minX + 6, minY + 48,
-                     "Recovery key:  %s", get_button(config->recovery));
+        guiDrawRect(config->highlight, minX + 4, minY + (16 * menu_index), maxX - 23, 17);
 
-        gfxSwap();
+        guiDrawText(menu_index == 0 ? config->fntSel : config->fntDef,
+                    minX + 6, minY, 14, "Timeout:  %i", config->timeout);
+
+        guiDrawText(menu_index == 1 ? config->fntSel : config->fntDef,
+                    minX + 6, minY + 16, 14, "Default:  %s", config->entries[config->index].title);
+
+        guiDrawText(menu_index == 2 ? config->fntSel : config->fntDef,
+                    minX + 6, minY + 32, 14, "Bootfix:  %i", config->autobootfix);
+
+        guiDrawText(menu_index == 3 ? config->fntSel : config->fntDef,
+                    minX + 6, minY + 48, 14, "Recovery key:  %s", get_button(config->recovery));
+
+        guiEnd();
+        // gui top
+
+        guiSwap();
     }
     return -1;
 }
