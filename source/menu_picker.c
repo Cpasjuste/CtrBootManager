@@ -193,7 +193,7 @@ void pick_file(file_s *picked, const char *path) {
         int maxX = 400 - 16;
         int minY = 32;
         int maxY = 240 - 16;
-        drawRect(GFX_TOP, GFX_LEFT, minX, minY, maxX, maxY, (u8) 0xFF, (u8) 0xFF, (u8) 0xFF);
+        drawRectColor(GFX_TOP, GFX_LEFT, minX, minY, maxX, maxY, config->borders);
         minY += 20;
 
         int i, y = 0;
@@ -203,7 +203,7 @@ void pick_file(file_s *picked, const char *path) {
                 break;
 
             if (i == picker->file_index) {
-                gfxDrawRectangle(GFX_TOP, GFX_LEFT, (u8[]) {0xDC, 0xDC, 0xDC}, minX + 4, minY + 16 * y, maxX - 23, 15);
+                gfxDrawRectangle(GFX_TOP, GFX_LEFT, config->highlight, minX + 4, minY + 16 * y, maxX - 23, 15);
                 gfxDrawTextN(GFX_TOP, GFX_LEFT, &fontSelected, picker->files[i].name, 47, minX + 6, minY + 16 * y);
                 if (!picker->files[i].isDir) {
                     gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault, "Informations", minX + 6, 20);

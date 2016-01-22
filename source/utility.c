@@ -6,6 +6,7 @@
 #include <CakeBrah/source/libkhax/khax.h>
 
 #include "gfx.h"
+#include "config.h"
 
 FS_archive sdmcArchive;
 
@@ -21,6 +22,10 @@ void closeSDArchive() {
 void svcSleep(u32 millis) {
     u64 nano = millis * 1000000;
     svcSleepThread(nano);
+}
+
+void gfxClear() {
+    gfxClearCustom(config->bgTop1, config->bgTop2, config->bgBot);
 }
 
 bool end_with(const char *str, const char c) {
@@ -128,8 +133,8 @@ bool fileExists(char *path) {
     Result ret;
     Handle fileHandle;
 
-    ret = FSUSER_OpenFile(NULL, &fileHandle, sdmcArchive, FS_makePath(PATH_CHAR, path), FS_OPEN_READ,
-                          FS_ATTRIBUTE_NONE);
+    ret = FSUSER_OpenFile(NULL, &fileHandle, sdmcArchive, FS_makePath(PATH_CHAR, path),
+                          FS_OPEN_READ, FS_ATTRIBUTE_NONE);
     if (ret != 0)return false;
 
     ret = FSFILE_Close(fileHandle);

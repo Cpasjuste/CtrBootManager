@@ -22,6 +22,13 @@ typedef struct {
     int recovery;
     int count;
     boot_entry_s entries[12];
+    u8 bgTop1[3];
+    u8 bgTop2[3];
+    u8 bgBot[3];
+    u8 highlight[3];
+    u8 borders[3];
+    u8 fntDef[3];
+    u8 fntSel[3];
 } boot_config_s;
 
 boot_config_s *config;

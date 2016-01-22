@@ -1,6 +1,5 @@
 #include <3ds.h>
 #include <string.h>
-
 #include "brahma.h"
 #include "utility.h"
 
@@ -17,12 +16,10 @@ int load_3dsx(char *path) {
 int load_bin(char *path, long offset) {
 
     if (brahma_init()) {
-        int rc = load_arm9_payload_offset(path, (u32)offset, 0x10000);
-        if (rc != 1) {
+        if (load_arm9_payload_offset(path, (u32) offset, 0x10000) != 1) {
             debug("Err: Couldn't load arm9 payload...\n");
             return -1;
         }
-
         firm_reboot();
         brahma_exit();
 

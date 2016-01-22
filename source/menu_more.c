@@ -6,6 +6,7 @@
 #include "picker.h"
 #include "loader.h"
 #include "menu.h"
+#include "config.h"
 
 static char menu_item[5][512] = {"File browser", "Netload 3dsx", "Settings", "Reboot", "PowerOff"};
 static int menu_count = 5;
@@ -69,7 +70,7 @@ int menu_more() {
         int maxX = 400 - 16;
         int minY = 32;
         int maxY = 240 - 16;
-        drawRect(GFX_TOP, GFX_LEFT, minX, minY, maxX, maxY, 0xFF, 0xFF, 0xFF);
+        drawRectColor(GFX_TOP, GFX_LEFT, minX, minY, maxX, maxY, config->borders);
         minY += 20;
 
         int i;
@@ -77,7 +78,7 @@ int menu_more() {
             if (i >= menu_count) break;
 
             if (i == menu_index) {
-                gfxDrawRectangle(GFX_TOP, GFX_LEFT, (u8[]) {0xDC, 0xDC, 0xDC}, minX + 4, minY + (16 * i), maxX - 23,
+                gfxDrawRectangle(GFX_TOP, GFX_LEFT, config->highlight, minX + 4, minY + (16 * i), maxX - 23,
                                  15);
                 gfxDrawText(GFX_TOP, GFX_LEFT, &fontSelected, menu_item[i], minX + 6, minY + (16 * i));
             }

@@ -2,24 +2,32 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <malloc.h>
 
 #include <libconfig.h>
 #include "config.h"
 #include "utility.h"
+#include "font.h"
 
 #define CONFIG_PATH "/boot.cfg"
 config_t cfg;
 config_setting_t *setting_root = NULL, *setting_boot = NULL, *setting_entries = NULL;
 
+int configCreate();
+
+void configThemeInit();
+
+void setColor(u8 *cfgColor, const char *color);
+
 int configInit() {
 
     config = malloc(sizeof(boot_config_s));
     memset(config, 0, sizeof(boot_config_s));
+
     config->timeout = 3;
     config->autobootfix = 100;
     config->index = 0;
     config->recovery = 2;
+    configThemeInit();
 
     config_init(&cfg);
 
@@ -82,7 +90,54 @@ int configInit() {
         }
     }
 
+    // "theme"
+    config_setting_t *setting_theme = config_lookup(&cfg, "boot_config.theme");
+    if (setting_theme != NULL) {
+
+        const char *str;
+        if (config_setting_lookup_string(setting_theme, "bgTop1", &str)) {
+            setColor(config->bgTop1, str);
+        }
+        if (config_setting_lookup_string(setting_theme, "bgTop2", &str)) {
+            setColor(config->bgTop2, str);
+        }
+        if (config_setting_lookup_string(setting_theme, "bgBottom", &str)) {
+            setColor(config->bgBot, str);
+        }
+        if (config_setting_lookup_string(setting_theme, "highlight", &str)) {
+            setColor(config->highlight, str);
+        }
+        if (config_setting_lookup_string(setting_theme, "borders", &str)) {
+            setColor(config->borders, str);
+        }
+        if (config_setting_lookup_string(setting_theme, "font1", &str)) {
+            setColor(config->fntDef, str);
+        }
+        if (config_setting_lookup_string(setting_theme, "font2", &str)) {
+            setColor(config->fntSel, str);
+        }
+        memcpy(fontDefault.color, config->fntDef, sizeof(u8[3]));
+        memcpy(fontSelected.color, config->fntSel, sizeof(u8[3]));
+    }
+
     return 0;
+}
+
+void setColor(u8 *cfgColor, const char *color) {
+    long l = strtoul(color, NULL, 16);
+    cfgColor[0] = (u8) (l >> 16 & 0xFF);
+    cfgColor[1] = (u8) (l >> 8 & 0xFF);
+    cfgColor[2] = (u8) (l & 0xFF);
+}
+
+void configThemeInit() {
+    memcpy(config->bgTop1, (u8[3]) {0x4a, 0x00, 0x31}, sizeof(u8[3]));
+    memcpy(config->bgTop2, (u8[3]) {0x6f, 0x01, 0x49}, sizeof(u8[3]));
+    memcpy(config->bgBot, (u8[3]) {0x6f, 0x01, 0x49}, sizeof(u8[3]));
+    memcpy(config->highlight, (u8[3]) {0xdc, 0xdc, 0xdc}, sizeof(u8[3]));
+    memcpy(config->borders, (u8[3]) {0xff, 0xff, 0xff}, sizeof(u8[3]));
+    memcpy(config->fntDef, (u8[3]) {0xff, 0xff, 0xff}, sizeof(u8[3]));
+    memcpy(config->fntSel, (u8[3]) {0x00, 0x00, 0x00}, sizeof(u8[3]));
 }
 
 int configCreate() {

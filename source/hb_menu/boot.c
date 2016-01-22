@@ -69,8 +69,8 @@ bool isNinjhax2(void) {
 int bootApp(char *executablePath, executableMetadata_s *em, char *arg) {
     // open file that we're going to boot up
     fsInit();
-    FSUSER_OpenFileDirectly(NULL, &hbFileHandle, sdmcArchive, FS_makePath(PATH_CHAR, executablePath), FS_OPEN_READ,
-                            FS_ATTRIBUTE_NONE);
+    FSUSER_OpenFileDirectly(NULL, &hbFileHandle, sdmcArchive, FS_makePath(PATH_CHAR, executablePath),
+                            FS_OPEN_READ, FS_ATTRIBUTE_NONE);
     fsExit();
 
     // set argv/argc

@@ -5,6 +5,7 @@
 #include "netloader.h"
 #include "utility.h"
 #include "loader.h"
+#include "config.h"
 
 int menu_netloader() {
 

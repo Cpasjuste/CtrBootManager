@@ -1,0 +1,6 @@
+[submodule "source/CakeBrah"]
+	path = source/CakeBrah
+	url = https://github.com/mid-kid/CakeBrah.git
+[submodule "source/libctru"]
+	path = source/libctru
+	url = https://github.com/smealum/ctrulib.git

@@ -17,6 +17,19 @@ int autoBootFix(int index) {
         gfxSwap();
         delay--;
     }
+
+    hidScanInput();
+    u32 k = hidKeysHeld();
+    if(k) {
+        int i = 0;
+        for(i=0; i<config->count; i++) {
+            if(k & BIT(config->entries[i].key)) {
+                index = i;
+                break;
+            }
+        }
+    }
+
     return load(config->entries[index].path,
                 config->entries[index].offset);
 }
@@ -27,20 +40,9 @@ int menu_boot() {
     int boot_index = config->index;
 
     hidScanInput();
-
-    u32 k = hidKeysHeld();
-    if (config->timeout < 0 || k & BIT(config->recovery)) { // disable autoboot
+    if (config->timeout < 0 || hidKeysHeld() & BIT(config->recovery)) { // disable autoboot
         timer = false;
     } else if (config->timeout == 0) { // autoboot
-        if(k) {
-            int i = 0;
-            for(i=0; i<config->count; i++) {
-                if(k & BIT(config->entries[i].key)) {
-                    boot_index = i;
-                    break;
-                }
-            }
-        }
         return autoBootFix(boot_index);
     }
 
@@ -102,14 +104,14 @@ int menu_boot() {
         if (!timer) {
             gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Select a boot entry ***", 140, 20);
         } else {
-            gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontDefault, 100, 20,
+            gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontDefault, 120, 20,
                          "*** Booting %s in %i ***", config->entries[boot_index].title,
                          config->timeout - elapsed);
         }
 
         int minX = 16, maxX = 400 - 16;
         int minY = 32, maxY = 240 - 8;
-        drawRect(GFX_TOP, GFX_LEFT, minX, minY, maxX, maxY, 0xFF, 0xFF, 0xFF);
+        drawRectColor(GFX_TOP, GFX_LEFT, minX, minY, maxX, maxY, config->borders);
         minY += 20;
 
         int i;
@@ -118,7 +120,7 @@ int menu_boot() {
                 break;
 
             if (i == boot_index) {
-                gfxDrawRectangle(GFX_TOP, GFX_LEFT, (u8[]) {0xDC, 0xDC, 0xDC}, minX + 4, minY + (16 * i), maxX - 23,
+                gfxDrawRectangle(GFX_TOP, GFX_LEFT, config->highlight, minX + 4, minY + (16 * i), maxX - 23,
                                  15);
                 gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontSelected, minX + 6, minY + (16 * i), "%s",
                              config->entries[i].title);
@@ -135,7 +137,7 @@ int menu_boot() {
         }
 
         if (boot_index == config->count) {
-            gfxDrawRectangle(GFX_TOP, GFX_LEFT, (u8[]) {0xDC, 0xDC, 0xDC}, minX + 4, minY + (16 * i), maxX - 23, 15);
+            gfxDrawRectangle(GFX_TOP, GFX_LEFT, config->highlight, minX + 4, minY + (16 * i), maxX - 23, 15);
             gfxDrawText(GFX_TOP, GFX_LEFT, &fontSelected, "More...", minX + 6, minY + (16 * i));
             gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault, "Informations", minX + 6, 20);
             gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault, "Show more options ...", minX + 12, 40);

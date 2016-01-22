@@ -8,7 +8,9 @@ typedef float (*gfxWaveCallback)(void *p, u16 x);
 //rendering stuff
 void drawLine(gfxScreen_t screen, gfx3dSide_t side, int x1, int y1, int x2, int y2, char r, char g, char b);
 
-void drawRect(gfxScreen_t screen, gfx3dSide_t side, int x1, int y1, int x2, int y2, char r, char g, char b);
+//void drawRect(gfxScreen_t screen, gfx3dSide_t side, int x1, int y1, int x2, int y2, char r, char g, char b);
+
+void drawRectColor(gfxScreen_t screen, gfx3dSide_t side, int x1, int y1, int x2, int y2, u8 *color);
 
 void drawFillRect(gfxScreen_t screen, gfx3dSide_t side, int x1, int y1, int x2, int y2, char r, char g, char b);
 
@@ -40,8 +42,10 @@ void gfxDrawRectangle(gfxScreen_t screen, gfx3dSide_t side, u8 rgbColor[3], s16 
 void gfxDrawWave(gfxScreen_t screen, gfx3dSide_t side, u8 rgbColorStart[3], u8 rgbColorEnd[3], u16 level, u16 amplitude,
                  u16 width, gfxWaveCallback cb, void *p);
 
-void gfxClearColor(u8 rgbColor[3]);
+//void gfxClearColor(u8 rgbColor[3]);
 
-void gfxClear();
+void gfxClearCustom(u8 top1[3], u8 top2[3], u8 bot[8]);
+
+//void gfxClear();
 
 void gfxSwap();

@@ -118,10 +118,10 @@ int menu_config() {
         int maxX = 400 - 16;
         int minY = 32;
         int maxY = 240 - 16;
-        drawRect(GFX_TOP, GFX_LEFT, minX, minY, maxX, maxY, (u8) 0xFF, (u8) 0xFF, (u8) 0xFF);
+        drawRectColor(GFX_TOP, GFX_LEFT, minX, minY, maxX, maxY, config->borders);
         minY += 20;
 
-        gfxDrawRectangle(GFX_TOP, GFX_LEFT, (u8[]) {0xDC, 0xDC, 0xDC}, minX + 4, minY + (16 * menu_index), maxX - 23,
+        gfxDrawRectangle(GFX_TOP, GFX_LEFT, config->highlight, minX + 4, minY + (16 * menu_index), maxX - 23,
                          15);
         gfxDrawTextf(GFX_TOP, GFX_LEFT, menu_index == 0 ? &fontSelected : &fontDefault, minX + 6, minY,
                      "Timeout:  %i", config->timeout);

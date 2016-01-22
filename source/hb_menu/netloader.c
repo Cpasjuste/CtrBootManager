@@ -12,6 +12,7 @@
 #include <stdio.h>
 
 #include <zlib.h>
+#include <config.h>
 #include "gfx.h"
 
 #define ZLIB_CHUNK (16 * 1024)
@@ -180,17 +181,14 @@ int netloader_draw_error(void) {
 int netloader_init(void) {
     SOC_buffer = memalign(0x1000, 0x100000);
     if (SOC_buffer == NULL) {
-        //debug("Err: SOC_buffer");
         return -1;
     }
 
     Result ret = SOC_Initialize(SOC_buffer, 0x100000);
     if (ret != 0) {
-        // need to free the shared memory block if something goes wrong
         SOC_Shutdown();
         free(SOC_buffer);
         SOC_buffer = NULL;
-        //debug("Err: SOC_Initialize");
         return -1;
     }
     return 0;
