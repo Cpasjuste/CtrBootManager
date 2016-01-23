@@ -119,6 +119,9 @@ int configInit() {
         if (config_setting_lookup_string(setting_theme, "bgImgTop", &path)) {
             strncpy(config->bgImgTop, path, 512);
         }
+        if (config_setting_lookup_string(setting_theme, "bgImgBot", &path)) {
+            strncpy(config->bgImgBot, path, 512);
+        }
         memcpy(fontDefault.color, config->fntDef, sizeof(u8[3]));
         memcpy(fontSelected.color, config->fntSel, sizeof(u8[3]));
     }

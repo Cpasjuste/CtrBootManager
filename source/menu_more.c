@@ -14,7 +14,9 @@ static char menu_item[5][512] = {"File browser", "Netload 3dsx", "Settings", "Re
 static int menu_count = 5;
 static int menu_index = 0;
 bool imgError2 = false;
+bool imgErrorBot2 = false;
 u8* bgImgTopBuff;
+u8* bgImgBotBuff;
 
 int menu_choose() {
 
@@ -36,7 +38,7 @@ int menu_more() {
     FILE *file = fopen(config->bgImgTop,"rb");
     if (file == NULL){
         imgError2 = true;
-        goto imgSkip;
+        goto imgSkipTop;
     }
     fseek(file,0,SEEK_END);
     off_t bgImgTopSize = ftell(file);
@@ -44,12 +46,35 @@ int menu_more() {
     bgImgTopBuff = malloc(bgImgTopSize);
     if(!bgImgTopBuff){
         imgError2 = true;
-        goto imgSkip;
+        goto imgSkipTop;
     }
     off_t bgImgTopRead = fread(bgImgTopBuff,1,bgImgTopSize,file);
     fclose(file);
     if(bgImgTopSize!=bgImgTopRead){
         imgError2 = true;
+        goto imgSkipTop;
+    }
+    //skip top image if loading fails
+    imgSkipTop: ;
+
+    //Load User set bgImgBot
+    FILE *fileBot = fopen(config->bgImgBot,"rb");
+    if (fileBot == NULL){
+        imgErrorBot2 = true;
+        goto imgSkip;
+    }
+    fseek(fileBot,0,SEEK_END);
+    off_t bgImgBotSize = ftell(fileBot);
+    fseek(fileBot,0,SEEK_SET);
+    bgImgBotBuff = malloc(bgImgBotSize);
+    if(!bgImgBotBuff){
+        imgErrorBot2 = true;
+        goto imgSkip;
+    }
+    off_t bgImgBotRead = fread(bgImgBotBuff,1,bgImgBotSize,fileBot);
+    fclose(fileBot);
+    if(bgImgBotSize!=bgImgBotRead){
+        imgErrorBot2 = true;
         goto imgSkip;
     }
 
@@ -96,6 +121,9 @@ int menu_more() {
         if(!imgError2){
             memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), bgImgTopBuff, bgImgTopSize);
             memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), bgImgTopBuff, bgImgTopSize);
+        }
+        if (!imgErrorBot2){
+            memcpy(gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL), bgImgBotBuff, bgImgBotSize);
         }
 
         gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Select an option ***", 140, 20);

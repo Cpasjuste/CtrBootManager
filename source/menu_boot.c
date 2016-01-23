@@ -2,6 +2,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 #include "gfx.h"
 #include "config.h"
@@ -12,7 +13,9 @@
 
 bool timer = true;
 bool imgError = false;
+bool imgErrorBot = false;
 u8* bgImgTopBuff;
+u8* bgImgBotBuff;
 
 int autoBootFix(int index) {
 
@@ -56,7 +59,7 @@ int menu_boot() {
     FILE *file = fopen(config->bgImgTop,"rb");
     if (file == NULL){
         imgError = true;
-        goto imgSkip;
+        goto imgSkipTop;
     }
     fseek(file,0,SEEK_END);
     off_t bgImgTopSize = ftell(file);
@@ -64,12 +67,35 @@ int menu_boot() {
     bgImgTopBuff = malloc(bgImgTopSize);
     if(!bgImgTopBuff){
         imgError = true;
-        goto imgSkip;
+        goto imgSkipTop;
     }
     off_t bgImgTopRead = fread(bgImgTopBuff,1,bgImgTopSize,file);
     fclose(file);
     if(bgImgTopSize!=bgImgTopRead){
         imgError = true;
+        goto imgSkipTop;
+    }
+    //skip top image if loading fails
+    imgSkipTop: ;
+
+    //Load User set bgImgBot
+    FILE *fileBot = fopen(config->bgImgBot,"rb");
+    if (fileBot == NULL){
+        imgErrorBot = true;
+        goto imgSkip;
+    }
+    fseek(fileBot,0,SEEK_END);
+    off_t bgImgBotSize = ftell(fileBot);
+    fseek(fileBot,0,SEEK_SET);
+    bgImgBotBuff = malloc(bgImgBotSize);
+    if(!bgImgBotBuff){
+        imgErrorBot = true;
+        goto imgSkip;
+    }
+    off_t bgImgBotRead = fread(bgImgBotBuff,1,bgImgBotSize,fileBot);
+    fclose(fileBot);
+    if(bgImgBotSize!=bgImgBotRead){
+        imgErrorBot = true;
         goto imgSkip;
     }
 
@@ -128,10 +154,14 @@ int menu_boot() {
 
         gfxClear();
 
-        if(!imgError){
+        if (!imgError){
             memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), bgImgTopBuff, bgImgTopSize);
             memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), bgImgTopBuff, bgImgTopSize);
         }
+        if (!imgErrorBot){
+            memcpy(gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL), bgImgBotBuff, bgImgBotSize);
+        }
+
         if (!timer) {
             gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Select a boot entry ***", 140, 20);
         } else {
