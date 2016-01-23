@@ -1,5 +1,7 @@
 #include <3ds.h>
 #include <time.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #include "gfx.h"
 #include "config.h"
@@ -9,6 +11,8 @@
 #include "font.h"
 
 bool timer = true;
+bool imgError = false;
+u8* bgImgTopBuff;
 
 int autoBootFix(int index) {
 
@@ -48,6 +52,29 @@ int menu_boot() {
 
     time(&start);
 
+    //Load User set bgImgTop
+    FILE *file = fopen(config->bgImgTop,"rb");
+    if (file == NULL){
+        imgError = true;
+        goto imgSkip;
+    }
+    fseek(file,0,SEEK_END);
+    off_t bgImgTopSize = ftell(file);
+    fseek(file,0,SEEK_SET);
+    bgImgTopBuff = malloc(bgImgTopSize);
+    if(!bgImgTopBuff){
+        imgError = true;
+        goto imgSkip;
+    }
+    off_t bgImgTopRead = fread(bgImgTopBuff,1,bgImgTopSize,file);
+    fclose(file);
+    if(bgImgTopSize!=bgImgTopRead){
+        imgError = true;
+        goto imgSkip;
+    }
+
+    //On Img Error skip image code
+    imgSkip:
     while (aptMainLoop()) {
         hidScanInput();
         u32 kDown = hidKeysDown();
@@ -101,6 +128,10 @@ int menu_boot() {
 
         gfxClear();
 
+        if(!imgError){
+            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), bgImgTopBuff, bgImgTopSize);
+            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), bgImgTopBuff, bgImgTopSize);
+        }
         if (!timer) {
             gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Select a boot entry ***", 140, 20);
         } else {

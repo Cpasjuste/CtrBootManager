@@ -94,7 +94,7 @@ int configInit() {
     config_setting_t *setting_theme = config_lookup(&cfg, "boot_config.theme");
     if (setting_theme != NULL) {
 
-        const char *str;
+        const char *str, *path;
         if (config_setting_lookup_string(setting_theme, "bgTop1", &str)) {
             setColor(config->bgTop1, str);
         }
@@ -115,6 +115,9 @@ int configInit() {
         }
         if (config_setting_lookup_string(setting_theme, "font2", &str)) {
             setColor(config->fntSel, str);
+        }
+        if (config_setting_lookup_string(setting_theme, "bgImgTop", &path)) {
+            strncpy(config->bgImgTop, path, 512);
         }
         memcpy(fontDefault.color, config->fntDef, sizeof(u8[3]));
         memcpy(fontSelected.color, config->fntSel, sizeof(u8[3]));

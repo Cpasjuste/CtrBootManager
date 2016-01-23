@@ -1,5 +1,7 @@
 #include <3ds.h>
 #include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #include "gfx.h"
 #include "utility.h"
@@ -11,6 +13,8 @@
 static char menu_item[5][512] = {"File browser", "Netload 3dsx", "Settings", "Reboot", "PowerOff"};
 static int menu_count = 5;
 static int menu_index = 0;
+bool imgError2 = false;
+u8* bgImgTopBuff;
 
 int menu_choose() {
 
@@ -27,6 +31,30 @@ int menu_choose() {
 int menu_more() {
 
     menu_index = 0;
+
+    //Load User set bgImgTop
+    FILE *file = fopen(config->bgImgTop,"rb");
+    if (file == NULL){
+        imgError2 = true;
+        goto imgSkip;
+    }
+    fseek(file,0,SEEK_END);
+    off_t bgImgTopSize = ftell(file);
+    fseek(file,0,SEEK_SET);
+    bgImgTopBuff = malloc(bgImgTopSize);
+    if(!bgImgTopBuff){
+        imgError2 = true;
+        goto imgSkip;
+    }
+    off_t bgImgTopRead = fread(bgImgTopBuff,1,bgImgTopSize,file);
+    fclose(file);
+    if(bgImgTopSize!=bgImgTopRead){
+        imgError2 = true;
+        goto imgSkip;
+    }
+
+    //On Img Error skip image code
+    imgSkip:
 
     while (aptMainLoop()) {
 
@@ -64,6 +92,12 @@ int menu_more() {
         }
 
         gfxClear();
+
+        if(!imgError2){
+            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), bgImgTopBuff, bgImgTopSize);
+            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), bgImgTopBuff, bgImgTopSize);
+        }
+
         gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Select an option ***", 140, 20);
 
         int minX = 16;

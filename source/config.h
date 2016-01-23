@@ -29,6 +29,7 @@ typedef struct {
     u8 borders[3];
     u8 fntDef[3];
     u8 fntSel[3];
+    char bgImgTop[512]
 } boot_config_s;
 
 boot_config_s *config;
