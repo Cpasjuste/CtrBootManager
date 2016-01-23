@@ -5,18 +5,14 @@
 
 #include "gfx.h"
 #include "utility.h"
+#include "config.h"
 #include "picker.h"
 #include "loader.h"
 #include "menu.h"
-#include "config.h"
 
 static char menu_item[5][512] = {"File browser", "Netload 3dsx", "Settings", "Reboot", "PowerOff"};
 static int menu_count = 5;
 static int menu_index = 0;
-bool imgError2 = false;
-bool imgErrorBot2 = false;
-u8* bgImgTopBuff;
-u8* bgImgBotBuff;
 
 int menu_choose() {
 
@@ -33,53 +29,6 @@ int menu_choose() {
 int menu_more() {
 
     menu_index = 0;
-
-    //Load User set bgImgTop
-    FILE *file = fopen(config->bgImgTop,"rb");
-    if (file == NULL){
-        imgError2 = true;
-        goto imgSkipTop;
-    }
-    fseek(file,0,SEEK_END);
-    off_t bgImgTopSize = ftell(file);
-    fseek(file,0,SEEK_SET);
-    bgImgTopBuff = malloc(bgImgTopSize);
-    if(!bgImgTopBuff){
-        imgError2 = true;
-        goto imgSkipTop;
-    }
-    off_t bgImgTopRead = fread(bgImgTopBuff,1,bgImgTopSize,file);
-    fclose(file);
-    if(bgImgTopSize!=bgImgTopRead){
-        imgError2 = true;
-        goto imgSkipTop;
-    }
-    //skip top image if loading fails
-    imgSkipTop: ;
-
-    //Load User set bgImgBot
-    FILE *fileBot = fopen(config->bgImgBot,"rb");
-    if (fileBot == NULL){
-        imgErrorBot2 = true;
-        goto imgSkip;
-    }
-    fseek(fileBot,0,SEEK_END);
-    off_t bgImgBotSize = ftell(fileBot);
-    fseek(fileBot,0,SEEK_SET);
-    bgImgBotBuff = malloc(bgImgBotSize);
-    if(!bgImgBotBuff){
-        imgErrorBot2 = true;
-        goto imgSkip;
-    }
-    off_t bgImgBotRead = fread(bgImgBotBuff,1,bgImgBotSize,fileBot);
-    fclose(fileBot);
-    if(bgImgBotSize!=bgImgBotRead){
-        imgErrorBot2 = true;
-        goto imgSkip;
-    }
-
-    //On Img Error skip image code
-    imgSkip:
 
     while (aptMainLoop()) {
 
@@ -118,20 +67,18 @@ int menu_more() {
 
         gfxClear();
 
-        if(!imgError2){
-            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), bgImgTopBuff, bgImgTopSize);
-            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), bgImgTopBuff, bgImgTopSize);
+        if (!config->imgError){
+            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), config->bgImgTopBuff, config->bgImgTopSize);
+            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), config->bgImgTopBuff, config->bgImgTopSize);
         }
-        if (!imgErrorBot2){
-            memcpy(gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL), bgImgBotBuff, bgImgBotSize);
+        if (!config->imgErrorBot){
+            memcpy(gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL), config->bgImgBotBuff, config->bgImgBotSize);
         }
 
         gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Select an option ***", 140, 20);
 
-        int minX = 16;
-        int maxX = 400 - 16;
-        int minY = 32;
-        int maxY = 240 - 16;
+        int minX = 16, maxX = 400 - 16;
+        int minY = 32, maxY = 240 - 8;
         drawRectColor(GFX_TOP, GFX_LEFT, minX, minY, maxX, maxY, config->borders);
         minY += 20;
 

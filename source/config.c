@@ -144,6 +144,7 @@ void configThemeInit() {
     memcpy(config->borders, (u8[3]) {0xff, 0xff, 0xff}, sizeof(u8[3]));
     memcpy(config->fntDef, (u8[3]) {0xff, 0xff, 0xff}, sizeof(u8[3]));
     memcpy(config->fntSel, (u8[3]) {0x00, 0x00, 0x00}, sizeof(u8[3]));
+    loadImages();
 }
 
 int configCreate() {
@@ -288,4 +289,52 @@ void configExit() {
         config_destroy(&cfg);
         free(config);
     }
+}
+
+void loadImages(){
+	config->imgError = false;
+	config->imgErrorBot = false;
+	FILE *file = fopen(config->bgImgTop,"rb");
+    if (file == NULL){
+        config->imgError = true;
+        goto imgSkipTop;
+    }
+    fseek(file,0,SEEK_END);
+    config->bgImgTopSize = ftell(file);
+    fseek(file,0,SEEK_SET);
+    config->bgImgTopBuff = malloc(config->bgImgTopSize);
+    if(!config->bgImgTopBuff){
+        config->imgError = true;
+        goto imgSkipTop;
+    }
+    off_t bgImgTopRead = fread(config->bgImgTopBuff,1,config->bgImgTopSize,file);
+    fclose(file);
+    if(config->bgImgTopSize!=bgImgTopRead){
+        config->imgError = true;
+        goto imgSkipTop;
+    }
+
+    //skip loading top image on error
+    imgSkipTop: ;
+
+    FILE *fileBot = fopen(config->bgImgBot,"rb");
+    if (fileBot == NULL){
+        config->imgErrorBot = true;
+        goto imgSkip;
+    }
+    fseek(fileBot,0,SEEK_END);
+    config->bgImgBotSize = ftell(fileBot);
+    fseek(fileBot,0,SEEK_SET);
+    config->bgImgBotBuff = malloc(config->bgImgBotSize);
+    if(!config->bgImgBotBuff){
+        config->imgErrorBot = true;
+        goto imgSkip;
+    }
+    off_t bgImgBotRead = fread(config->bgImgBotBuff,1,config->bgImgBotSize,fileBot);
+    fclose(fileBot);
+    if(config->bgImgBotSize!=bgImgBotRead){
+        config->imgErrorBot = true;
+        goto imgSkip;
+    }
+    imgSkip: ;
 }
