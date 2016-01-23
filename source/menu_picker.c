@@ -187,6 +187,13 @@ void pick_file(file_s *picked, const char *path) {
         }
 
         gfxClear();
+        if (!config->imgError){
+            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), config->bgImgTopBuff, config->bgImgTopSize);
+            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), config->bgImgTopBuff, config->bgImgTopSize);
+        }
+        if (!config->imgErrorBot){
+            memcpy(gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL), config->bgImgBotBuff, config->bgImgBotSize);
+        }
         gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Select a file ***", 150, 20);
 
         int minX = 16;

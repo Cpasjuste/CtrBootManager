@@ -12,10 +12,7 @@
 #include "font.h"
 
 bool timer = true;
-bool imgError = false;
-bool imgErrorBot = false;
-u8* bgImgTopBuff;
-u8* bgImgBotBuff;
+
 
 int autoBootFix(int index) {
 
@@ -55,52 +52,6 @@ int menu_boot() {
 
     time(&start);
 
-    //Load User set bgImgTop
-    FILE *file = fopen(config->bgImgTop,"rb");
-    if (file == NULL){
-        imgError = true;
-        goto imgSkipTop;
-    }
-    fseek(file,0,SEEK_END);
-    off_t bgImgTopSize = ftell(file);
-    fseek(file,0,SEEK_SET);
-    bgImgTopBuff = malloc(bgImgTopSize);
-    if(!bgImgTopBuff){
-        imgError = true;
-        goto imgSkipTop;
-    }
-    off_t bgImgTopRead = fread(bgImgTopBuff,1,bgImgTopSize,file);
-    fclose(file);
-    if(bgImgTopSize!=bgImgTopRead){
-        imgError = true;
-        goto imgSkipTop;
-    }
-    //skip top image if loading fails
-    imgSkipTop: ;
-
-    //Load User set bgImgBot
-    FILE *fileBot = fopen(config->bgImgBot,"rb");
-    if (fileBot == NULL){
-        imgErrorBot = true;
-        goto imgSkip;
-    }
-    fseek(fileBot,0,SEEK_END);
-    off_t bgImgBotSize = ftell(fileBot);
-    fseek(fileBot,0,SEEK_SET);
-    bgImgBotBuff = malloc(bgImgBotSize);
-    if(!bgImgBotBuff){
-        imgErrorBot = true;
-        goto imgSkip;
-    }
-    off_t bgImgBotRead = fread(bgImgBotBuff,1,bgImgBotSize,fileBot);
-    fclose(fileBot);
-    if(bgImgBotSize!=bgImgBotRead){
-        imgErrorBot = true;
-        goto imgSkip;
-    }
-
-    //On Img Error skip image code
-    imgSkip:
     while (aptMainLoop()) {
         hidScanInput();
         u32 kDown = hidKeysDown();
@@ -154,12 +105,12 @@ int menu_boot() {
 
         gfxClear();
 
-        if (!imgError){
-            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), bgImgTopBuff, bgImgTopSize);
-            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), bgImgTopBuff, bgImgTopSize);
+        if (!config->imgError){
+            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), config->bgImgTopBuff, config->bgImgTopSize);
+            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), config->bgImgTopBuff, config->bgImgTopSize);
         }
-        if (!imgErrorBot){
-            memcpy(gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL), bgImgBotBuff, bgImgBotSize);
+        if (!config->imgErrorBot){
+            memcpy(gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL), config->bgImgBotBuff, config->bgImgBotSize);
         }
 
         if (!timer) {

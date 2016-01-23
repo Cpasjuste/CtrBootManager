@@ -124,6 +124,7 @@ int configInit() {
         }
         memcpy(fontDefault.color, config->fntDef, sizeof(u8[3]));
         memcpy(fontSelected.color, config->fntSel, sizeof(u8[3]));
+        loadImages();
     }
 
     return 0;
@@ -144,7 +145,6 @@ void configThemeInit() {
     memcpy(config->borders, (u8[3]) {0xff, 0xff, 0xff}, sizeof(u8[3]));
     memcpy(config->fntDef, (u8[3]) {0xff, 0xff, 0xff}, sizeof(u8[3]));
     memcpy(config->fntSel, (u8[3]) {0x00, 0x00, 0x00}, sizeof(u8[3]));
-    loadImages();
 }
 
 int configCreate() {
