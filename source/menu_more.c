@@ -1,11 +1,8 @@
 #include <3ds.h>
 #include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
 
 #include "gfx.h"
 #include "utility.h"
-#include "config.h"
 #include "picker.h"
 #include "loader.h"
 #include "menu.h"
@@ -28,6 +25,7 @@ int menu_choose() {
 
 int menu_more() {
 
+    int i = 0;
     menu_index = 0;
 
     while (aptMainLoop()) {
@@ -65,67 +63,30 @@ int menu_more() {
             return -1;
         }
 
-        gfxClear();
+        drawBg();
+        drawTitle("*** Select an option ***");
 
-        if (!config->imgError) {
-            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), config->bgImgTopBuff,
-                   (size_t) config->bgImgTopSize);
-            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), config->bgImgTopBuff,
-                   (size_t) config->bgImgTopSize);
-        }
-        if (!config->imgErrorBot) {
-            memcpy(gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL), config->bgImgBotBuff,
-                   (size_t) config->bgImgBotSize);
-        }
-
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Select an option ***", 140, 25);
-
-        int minX = 16, maxX = 400 - 16;
-        int minY = 32, maxY = 240 - 8;
-        drawRectColor(GFX_TOP, GFX_LEFT, minX, minY, maxX, maxY, config->borders);
-        minY += 20;
-
-        int i;
         for (i = 0; i < menu_count; i++) {
-            if (i >= menu_count) break;
-
-            if (i == menu_index) {
-                gfxDrawRectangle(GFX_TOP, GFX_LEFT, config->highlight, minX + 4, minY + (16 * i), maxX - 23,
-                                 15);
-                gfxDrawText(GFX_TOP, GFX_LEFT, &fontSelected, menu_item[i], minX + 6, minY + (16 * i));
-            }
-            else
-                gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, menu_item[i], minX + 6, minY + (16 * i));
+            drawItem(i == menu_index, 16 * i, menu_item[i]);
         }
 
         // draw "help"
-        gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault, "Informations", minX + 6, 20);
         switch (menu_index) {
             case 0:
-                gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault,
-                            "Browse for a file to boot or add a boot entry", minX + 12, 40);
+                drawInfo("Browse for a file to boot or add a boot entry");
                 break;
-
             case 1:
-                gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault,
-                            "Netload a file (3dsx) from the computer with 3dslink", minX + 12, 40);
+                drawInfo("Netload a file (3dsx) from the computer with 3dslink");
                 break;
-
             case 2:
-                gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault,
-                            "Edit boot settings", minX + 12, 40);
+                drawInfo("Edit boot settings");
                 break;
-
             case 3:
-                gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault,
-                            "Reboot the 3ds...", minX + 12, 40);
+                drawInfo("Reboot the 3ds...");
                 break;
-
             case 4:
-                gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault,
-                            "Shutdown the 3ds...", minX + 12, 40);
+                drawInfo("Shutdown the 3ds...");
                 break;
-
             default:
                 break;
         }

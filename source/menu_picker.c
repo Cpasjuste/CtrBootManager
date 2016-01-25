@@ -9,6 +9,7 @@
 #include "picker.h"
 #include "utility.h"
 #include "config.h"
+#include "menu.h"
 
 #define MAX_LINE 11
 
@@ -186,25 +187,8 @@ void pick_file(file_s *picked, const char *path) {
             get_dir(picker->now_path);
         }
 
-        gfxClear();
-        if (!config->imgError) {
-            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), config->bgImgTopBuff,
-                   (size_t) config->bgImgTopSize);
-            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), config->bgImgTopBuff,
-                   (size_t) config->bgImgTopSize);
-        }
-        if (!config->imgErrorBot) {
-            memcpy(gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL), config->bgImgBotBuff,
-                   (size_t) config->bgImgBotSize);
-        }
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Select a file ***", 150, 25);
-
-        int minX = 16;
-        int maxX = 400 - 16;
-        int minY = 32;
-        int maxY = 240 - 16;
-        drawRectColor(GFX_TOP, GFX_LEFT, minX, minY, maxX, maxY, config->borders);
-        minY += 20;
+        drawBg();
+        drawTitle("*** Select a file ***");
 
         int i, y = 0;
         int page = picker->file_index / MAX_LINE;
@@ -212,16 +196,10 @@ void pick_file(file_s *picked, const char *path) {
             if (i >= picker->file_count)
                 break;
 
-            if (i == picker->file_index) {
-                gfxDrawRectangle(GFX_TOP, GFX_LEFT, config->highlight, minX + 4, minY + 16 * y, maxX - 23, 15);
-                gfxDrawTextN(GFX_TOP, GFX_LEFT, &fontSelected, picker->files[i].name, 47, minX + 6, minY + 16 * y);
-                if (!picker->files[i].isDir) {
-                    gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault, "Informations", minX + 6, 20);
-                    gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault,
-                                "Press (A) to launch\nPress (X) to add to boot menu", minX + 12, 40);
-                }
-            } else {
-                gfxDrawTextN(GFX_TOP, GFX_LEFT, &fontDefault, picker->files[i].name, 47, minX + 6, minY + 16 * y);
+            drawItemN(i == picker->file_index, 47, 16 * i, picker->files[i].name);
+            if (i == picker->file_index && !picker->files[i].isDir) {
+                drawInfo("Press (A) to launch\nPress (X) to add to boot menu");
+
             }
             y++;
         }

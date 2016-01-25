@@ -286,10 +286,10 @@ void configWrite() {
 
 void configExit() {
     if (config) {
-        if(config->bgImgTopBuff) {
+        if (config->bgImgTopBuff) {
             free(config->bgImgTopBuff);
         }
-        if(config->bgImgBotBuff) {
+        if (config->bgImgBotBuff) {
             free(config->bgImgBotBuff);
         }
         config_destroy(&cfg);

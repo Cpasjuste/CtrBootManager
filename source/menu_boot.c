@@ -1,7 +1,5 @@
 #include <3ds.h>
 #include <time.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include "gfx.h"
 #include "config.h"
@@ -40,6 +38,7 @@ int menu_boot() {
 
     time_t start, end, elapsed = 0;
     int boot_index = config->index;
+    int i = 0;
 
     hidScanInput();
     if (config->timeout < 0 || hidKeysHeld() & BIT(config->recovery)) { // disable autoboot
@@ -101,62 +100,26 @@ int menu_boot() {
             }
         }
 
-        gfxClear();
-
-        if (!config->imgError) {
-            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), config->bgImgTopBuff,
-                   (size_t) config->bgImgTopSize);
-            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), config->bgImgTopBuff,
-                   (size_t) config->bgImgTopSize);
-        }
-        if (!config->imgErrorBot) {
-            memcpy(gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL), config->bgImgBotBuff,
-                   (size_t) config->bgImgBotSize);
-        }
-
+        drawBg();
         if (!timer) {
-            gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Select a boot entry ***", 140, 25);
+            drawTitle("*** Select a boot entry ***");
         } else {
-            gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontDefault, 120, 20,
-                         "*** Booting %s in %i ***", config->entries[boot_index].title,
-                         config->timeout - elapsed);
+            drawTitle("*** Booting %s in %i ***", config->entries[boot_index].title, config->timeout - elapsed);
         }
 
-        int minX = 16, maxX = 400 - 16;
-        int minY = 32, maxY = 240 - 8;
-        drawRectColor(GFX_TOP, GFX_LEFT, minX, minY, maxX, maxY, config->borders);
-        minY += 20;
-
-        int i;
         for (i = 0; i < config->count; i++) {
-            if (i >= config->count)
-                break;
-
+            drawItem(i == boot_index, 16 * i, config->entries[i].title);
             if (i == boot_index) {
-                gfxDrawRectangle(GFX_TOP, GFX_LEFT, config->highlight, minX + 4, minY + (16 * i), maxX - 23,
-                                 15);
-                gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontSelected, minX + 6, minY + (16 * i), "%s",
-                             config->entries[i].title);
-
-                gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault, "Informations", minX + 6, 20);
-                gfxDrawTextf(GFX_BOTTOM, GFX_LEFT, &fontDefault, minX + 12, 40,
-                             "Name: %s\nPath: %s\nOffset: 0x%lx\n\n\nPress (A) to launch\nPress (X) to remove entry\n",
-                             config->entries[i].title,
-                             config->entries[i].path,
-                             config->entries[i].offset);
+                drawInfo("Name: %s\nPath: %s\nOffset: 0x%lx\n\n\nPress (A) to launch\nPress (X) to remove entry\n",
+                         config->entries[i].title,
+                         config->entries[i].path,
+                         config->entries[i].offset);
             }
-            else
-                gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, config->entries[i].title, minX + 6, minY + (16 * i));
         }
-
+        drawItem(boot_index == config->count, 16 * i, "More...");
         if (boot_index == config->count) {
-            gfxDrawRectangle(GFX_TOP, GFX_LEFT, config->highlight, minX + 4, minY + (16 * i), maxX - 23, 15);
-            gfxDrawText(GFX_TOP, GFX_LEFT, &fontSelected, "More...", minX + 6, minY + (16 * i));
-            gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault, "Informations", minX + 6, 20);
-            gfxDrawText(GFX_BOTTOM, GFX_LEFT, &fontDefault, "Show more options ...", minX + 12, 40);
+            drawInfo("Show more options ...");
         }
-        else
-            gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "More...", minX + 6, minY + (16 * i));
 
         gfxSwap();
     }

@@ -1,10 +1,10 @@
 #include <3ds.h>
 #include <time.h>
-#include <string.h>
 
 #include "config.h"
 #include "gfx.h"
 #include "utility.h"
+#include "menu.h"
 
 void keyLeft(int index) {
 
@@ -112,34 +112,13 @@ int menu_config() {
             return 0;
         }
 
-        gfxClear();
-        if (!config->imgError) {
-            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), config->bgImgTopBuff,
-                   (size_t) config->bgImgTopSize);
-            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), config->bgImgTopBuff,
-                   (size_t) config->bgImgTopSize);
-        }
-        if (!config->imgErrorBot) {
-            memcpy(gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL), config->bgImgBotBuff,
-                   (size_t) config->bgImgBotSize);
-        }
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Boot configuration ***", 120, 25);
+        drawBg();
+        drawTitle("*** Boot configuration ***");
 
-        int minX = 16, maxX = 400 - 16;
-        int minY = 32, maxY = 240 - 8;
-        drawRectColor(GFX_TOP, GFX_LEFT, minX, minY, maxX, maxY, config->borders);
-        minY += 20;
-
-        gfxDrawRectangle(GFX_TOP, GFX_LEFT, config->highlight, minX + 4, minY + (16 * menu_index), maxX - 23,
-                         15);
-        gfxDrawTextf(GFX_TOP, GFX_LEFT, menu_index == 0 ? &fontSelected : &fontDefault, minX + 6, minY,
-                     "Timeout:  %i", config->timeout);
-        gfxDrawTextf(GFX_TOP, GFX_LEFT, menu_index == 1 ? &fontSelected : &fontDefault, minX + 6, minY + 16,
-                     "Default:  %s", config->entries[config->index].title);
-        gfxDrawTextf(GFX_TOP, GFX_LEFT, menu_index == 2 ? &fontSelected : &fontDefault, minX + 6, minY + 32,
-                     "Bootfix:  %i", config->autobootfix);
-        gfxDrawTextf(GFX_TOP, GFX_LEFT, menu_index == 3 ? &fontSelected : &fontDefault, minX + 6, minY + 48,
-                     "Recovery key:  %s", get_button(config->recovery));
+        drawItem(menu_index == 0, 0, "Timeout:  %i", config->timeout);
+        drawItem(menu_index == 1, 16, "Default:  %s", config->entries[config->index].title);
+        drawItem(menu_index == 2, 32, "Bootfix:  %i", config->autobootfix);
+        drawItem(menu_index == 3, 48, "Recovery key:  %s", get_button(config->recovery));
 
         gfxSwap();
     }
