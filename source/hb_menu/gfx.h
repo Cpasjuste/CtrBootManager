@@ -42,10 +42,8 @@ void gfxDrawRectangle(gfxScreen_t screen, gfx3dSide_t side, u8 rgbColor[3], s16 
 void gfxDrawWave(gfxScreen_t screen, gfx3dSide_t side, u8 rgbColorStart[3], u8 rgbColorEnd[3], u16 level, u16 amplitude,
                  u16 width, gfxWaveCallback cb, void *p);
 
-//void gfxClearColor(u8 rgbColor[3]);
+void gfxClearTop(u8 top1[3], u8 top2[3]);
 
-void gfxClearCustom(u8 top1[3], u8 top2[3], u8 bot[8]);
-
-//void gfxClear();
+void gfxClearBot(u8 bot[8]);
 
 void gfxSwap();

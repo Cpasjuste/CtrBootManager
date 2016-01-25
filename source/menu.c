@@ -8,22 +8,21 @@
 #include <stdio.h>
 #include <string.h>
 #include "config.h"
-#include "utility.h"
 #include "menu.h"
 
 void drawBg() {
 
-    gfxClear();
-
     if (!config->imgError) {
         memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), config->bgImgTopBuff,
                (size_t) config->bgImgTopSize);
-        memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), config->bgImgTopBuff,
-               (size_t) config->bgImgTopSize);
+    } else {
+        gfxClearTop(config->bgTop1, config->bgTop2);
     }
     if (!config->imgErrorBot) {
         memcpy(gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL), config->bgImgBotBuff,
                (size_t) config->bgImgBotSize);
+    } else {
+        gfxClearBot(config->bgBot);
     }
     drawRectColor(GFX_TOP, GFX_LEFT, MENU_MIN_X, MENU_MIN_Y - 20, MENU_MAX_X, MENU_MAX_Y, config->borders);
 }

@@ -27,6 +27,7 @@ void __appInit() {
     ptmInit();
     amInit();
     gfxInitDefault();
+    gfxSet3D(false);
 }
 
 void __appExit() {

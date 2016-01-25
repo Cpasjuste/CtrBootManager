@@ -7,6 +7,7 @@
 
 #include "gfx.h"
 #include "config.h"
+#include "menu.h"
 
 FS_archive sdmcArchive;
 
@@ -22,10 +23,6 @@ void closeSDArchive() {
 void svcSleep(u32 millis) {
     u64 nano = millis * 1000000;
     svcSleepThread(nano);
-}
-
-void gfxClear() {
-    gfxClearCustom(config->bgTop1, config->bgTop2, config->bgBot);
 }
 
 bool end_with(const char *str, const char c) {
@@ -95,16 +92,9 @@ void debug(const char *fmt, ...) {
         if (hidKeysDown())
             break;
 
-        gfxClear();
-        if (!config->imgError) {
-            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), config->bgImgTopBuff, config->bgImgTopSize);
-            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), config->bgImgTopBuff, config->bgImgTopSize);
-        }
-        if (!config->imgErrorBot) {
-            memcpy(gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL), config->bgImgBotBuff, config->bgImgBotSize);
-        }
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, s, 8, 32);
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "Press any key to continue...", 8, 64);
+        drawBg();
+        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, s, MENU_MIN_X + 16, MENU_MIN_Y + 16);
+        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "Press any key to continue...", MENU_MIN_X + 16, MENU_MIN_Y + 64);
         gfxSwap();
     }
 }
@@ -126,17 +116,10 @@ bool confirm(int confirmButton, const char *fmt, ...) {
             return false;
         }
 
-        gfxClear();
-        if (!config->imgError) {
-            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), config->bgImgTopBuff, config->bgImgTopSize);
-            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), config->bgImgTopBuff, config->bgImgTopSize);
-        }
-        if (!config->imgErrorBot) {
-            memcpy(gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL), config->bgImgBotBuff, config->bgImgBotSize);
-        }
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, s, 8, 32);
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "Press any key to cancel...", 8, 64);
-        gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontDefault, 8, 80, "Press (%s) to confirm...", get_button(confirmButton));
+        drawBg();
+        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, s, MENU_MIN_X + 16, MENU_MIN_Y + 16);
+        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "Press any key to cancel...", MENU_MIN_X + 16, MENU_MIN_Y + 64);
+        gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontDefault, MENU_MIN_X + 16, MENU_MIN_Y + 84, "Press (%s) to confirm...", get_button(confirmButton));
         gfxSwap();
     }
 }

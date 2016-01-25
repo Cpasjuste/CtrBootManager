@@ -17,8 +17,6 @@ void openSDArchive();
 
 void closeSDArchive();
 
-void gfxClear();
-
 bool fileExists(char *path);
 
 void svcSleep(u32 millis);

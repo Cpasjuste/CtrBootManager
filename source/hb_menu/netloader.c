@@ -13,6 +13,7 @@
 
 #include <zlib.h>
 #include <config.h>
+#include <menu.h>
 #include "gfx.h"
 
 #define ZLIB_CHUNK (16 * 1024)
@@ -53,8 +54,9 @@ static int netloader_draw_progress(void) {
     //gfxFlushBuffers();
     //gfxSwapBuffers();
     //gspWaitForVBlank();
-    gfxClear();
-    gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontDefault, 48, 48, "%s: %s", netloadedPath, progress);
+    drawBg();
+    gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontDefault, MENU_MIN_X + 16, MENU_MIN_Y + 16,
+                 "%s: %s", netloadedPath, progress);
     gfxSwap();
 
     return 0;
