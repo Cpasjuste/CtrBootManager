@@ -1,5 +1,6 @@
 #include <3ds.h>
 #include <time.h>
+#include <string.h>
 
 #include "config.h"
 #include "gfx.h"
@@ -112,12 +113,17 @@ int menu_config() {
         }
 
         gfxClear();
+        if (!config->imgError){
+            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), config->bgImgTopBuff, config->bgImgTopSize);
+            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), config->bgImgTopBuff, config->bgImgTopSize);
+        }
+        if (!config->imgErrorBot){
+            memcpy(gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL), config->bgImgBotBuff, config->bgImgBotSize);
+        }
         gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Boot configuration ***", 120, 20);
 
-        int minX = 16;
-        int maxX = 400 - 16;
-        int minY = 32;
-        int maxY = 240 - 16;
+        int minX = 16, maxX = 400 - 16;
+        int minY = 32, maxY = 240 - 8;
         drawRectColor(GFX_TOP, GFX_LEFT, minX, minY, maxX, maxY, config->borders);
         minY += 20;
 

@@ -1,12 +1,14 @@
 #include <3ds.h>
 #include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 #include "gfx.h"
 #include "utility.h"
+#include "config.h"
 #include "picker.h"
 #include "loader.h"
 #include "menu.h"
-#include "config.h"
 
 static char menu_item[5][512] = {"File browser", "Netload 3dsx", "Settings", "Reboot", "PowerOff"};
 static int menu_count = 5;
@@ -64,12 +66,19 @@ int menu_more() {
         }
 
         gfxClear();
+
+        if (!config->imgError){
+            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), config->bgImgTopBuff, config->bgImgTopSize);
+            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), config->bgImgTopBuff, config->bgImgTopSize);
+        }
+        if (!config->imgErrorBot){
+            memcpy(gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL), config->bgImgBotBuff, config->bgImgBotSize);
+        }
+
         gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Select an option ***", 140, 20);
 
-        int minX = 16;
-        int maxX = 400 - 16;
-        int minY = 32;
-        int maxY = 240 - 16;
+        int minX = 16, maxX = 400 - 16;
+        int minY = 32, maxY = 240 - 8;
         drawRectColor(GFX_TOP, GFX_LEFT, minX, minY, maxX, maxY, config->borders);
         minY += 20;
 

@@ -94,7 +94,7 @@ int configInit() {
     config_setting_t *setting_theme = config_lookup(&cfg, "boot_config.theme");
     if (setting_theme != NULL) {
 
-        const char *str;
+        const char *str, *path;
         if (config_setting_lookup_string(setting_theme, "bgTop1", &str)) {
             setColor(config->bgTop1, str);
         }
@@ -116,8 +116,15 @@ int configInit() {
         if (config_setting_lookup_string(setting_theme, "font2", &str)) {
             setColor(config->fntSel, str);
         }
+        if (config_setting_lookup_string(setting_theme, "bgImgTop", &path)) {
+            strncpy(config->bgImgTop, path, 512);
+        }
+        if (config_setting_lookup_string(setting_theme, "bgImgBot", &path)) {
+            strncpy(config->bgImgBot, path, 512);
+        }
         memcpy(fontDefault.color, config->fntDef, sizeof(u8[3]));
         memcpy(fontSelected.color, config->fntSel, sizeof(u8[3]));
+        loadImages();
     }
 
     return 0;
@@ -282,4 +289,52 @@ void configExit() {
         config_destroy(&cfg);
         free(config);
     }
+}
+
+void loadImages(){
+	config->imgError = false;
+	config->imgErrorBot = false;
+	FILE *file = fopen(config->bgImgTop,"rb");
+    if (file == NULL){
+        config->imgError = true;
+        goto imgSkipTop;
+    }
+    fseek(file,0,SEEK_END);
+    config->bgImgTopSize = ftell(file);
+    fseek(file,0,SEEK_SET);
+    config->bgImgTopBuff = malloc(config->bgImgTopSize);
+    if(!config->bgImgTopBuff){
+        config->imgError = true;
+        goto imgSkipTop;
+    }
+    off_t bgImgTopRead = fread(config->bgImgTopBuff,1,config->bgImgTopSize,file);
+    fclose(file);
+    if(config->bgImgTopSize!=bgImgTopRead){
+        config->imgError = true;
+        goto imgSkipTop;
+    }
+
+    //skip loading top image on error
+    imgSkipTop: ;
+
+    FILE *fileBot = fopen(config->bgImgBot,"rb");
+    if (fileBot == NULL){
+        config->imgErrorBot = true;
+        goto imgSkip;
+    }
+    fseek(fileBot,0,SEEK_END);
+    config->bgImgBotSize = ftell(fileBot);
+    fseek(fileBot,0,SEEK_SET);
+    config->bgImgBotBuff = malloc(config->bgImgBotSize);
+    if(!config->bgImgBotBuff){
+        config->imgErrorBot = true;
+        goto imgSkip;
+    }
+    off_t bgImgBotRead = fread(config->bgImgBotBuff,1,config->bgImgBotSize,fileBot);
+    fclose(fileBot);
+    if(config->bgImgBotSize!=bgImgBotRead){
+        config->imgErrorBot = true;
+        goto imgSkip;
+    }
+    imgSkip: ;
 }

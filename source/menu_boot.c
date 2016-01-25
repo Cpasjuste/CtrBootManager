@@ -1,5 +1,8 @@
 #include <3ds.h>
 #include <time.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 #include "gfx.h"
 #include "config.h"
@@ -9,6 +12,7 @@
 #include "font.h"
 
 bool timer = true;
+
 
 int autoBootFix(int index) {
 
@@ -100,6 +104,14 @@ int menu_boot() {
         }
 
         gfxClear();
+
+        if (!config->imgError){
+            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), config->bgImgTopBuff, config->bgImgTopSize);
+            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), config->bgImgTopBuff, config->bgImgTopSize);
+        }
+        if (!config->imgErrorBot){
+            memcpy(gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL), config->bgImgBotBuff, config->bgImgBotSize);
+        }
 
         if (!timer) {
             gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Select a boot entry ***", 140, 20);
