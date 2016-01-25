@@ -33,8 +33,8 @@ typedef struct {
     char bgImgBot[512];
     bool imgError;
     bool imgErrorBot;
-    u8* bgImgTopBuff;
-    u8* bgImgBotBuff;
+    u8 *bgImgTopBuff;
+    u8 *bgImgBotBuff;
     off_t bgImgTopSize;
     off_t bgImgBotSize;
 } boot_config_s;

@@ -96,11 +96,11 @@ void debug(const char *fmt, ...) {
             break;
 
         gfxClear();
-        if (!config->imgError){
+        if (!config->imgError) {
             memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), config->bgImgTopBuff, config->bgImgTopSize);
             memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), config->bgImgTopBuff, config->bgImgTopSize);
         }
-        if (!config->imgErrorBot){
+        if (!config->imgErrorBot) {
             memcpy(gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL), config->bgImgBotBuff, config->bgImgBotSize);
         }
         gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, s, 8, 32);
@@ -127,11 +127,11 @@ bool confirm(int confirmButton, const char *fmt, ...) {
         }
 
         gfxClear();
-        if (!config->imgError){
+        if (!config->imgError) {
             memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), config->bgImgTopBuff, config->bgImgTopSize);
             memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), config->bgImgTopBuff, config->bgImgTopSize);
         }
-        if (!config->imgErrorBot){
+        if (!config->imgErrorBot) {
             memcpy(gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL), config->bgImgBotBuff, config->bgImgBotSize);
         }
         gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, s, 8, 32);

@@ -286,55 +286,61 @@ void configWrite() {
 
 void configExit() {
     if (config) {
+        if(config->bgImgTopBuff) {
+            free(config->bgImgTopBuff);
+        }
+        if(config->bgImgBotBuff) {
+            free(config->bgImgBotBuff);
+        }
         config_destroy(&cfg);
         free(config);
     }
 }
 
-void loadImages(){
-	config->imgError = false;
-	config->imgErrorBot = false;
-	FILE *file = fopen(config->bgImgTop,"rb");
-    if (file == NULL){
+void loadImages() {
+    config->imgError = false;
+    config->imgErrorBot = false;
+    FILE *file = fopen(config->bgImgTop, "rb");
+    if (file == NULL) {
         config->imgError = true;
         goto imgSkipTop;
     }
-    fseek(file,0,SEEK_END);
+    fseek(file, 0, SEEK_END);
     config->bgImgTopSize = ftell(file);
-    fseek(file,0,SEEK_SET);
-    config->bgImgTopBuff = malloc(config->bgImgTopSize);
-    if(!config->bgImgTopBuff){
+    fseek(file, 0, SEEK_SET);
+    config->bgImgTopBuff = malloc((size_t) config->bgImgTopSize);
+    if (!config->bgImgTopBuff) {
         config->imgError = true;
         goto imgSkipTop;
     }
-    off_t bgImgTopRead = fread(config->bgImgTopBuff,1,config->bgImgTopSize,file);
+    off_t bgImgTopRead = (off_t) fread(config->bgImgTopBuff, 1, (size_t) config->bgImgTopSize, file);
     fclose(file);
-    if(config->bgImgTopSize!=bgImgTopRead){
+    if (config->bgImgTopSize != bgImgTopRead) {
         config->imgError = true;
         goto imgSkipTop;
     }
 
     //skip loading top image on error
-    imgSkipTop: ;
+    imgSkipTop:;
 
-    FILE *fileBot = fopen(config->bgImgBot,"rb");
-    if (fileBot == NULL){
+    FILE *fileBot = fopen(config->bgImgBot, "rb");
+    if (fileBot == NULL) {
         config->imgErrorBot = true;
         goto imgSkip;
     }
-    fseek(fileBot,0,SEEK_END);
+    fseek(fileBot, 0, SEEK_END);
     config->bgImgBotSize = ftell(fileBot);
-    fseek(fileBot,0,SEEK_SET);
-    config->bgImgBotBuff = malloc(config->bgImgBotSize);
-    if(!config->bgImgBotBuff){
+    fseek(fileBot, 0, SEEK_SET);
+    config->bgImgBotBuff = malloc((size_t) config->bgImgBotSize);
+    if (!config->bgImgBotBuff) {
         config->imgErrorBot = true;
         goto imgSkip;
     }
-    off_t bgImgBotRead = fread(config->bgImgBotBuff,1,config->bgImgBotSize,fileBot);
+    off_t bgImgBotRead = (off_t) fread(config->bgImgBotBuff, 1, (size_t) config->bgImgBotSize, fileBot);
     fclose(fileBot);
-    if(config->bgImgBotSize!=bgImgBotRead){
+    if (config->bgImgBotSize != bgImgBotRead) {
         config->imgErrorBot = true;
         goto imgSkip;
     }
-    imgSkip: ;
+    imgSkip:;
 }

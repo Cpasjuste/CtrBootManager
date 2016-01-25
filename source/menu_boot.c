@@ -1,7 +1,6 @@
 #include <3ds.h>
 #include <time.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 
 #include "gfx.h"
@@ -9,7 +8,6 @@
 #include "loader.h"
 #include "menu.h"
 #include "utility.h"
-#include "font.h"
 
 bool timer = true;
 
@@ -24,10 +22,10 @@ int autoBootFix(int index) {
 
     hidScanInput();
     u32 k = hidKeysHeld();
-    if(k) {
+    if (k) {
         int i = 0;
-        for(i=0; i<config->count; i++) {
-            if(k & BIT(config->entries[i].key)) {
+        for (i = 0; i < config->count; i++) {
+            if (k & BIT(config->entries[i].key)) {
                 index = i;
                 break;
             }
@@ -40,7 +38,7 @@ int autoBootFix(int index) {
 
 int menu_boot() {
 
-    time_t start, end, elapsed;
+    time_t start, end, elapsed = 0;
     int boot_index = config->index;
 
     hidScanInput();
@@ -105,16 +103,19 @@ int menu_boot() {
 
         gfxClear();
 
-        if (!config->imgError){
-            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), config->bgImgTopBuff, config->bgImgTopSize);
-            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), config->bgImgTopBuff, config->bgImgTopSize);
+        if (!config->imgError) {
+            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), config->bgImgTopBuff,
+                   (size_t) config->bgImgTopSize);
+            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), config->bgImgTopBuff,
+                   (size_t) config->bgImgTopSize);
         }
-        if (!config->imgErrorBot){
-            memcpy(gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL), config->bgImgBotBuff, config->bgImgBotSize);
+        if (!config->imgErrorBot) {
+            memcpy(gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL), config->bgImgBotBuff,
+                   (size_t) config->bgImgBotSize);
         }
 
         if (!timer) {
-            gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Select a boot entry ***", 140, 20);
+            gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Select a boot entry ***", 140, 25);
         } else {
             gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontDefault, 120, 20,
                          "*** Booting %s in %i ***", config->entries[boot_index].title,

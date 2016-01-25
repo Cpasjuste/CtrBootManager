@@ -113,14 +113,17 @@ int menu_config() {
         }
 
         gfxClear();
-        if (!config->imgError){
-            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), config->bgImgTopBuff, config->bgImgTopSize);
-            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), config->bgImgTopBuff, config->bgImgTopSize);
+        if (!config->imgError) {
+            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), config->bgImgTopBuff,
+                   (size_t) config->bgImgTopSize);
+            memcpy(gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, NULL, NULL), config->bgImgTopBuff,
+                   (size_t) config->bgImgTopSize);
         }
-        if (!config->imgErrorBot){
-            memcpy(gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL), config->bgImgBotBuff, config->bgImgBotSize);
+        if (!config->imgErrorBot) {
+            memcpy(gfxGetFramebuffer(GFX_BOTTOM, GFX_LEFT, NULL, NULL), config->bgImgBotBuff,
+                   (size_t) config->bgImgBotSize);
         }
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Boot configuration ***", 120, 20);
+        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "*** Boot configuration ***", 120, 25);
 
         int minX = 16, maxX = 400 - 16;
         int minY = 32, maxY = 240 - 8;
