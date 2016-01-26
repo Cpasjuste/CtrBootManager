@@ -196,7 +196,7 @@ void pick_file(file_s *picked, const char *path) {
             if (i >= picker->file_count)
                 break;
 
-            drawItemN(i == picker->file_index, 47, 16 * i, picker->files[i].name);
+            drawItemN(i == picker->file_index, 47, 16 * y, picker->files[i].name);
             if (i == picker->file_index && !picker->files[i].isDir) {
                 drawInfo("Press (A) to launch\nPress (X) to add to boot menu");
 
