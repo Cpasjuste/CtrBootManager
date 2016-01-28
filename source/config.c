@@ -65,7 +65,7 @@ int configInit() {
 
         int i;
         for (i = 0; i < count; ++i) {
-            config_setting_t *entry = config_setting_get_elem(setting_entries, i);
+            config_setting_t *entry = config_setting_get_elem(setting_entries, (unsigned int) i);
             const char *title, *path, *offset;
             int key = -1;
 
@@ -122,10 +122,10 @@ int configInit() {
         if (config_setting_lookup_string(setting_theme, "bgImgBot", &path)) {
             strncpy(config->bgImgBot, path, 512);
         }
-        memcpy(fontDefault.color, config->fntDef, sizeof(u8[3]));
-        memcpy(fontSelected.color, config->fntSel, sizeof(u8[3]));
-        loadImages();
     }
+    memcpy(fontDefault.color, config->fntDef, sizeof(u8[3]));
+    memcpy(fontSelected.color, config->fntSel, sizeof(u8[3]));
+    loadImages();
 
     return 0;
 }
@@ -216,7 +216,7 @@ int configAddEntry(char *title, char *path, long offset) {
 int configRemoveEntry(int index) {
 
     // remove element
-    if (!config_setting_remove_elem(setting_entries, index)) {
+    if (!config_setting_remove_elem(setting_entries, (unsigned int) index)) {
         return -1;
     }
 
