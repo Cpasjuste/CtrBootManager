@@ -1,6 +1,3 @@
-[submodule "source/CakeBrah"]
-	path = source/CakeBrah
-	url = https://github.com/mid-kid/CakeBrah.git
-[submodule "source/libctru"]
-	path = source/libctru
-	url = https://github.com/smealum/ctrulib.git
+[submodule "source/CakeBrah/source/libkhax"]
+	path = source/CakeBrah/source/libkhax
+	url = git@github.com:Cpasjuste/libkhax.git
