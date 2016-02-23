@@ -6,8 +6,10 @@
 #include "picker.h"
 #include "loader.h"
 #include "menu.h"
+#include "menu_netloaderarm9.h"
 
-static char menu_item[5][512] = {"File browser", "Netload 3dsx", "Settings", "Reboot", "PowerOff"};
+static char menu_item[6][128] = {"File browser", "Netload 3dsx",
+                                 "Netload arm9", "Settings", "Reboot", "PowerOff"};
 static int menu_count = 5;
 static int menu_index = 0;
 
@@ -50,11 +52,13 @@ int menu_more() {
                 return 0;
             } else if (menu_index == 1 && menu_netloader() == 0) {
                 return 0;
-            } else if (menu_index == 2) {
-                menu_config();
+            } else if (menu_index == 2 && menu_netloaderarm9() == 0) {
+                return 0;
             } else if (menu_index == 3) {
-                reboot();
+                menu_config();
             } else if (menu_index == 4) {
+                reboot();
+            } else if (menu_index == 5) {
                 poweroff();
             }
         }
@@ -79,12 +83,15 @@ int menu_more() {
                 drawInfo("Netload a file (3dsx) from the computer with 3dslink");
                 break;
             case 2:
-                drawInfo("Edit boot settings");
+                drawInfo("Netload a file (arm9) from the computer with nc");
                 break;
             case 3:
-                drawInfo("Reboot the 3ds...");
+                drawInfo("Edit boot settings");
                 break;
             case 4:
+                drawInfo("Reboot the 3ds...");
+                break;
+            case 5:
                 drawInfo("Shutdown the 3ds...");
                 break;
             default:

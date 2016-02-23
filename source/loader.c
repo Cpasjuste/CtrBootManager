@@ -15,6 +15,8 @@ int load_3dsx(char *path) {
 
 int load_bin(char *path, long offset) {
 
+    gfxExit();
+
     if (brahma_init()) {
         if (load_arm9_payload_offset(path, (u32) offset, 0x10000) != 1) {
             debug("Err: Couldn't load arm9 payload...\n");
