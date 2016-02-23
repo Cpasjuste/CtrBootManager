@@ -10,7 +10,7 @@
 
 static char menu_item[6][128] = {"File browser", "Netload 3dsx",
                                  "Netload arm9", "Settings", "Reboot", "PowerOff"};
-static int menu_count = 5;
+static int menu_count = 6;
 static int menu_index = 0;
 
 int menu_choose() {
