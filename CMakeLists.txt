@@ -15,10 +15,7 @@ file(GLOB_RECURSE SOURCE_FILES
     source/*
 )
 
-#file(GLOB_RECURSE CTRU_EXAMPLES
-#    source/libctru/examples/*
-#)
-
+# Filter
 file(GLOB FILTER_FILES
     source/CakeBrah/source/main.c
     source/CakeBrah/source/hid.c
@@ -26,7 +23,6 @@ file(GLOB FILTER_FILES
 )
 list(REMOVE_ITEM SOURCE_FILES
     ${FILTER_FILES}
-#    ${CTRU_EXAMPLES}
 )
 
 add_executable(CtrBootManager ${SOURCE_FILES}) # Create the elf file
@@ -38,12 +34,10 @@ target_include_directories(CtrBootManager PUBLIC ${DEVKITPRO}/portlibs/armv6k/in
 target_link_libraries(CtrBootManager ${DEVKITPRO}/portlibs/armv6k/lib/libz.a)
 target_link_libraries(CtrBootManager ${DEVKITPRO}/portlibs/armv6k/lib/libconfig.a)
 
-#target_include_directories(CtrBootManager PUBLIC source/libctru/libctru/include)
 target_include_directories(CtrBootManager PUBLIC source source/hb_menu source/CakeBrah/include)
 target_include_directories(CtrBootManager PUBLIC source/CakeBrah/source/libkhax)
 
 target_embed_file(CtrBootManager data/font.bin)
-#target_embed_file(CtrBootManager source/libctru/libctru/data/default_font.bin)
 
 add_3dsx_target(CtrBootManager NO_SMDH) # Generate the .3dsx and .smdh from the CtrBootManager target
 add_netload_target(CtrBootManager_3dslink CtrBootManager)
