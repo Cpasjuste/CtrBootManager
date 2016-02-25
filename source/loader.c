@@ -39,6 +39,8 @@ int load(char *path, long offset) {
         reboot();
     } else if (strcasecmp(path, "shutdown") == 0) {
         poweroff();
+    } else if (strcasecmp(path, "homemenu") == 0) {
+        return load_homemenu();
     } else {
         const char *ext = get_filename_ext(path);
         if (strcasecmp(ext, "bin") == 0

@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 project(CtrBootManager)
 enable_language(ASM)
 
-set(NETLOAD_IP "172.20.138.5")
+set(NETLOAD_IP "172.20.146.74")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${DKA_SUGGESTED_C_FLAGS} -O2 -mtp=soft") # Use the devkitArm suggested flags. This is not mandatory.
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DKA_SUGGESTED_CXX_FLAGS} -O2 -mtp=soft")

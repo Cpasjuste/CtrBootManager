@@ -31,6 +31,8 @@ void debug(const char *fmt, ...);
 
 bool confirm(int confirmButton, const char *fmt, ...);
 
+int load_homemenu();
+
 void reboot();
 
 void poweroff();

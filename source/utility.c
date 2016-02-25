@@ -1,15 +1,14 @@
 #include <3ds.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
 #include <CakeBrah/source/libkhax/khax.h>
 
 #include "gfx.h"
-#include "config.h"
 #include "menu.h"
 
 FS_Archive sdmcArchive;
+extern void __appExit();
 
 void openSDArchive() {
     sdmcArchive = (FS_Archive) {0x00000009, (FS_Path) {PATH_EMPTY, 1, (u8 *) ""}};
@@ -119,7 +118,8 @@ bool confirm(int confirmButton, const char *fmt, ...) {
         drawBg();
         gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, s, MENU_MIN_X + 16, MENU_MIN_Y + 16);
         gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "Press any key to cancel...", MENU_MIN_X + 16, MENU_MIN_Y + 64);
-        gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontDefault, MENU_MIN_X + 16, MENU_MIN_Y + 84, "Press (%s) to confirm...", get_button(confirmButton));
+        gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontDefault, MENU_MIN_X + 16, MENU_MIN_Y + 84, "Press (%s) to confirm...",
+                     get_button(confirmButton));
         gfxSwap();
     }
 }
@@ -140,18 +140,18 @@ bool fileExists(char *path) {
     return true;
 }
 
-void load_homemenu() {
+int load_homemenu() {
 
-    /*
-    if (nsInit() != 0) {
-        debug("Err: nsInit...\n");
-    } else {
-        if (NS_RebootToTitle(0x0004003000009802, 0) != 0) {
-            debug("Err: NS_LaunchTitle...\n");
-        }
+    Handle kill = 0;
+
+    if (srvGetServiceHandle(&kill, "hb:kill") != 0) {
+        return -1;
     }
-    nsExit();
-    */
+
+    __appExit();
+    srvExit();
+    svcSignalEvent(kill);
+    svcExitProcess();
 }
 
 void reboot() {
