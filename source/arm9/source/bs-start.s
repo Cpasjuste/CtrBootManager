@@ -2,7 +2,6 @@
 
 .section ".init"
 .global _start
-.extern main
 .align 4
 .arm
 
@@ -92,7 +91,6 @@ _init:
     push {r0-r12, lr}
 
     bl _enable_caches
-    bl main
 
     mrc p15, 0, r4, c1, c0, 0
     bic r4, r4, #(1<<0)        @ mpu disable
