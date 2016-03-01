@@ -28,11 +28,13 @@ if(WIN32)
     set(CMAKE_CXX_COMPILER "${DEVKITARM}/bin/arm-none-eabi-g++.exe")
     set(CMAKE_AR "${DEVKITARM}/bin/arm-none-eabi-gcc-ar.exe" CACHE STRING "")
     set(CMAKE_RANLIB "${DEVKITARM}/bin/arm-none-eabi-gcc-ranlib.exe" CACHE STRING "")
+    set(CMAKE_OBJCOPY "${DEVKITARM}/bin/arm-none-eabi-objcopy.exe")
 else()
     set(CMAKE_C_COMPILER "${DEVKITARM}/bin/arm-none-eabi-gcc")
     set(CMAKE_CXX_COMPILER "${DEVKITARM}/bin/arm-none-eabi-g++")
     set(CMAKE_AR "${DEVKITARM}/bin/arm-none-eabi-gcc-ar" CACHE STRING "")
     set(CMAKE_RANLIB "${DEVKITARM}/bin/arm-none-eabi-gcc-ranlib" CACHE STRING "")
+    set(CMAKE_OBJCOPY "${DEVKITARM}/bin/arm-none-eabi-objcopy")
 endif()
 
 set(WITH_PORTLIBS ON CACHE BOOL "use portlibs ?")
@@ -50,12 +52,7 @@ set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
 
 SET(BUILD_SHARED_LIBS OFF CACHE INTERNAL "Shared libs not available" )
 
-add_definitions(-DARM11 -D_3DS)
-
-set(ARCH "-march=armv6k -mtune=mpcore -mfloat-abi=hard ")
-set(CMAKE_C_FLAGS " -mword-relocations ${ARCH}" CACHE STRING "C flags")
 set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS}" CACHE STRING "C++ flags")
-set(DKA_SUGGESTED_C_FLAGS "-fomit-frame-pointer -ffast-math")
 set(DKA_SUGGESTED_CXX_FLAGS "${DKA_SUGGESTED_C_FLAGS} -fno-rtti -fno-exceptions -std=gnu++11")
 
 set(CMAKE_INSTALL_PREFIX ${DEVKITPRO}/portlibs/3ds

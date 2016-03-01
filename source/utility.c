@@ -1,12 +1,20 @@
-#include <3ds.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
+#ifdef ARM9
+#include "arm9/source/common.h"
+#include "arm9/source/hid.h"
+#include "arm9/source/i2c.h"
+#include "arm9/source/fatfs/ff.h"
+#else
+#include <3ds.h>
 #include <CakeBrah/source/libkhax/khax.h>
-
+#endif
 #include "gfx.h"
 #include "menu.h"
+#include "utility.h"
 
+#ifndef ARM9
 FS_Archive sdmcArchive;
 extern void __appExit();
 
@@ -18,10 +26,15 @@ void openSDArchive() {
 void closeSDArchive() {
     FSUSER_CloseArchive(&sdmcArchive);
 }
+#endif
 
 void svcSleep(u32 millis) {
     u64 nano = millis * 1000000;
+#ifndef ARM9
     svcSleepThread(nano);
+#else
+    waitcycles((u32)nano);
+#endif
 }
 
 bool end_with(const char *str, const char c) {
@@ -86,15 +99,18 @@ void debug(const char *fmt, ...) {
     vsprintf(s, fmt, args);
     va_end(args);
 
+    drawBg();
+    gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, s, MENU_MIN_X + 16, MENU_MIN_Y + 16);
+    gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "Press any key to continue...", MENU_MIN_X + 16, MENU_MIN_Y + 64);
+    gfxSwap();
+
     while (aptMainLoop()) {
+#ifndef ARM9
+        svcSleep(100);
+#endif
         hidScanInput();
         if (hidKeysDown())
             break;
-
-        drawBg();
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, s, MENU_MIN_X + 16, MENU_MIN_Y + 16);
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "Press any key to continue...", MENU_MIN_X + 16, MENU_MIN_Y + 64);
-        gfxSwap();
     }
 }
 
@@ -106,7 +122,17 @@ bool confirm(int confirmButton, const char *fmt, ...) {
     vsprintf(s, fmt, args);
     va_end(args);
 
+    drawBg();
+    gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, s, MENU_MIN_X + 16, MENU_MIN_Y + 16);
+    gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "Press any key to cancel...", MENU_MIN_X + 16, MENU_MIN_Y + 64);
+    gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontDefault, MENU_MIN_X + 16, MENU_MIN_Y + 84, "Press (%s) to confirm...",
+                 get_button(confirmButton));
+    gfxSwap();
+
     while (aptMainLoop()) {
+#ifndef ARM9
+        svcSleep(100);
+#endif
         hidScanInput();
         u32 key = hidKeysDown();
         if (key & BIT(confirmButton)) {
@@ -114,17 +140,20 @@ bool confirm(int confirmButton, const char *fmt, ...) {
         } else if (key) {
             return false;
         }
-
-        drawBg();
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, s, MENU_MIN_X + 16, MENU_MIN_Y + 16);
-        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "Press any key to cancel...", MENU_MIN_X + 16, MENU_MIN_Y + 64);
-        gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontDefault, MENU_MIN_X + 16, MENU_MIN_Y + 84, "Press (%s) to confirm...",
-                     get_button(confirmButton));
-        gfxSwap();
     }
+    return false;
 }
 
 bool fileExists(char *path) {
+#ifdef ARM9
+    /*
+    if(FileOpen(path)) {
+        FileClose(path);
+        return true;
+    }
+    */
+    return true;
+#else
     if (!path)return false;
 
     Result ret;
@@ -138,10 +167,69 @@ bool fileExists(char *path) {
     if (ret != 0)return false;
 
     return true;
+#endif
+}
+
+size_t fileSize(const char *path) {
+    size_t size = -1;
+#ifdef ARM9
+    FIL file;
+    if(f_open(&file, path, FA_READ | FA_OPEN_EXISTING) != FR_OK) {
+        return size;
+    }
+    size = f_size(&file);
+    f_close(&file);
+#else
+    FILE *file;
+    if((file = fopen(path, "rt")) == NULL) {
+        return size;
+    }
+    fseek(file, 0, SEEK_END);
+    size = ftell(file);
+    fclose(file);
+#endif
+    return size;
+}
+
+int fileReadOffset(const char *path, void *data, size_t size, u32 offset) {
+#ifdef ARM9
+    FIL file;
+    UINT bytes_read = 0;
+    if(f_open(&file, path, FA_READ | FA_OPEN_EXISTING) != FR_OK) {
+        return -1;
+    }
+    f_lseek(&file, offset);
+    u32 newSize = size - offset;
+    if(f_read(&file, data, newSize, &bytes_read) != FR_OK) {
+        f_close(&file);
+        return -1;
+    }
+    f_close(&file);
+#else
+    FILE *file;
+    if((file = fopen(path, "rt")) == NULL) {
+        return -1;
+    }
+    fseek( file, offset, SEEK_SET );
+    u32 newSize = size - offset;
+    if(!fread(data, newSize, 1, file)) {
+        fclose(file);
+        return -1;
+    }
+    fclose(file);
+#endif
+    return 0;
+}
+
+int fileRead(const char *path, void *data, size_t size) {
+    return fileReadOffset(path, data, size, 0);
 }
 
 int load_homemenu() {
-
+#ifdef ARM9
+    debug("load_homemenu not implemented");
+    return -1;
+#else
     Handle kill = 0;
 
     if (srvGetServiceHandle(&kill, "hb:kill") != 0) {
@@ -152,18 +240,27 @@ int load_homemenu() {
     srvExit();
     svcSignalEvent(kill);
     svcExitProcess();
+#endif
 }
 
 void reboot() {
+#ifdef ARM9
+    i2cWriteRegister(I2C_DEV_MCU, 0x20, 1 << 2);
+    while(true);
+#else
     aptInit();
     aptOpenSession();
     APT_HardwareResetAsync();
     aptCloseSession();
     aptExit();
+#endif
 }
 
 void poweroff() {
-
+#ifdef ARM9
+    i2cWriteRegister(I2C_DEV_MCU, 0x20, 1 << 0);
+    while (true);
+#else
     if (khaxInit() != 0) {
         debug("Err: khaxInit");
         return;
@@ -186,4 +283,11 @@ void poweroff() {
         debug("Err: srvGetServiceHandle(ptm:s)");
     }
     svcCloseHandle(handle);
+#endif
 }
+
+#ifdef ARM9
+bool aptMainLoop() {
+    return true;
+}
+#endif

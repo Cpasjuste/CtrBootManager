@@ -9,12 +9,10 @@
 #include <sys/unistd.h>
 #include <sys/fcntl.h>
 #include <stdio.h>
-#include <hb_menu/gfx.h>
 #include <malloc.h>
-#include <hb_menu/netloader.h>
 #include "utility.h"
 #include "menu.h"
-#include "config.h"
+#include "gfx.h"
 
 int menu_netloaderarm9(void) {
 

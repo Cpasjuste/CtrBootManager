@@ -15,8 +15,6 @@ typedef struct {
 
 extern u8 defaultData[];
 extern charDesc_s defaultDesc[];
-
 extern font_s fontDefault;
-extern font_s fontSelected;
 
 #endif

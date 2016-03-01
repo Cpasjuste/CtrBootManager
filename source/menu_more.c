@@ -1,16 +1,25 @@
+#ifdef ARM9
+#include "arm9/source/common.h"
+#include "arm9/source/hid.h"
+#else
 #include <3ds.h>
+#endif
 #include <string.h>
-
 #include "gfx.h"
 #include "utility.h"
-#include "picker.h"
 #include "loader.h"
 #include "menu.h"
 #include "menu_netloaderarm9.h"
+#include "picker.h"
 
-static char menu_item[6][128] = {"File browser", "Netload 3dsx",
+#ifdef ARM9
+#define MENU_COUNT 3
+static char menu_item[3][64] = {"File browser", "Reboot", "PowerOff"};
+#else
+#define MENU_COUNT 6
+static char menu_item[6][64] = {"File browser", "Netload 3dsx",
                                  "Netload arm9", "Settings", "Reboot", "PowerOff"};
-static int menu_count = 6;
+#endif
 static int menu_index = 0;
 
 int menu_choose() {
@@ -22,34 +31,90 @@ int menu_choose() {
     if (strlen(picked.path) > 0) {
         return load(picked.path, 0);
     }
+
     return -1;
+}
+
+static void draw() {
+    int i = 0;
+
+    drawBg();
+    drawTitle("*** Select an option ***");
+
+    for (i = 0; i < MENU_COUNT; i++) {
+        drawItem(i == menu_index, 16 * i, menu_item[i]);
+    }
+
+    // draw "help"
+    switch (menu_index) {
+#ifdef ARM9
+        case 0:
+            drawInfo("Browse for a file to boot");
+            break;
+        case 1:
+            drawInfo("Reboot the 3ds...");
+            break;
+        case 2:
+            drawInfo("Shutdown the 3ds...");
+            break;
+#else
+        case 0:
+            drawInfo("Browse for a file to boot or add a boot entry");
+            break;
+        case 1:
+            drawInfo("Netload a file (3dsx) from the computer with 3dslink");
+            break;
+        case 2:
+            drawInfo("Netload a file (arm9) from the computer with nc");
+            break;
+        case 3:
+            drawInfo("Edit boot settings");
+            break;
+        case 4:
+            drawInfo("Reboot the 3ds...");
+            break;
+        case 5:
+            drawInfo("Shutdown the 3ds...");
+            break;
+#endif
+        default:
+            break;
+    }
+
+    gfxSwap();
 }
 
 int menu_more() {
 
-    int i = 0;
     menu_index = 0;
 
     while (aptMainLoop()) {
+
+        draw();
 
         hidScanInput();
         u32 kDown = hidKeysDown();
 
         if (kDown & KEY_DOWN) {
             menu_index++;
-            if (menu_index >= menu_count)
+            if (menu_index >= MENU_COUNT)
                 menu_index = 0;
         }
-
-        if (kDown & KEY_UP) {
+        else if (kDown & KEY_UP) {
             menu_index--;
             if (menu_index < 0)
-                menu_index = menu_count - 1;
+                menu_index = MENU_COUNT - 1;
         }
-
-        if (kDown & KEY_A) {
+        else if (kDown & KEY_A) {
             if (menu_index == 0 && menu_choose() == 0) {
                 return 0;
+#ifdef ARM9
+            } else if (menu_index == 1) {
+                reboot();
+            } else if (menu_index == 2) {
+                poweroff();
+            }
+#else
             } else if (menu_index == 1 && menu_netloader() == 0) {
                 return 0;
             } else if (menu_index == 2 && menu_netloaderarm9() == 0) {
@@ -61,44 +126,11 @@ int menu_more() {
             } else if (menu_index == 5) {
                 poweroff();
             }
+#endif
         }
-
-        if (kDown & KEY_B) {
+        else if (kDown & KEY_B) {
             return -1;
         }
-
-        drawBg();
-        drawTitle("*** Select an option ***");
-
-        for (i = 0; i < menu_count; i++) {
-            drawItem(i == menu_index, 16 * i, menu_item[i]);
-        }
-
-        // draw "help"
-        switch (menu_index) {
-            case 0:
-                drawInfo("Browse for a file to boot or add a boot entry");
-                break;
-            case 1:
-                drawInfo("Netload a file (3dsx) from the computer with 3dslink");
-                break;
-            case 2:
-                drawInfo("Netload a file (arm9) from the computer with nc");
-                break;
-            case 3:
-                drawInfo("Edit boot settings");
-                break;
-            case 4:
-                drawInfo("Reboot the 3ds...");
-                break;
-            case 5:
-                drawInfo("Shutdown the 3ds...");
-                break;
-            default:
-                break;
-        }
-
-        gfxSwap();
     }
     return -1;
 }

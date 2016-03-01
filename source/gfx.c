@@ -1,13 +1,26 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#ifdef ARM9
+#include "arm9/source/common.h"
+#else
 #include <3ds.h>
+#endif
 #include <stdarg.h>
-
 #include "gfx.h"
-#include "font.h"
 #include "text.h"
-#include "costable.h"
+
+#ifdef ARM9
+u8* gfxGetFramebuffer(gfxScreen_t screen, gfx3dSide_t side, u16* width, u16* height) {
+    if(screen == GFX_TOP) {
+        *width = 240; *height = 400;
+        return side == GFX_LEFT ? TOP_SCREEN0 : TOP_SCREEN1;
+    } else {
+        *width = 240; *height = 320;
+        return side == GFX_LEFT ? BOT_SCREEN0 : BOT_SCREEN1;
+    }
+}
+#endif
 
 void drawPixel(int x, int y, char r, char g, char b, u8 *screen) {
     int height = 240;
@@ -153,13 +166,22 @@ void gfxClearTop(u8 top1[3], u8 top2[3]) {
     gfxFillColorGradient(GFX_TOP, GFX_LEFT, top1, top2);
 }
 
+void gfxClearTopRight(u8 top1[3], u8 top2[3]) {
+    gfxFillColorGradient(GFX_TOP, GFX_RIGHT, top1, top2);
+}
+
 void gfxClearBot(u8 bot[8]) {
     gfxFillColor(GFX_BOTTOM, GFX_LEFT, bot);
 }
 
+void gfxClearBotRight(u8 bot[8]) {
+    gfxFillColor(GFX_BOTTOM, GFX_RIGHT, bot);
+}
+
 void gfxSwap() {
+#ifndef ARM9
     gfxFlushBuffers();
     gfxSwapBuffers();
     gspWaitForVBlank();
+#endif
 }
-

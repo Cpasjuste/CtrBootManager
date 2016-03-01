@@ -1,12 +1,15 @@
 #include <stdlib.h>
 #include <string.h>
+#ifdef ARM9
+#include "arm9/source/common.h"
+#else
 #include <3ds.h>
+#endif
 #include "text.h"
-#include "font_bin.h"
-
+//#include "font_bin.h"
 #include "font.h"
 
-const u8 *font = font_bin;
+//const u8 *font = font_bin;
 
 //this code is not meant to be readable
 int drawCharacter(u8 *fb, font_s *f, char c, s16 x, s16 y, u16 w, u16 h) {

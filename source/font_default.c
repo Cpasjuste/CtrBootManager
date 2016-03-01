@@ -1,4 +1,8 @@
+#ifdef ARM9
+#include "arm9/source/common.h"
+#else
 #include <3ds.h>
+#endif
 #include "font.h"
 
 charDesc_s defaultDesc[] = {

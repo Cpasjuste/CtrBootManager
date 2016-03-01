@@ -3,15 +3,14 @@
 //
 
 #include <stdbool.h>
-#include <hb_menu/gfx.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
+#include "gfx.h"
 #include "config.h"
 #include "menu.h"
 
 void drawBg() {
-
     if (!config->imgError) {
         memcpy(gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL), config->bgImgTopBuff,
                (size_t) config->bgImgTopSize);
@@ -49,8 +48,11 @@ void drawItem(bool selected, int y, const char *format, ...) {
     if (selected) {
         gfxDrawRectangle(GFX_TOP, GFX_LEFT, config->highlight, (s16) (MENU_MIN_X + 4), (s16) (y + MENU_MIN_Y), 361, 15);
     }
-    gfxDrawText(GFX_TOP, GFX_LEFT, selected ? &fontSelected : &fontDefault, msg, (s16) (MENU_MIN_X + 6),
+    memcpy(fontDefault.color, selected ? config->fntSel : config->fntDef, sizeof(u8[3]));
+    gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, msg, (s16) (MENU_MIN_X + 6),
                 (s16) y + (s16) MENU_MIN_Y);
+
+    memcpy(fontDefault.color, config->fntDef, sizeof(u8[3]));
 }
 
 void drawItemN(bool selected, int maxChar, int y, const char *format, ...) {
@@ -64,8 +66,11 @@ void drawItemN(bool selected, int maxChar, int y, const char *format, ...) {
     if (selected) {
         gfxDrawRectangle(GFX_TOP, GFX_LEFT, config->highlight, (s16) (MENU_MIN_X + 4), (s16) (y + MENU_MIN_Y), 361, 15);
     }
-    gfxDrawTextN(GFX_TOP, GFX_LEFT, selected ? &fontSelected : &fontDefault, msg, maxChar, (s16) (MENU_MIN_X + 6),
+    memcpy(fontDefault.color, selected ? config->fntSel : config->fntDef, sizeof(u8[3]));
+    gfxDrawTextN(GFX_TOP, GFX_LEFT, &fontDefault, msg, maxChar, (s16) (MENU_MIN_X + 6),
                  (s16) y + (s16) MENU_MIN_Y);
+
+    memcpy(fontDefault.color, config->fntDef, sizeof(u8[3]));
 }
 
 void drawInfo(const char *format, ...) {
