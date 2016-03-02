@@ -33,5 +33,13 @@
 
 # Custom
 *~
+
+# Cmake file
+CMakeCache.txt
+CMakeFiles/
+Makefile
+__CtrBootManager_embed_font.bin_include/
+binaries_asm/
+cmake_install.cmake
 .idea
 
