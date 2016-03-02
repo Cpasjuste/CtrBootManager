@@ -5,9 +5,6 @@
 extern "C" {
 #endif
 
-#ifdef ARM9
-bool aptMainLoop();
-#else
 #include "descriptor.h"
 
 typedef struct menuEntry_s {
@@ -19,15 +16,8 @@ typedef struct menuEntry_s {
 void openSDArchive();
 
 void closeSDArchive();
-#endif
 
 bool fileExists(char *path);
-
-size_t fileSize(const char *path);
-
-int fileReadOffset(const char *path, void *data, size_t size, u32 offset);
-
-int fileRead(const char *path, void *data, size_t size);
 
 void svcSleep(u32 millis);
 

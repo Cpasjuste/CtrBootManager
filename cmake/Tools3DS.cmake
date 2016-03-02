@@ -393,14 +393,6 @@ macro(add_netload_target name target)
     )
 endmacro()
 
-macro(add_a9lh_target name target)
-    set(FILE ${CMAKE_CURRENT_BINARY_DIR}/${target})
-    add_custom_target(${name}
-            COMMAND ${CMAKE_OBJCOPY} --set-section-flags .bss=alloc,load,contents -O binary ${FILE} ${FILE}.bin
-            DEPENDS  ${FILE}
-            )
-endmacro()
-
 macro(add_citra_target name target)
     if(NOT TARGET ${target})
         message("NOT ${target}")

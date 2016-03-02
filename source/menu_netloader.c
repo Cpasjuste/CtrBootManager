@@ -1,9 +1,12 @@
 #include <3ds.h>
 #include <stdio.h>
-#include "gfx.h"
+#include <string.h>
+
+#include "hb_menu/gfx.h"
 #include "netloader.h"
 #include "utility.h"
 #include "loader.h"
+#include "config.h"
 #include "menu.h"
 
 int menu_netloader() {

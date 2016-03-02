@@ -6,15 +6,15 @@ extern "C" {
 #endif
 
 typedef struct {
-    char name[128];
-    char path[256];
+    char name[512];
+    char path[512];
     bool isDir;
     u64 size;
 } file_s;
 
 typedef struct {
-    char now_path[256];
-    file_s files[256];
+    char now_path[512];
+    file_s files[512];
     int file_count;
     int file_index;
 } picker_s;

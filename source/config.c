@@ -1,40 +1,16 @@
+#include <3ds.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
 #include <libconfig.h>
 #include "config.h"
-#ifndef ARM9
+#include "utility.h"
 #include "font.h"
-#endif
 
 #define CONFIG_PATH "/boot.cfg"
-
 config_t cfg;
 config_setting_t *setting_root = NULL, *setting_boot = NULL, *setting_entries = NULL;
-
-#ifdef ARM9
-int config_read_file_arm9(config_t * config) {
-
-    debug("FileOpen");
-    if (!FileOpen("boot.cfg")) {
-        return -1;
-    }
-
-    size_t size = FileGetSize();
-    char buffer[size];
-    memset(buffer, 0, size);
-
-    debug("FileRead");
-    if (!FileRead(buffer, FileGetSize(), 0)) {
-        FileClose();
-        return -1;
-    }
-    debug("config_read_string");
-    int ret = config_read_string(&cfg, buffer);
-    FileClose();
-    return ret;
-}
-#endif
 
 int configCreate();
 
@@ -47,7 +23,6 @@ int configInit() {
     config = malloc(sizeof(boot_config_s));
     memset(config, 0, sizeof(boot_config_s));
 
-    config->count = 0;
     config->timeout = 3;
     config->autobootfix = 100;
     config->index = 0;
@@ -56,12 +31,6 @@ int configInit() {
 
     config_init(&cfg);
 
-#ifdef ARM9
-    if (!config_read_file_arm9(&cfg)) {
-        debug("Config file not found: %s\n", CONFIG_PATH);
-        return -1;
-    }
-#else
     if (!config_read_file(&cfg, CONFIG_PATH)) {
         debug("Configuration file not found: %s\nCreating default configuration..\n", CONFIG_PATH);
         if (configCreate() != 0) {
@@ -69,7 +38,7 @@ int configInit() {
             return -1;
         }
     }
-#endif
+
     setting_boot = config_lookup(&cfg, "boot_config");
     if (setting_boot != NULL) {
         int timeout = 3, autobootfix = 8, index = 0, recovery = 2; //SELECT
@@ -104,8 +73,8 @@ int configInit() {
                   && config_setting_lookup_string(entry, "path", &path)))
                 continue;
 
-            strncpy(config->entries[i].title, title, 64);
-            strncpy(config->entries[i].path, path, 128);
+            strncpy(config->entries[i].title, title, 512);
+            strncpy(config->entries[i].path, path, 512);
             config->entries[i].key = -1;
             if (config_setting_lookup_int(entry, "key", &key)) {
                 config->entries[i].key = key;
@@ -154,11 +123,9 @@ int configInit() {
             strncpy(config->bgImgBot, path, 512);
         }
     }
-#ifndef ARM9
     memcpy(fontDefault.color, config->fntDef, sizeof(u8[3]));
     memcpy(fontSelected.color, config->fntSel, sizeof(u8[3]));
     loadImages();
-#endif
 
     return 0;
 }
@@ -238,8 +205,8 @@ int configAddEntry(char *title, char *path, long offset) {
     // write/update config file
     configWrite();
 
-    strncpy(config->entries[config->count].title, title, 64);
-    strncpy(config->entries[config->count].path, path, 128);
+    strncpy(config->entries[config->count].title, title, 512);
+    strncpy(config->entries[config->count].path, path, 512);
     config->entries[config->count].key = -1;
     config->count++;
 

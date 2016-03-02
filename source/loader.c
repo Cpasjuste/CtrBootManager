@@ -1,29 +1,8 @@
-#ifndef ARM9
-#include <string.h>
 #include <3ds.h>
+#include <string.h>
 #include "brahma.h"
-#else
-#include "arm9/source/common.h"
-#include "stage2_bin.h"
-#endif
 #include "utility.h"
 
-#ifdef ARM9
-int load_bin(char *path, long offset) {
-
-    size_t size = fileSize(path);
-	if (!size) {
-        return -1;
-    }
-
-    if(fileReadOffset(path, (void*)PAYLOAD_DATA, size, offset) != 0) {
-        return -1;
-    }
-    memcpy((void*)PAYLOAD_STAGE2, stage2_bin, stage2_bin_size);
-    ((void (*)())PAYLOAD_STAGE2)();
-    return 0;
-}
-#else
 char boot_app[512];
 bool boot_app_enabled;
 
@@ -53,7 +32,6 @@ int load_bin(char *path, long offset) {
 
     return 0;
 }
-#endif
 
 int load(char *path, long offset) {
     // check for reboot/poweroff
@@ -61,19 +39,15 @@ int load(char *path, long offset) {
         reboot();
     } else if (strcasecmp(path, "shutdown") == 0) {
         poweroff();
-#ifndef ARM9
     } else if (strcasecmp(path, "homemenu") == 0) {
         return load_homemenu();
-#endif
     } else {
         const char *ext = get_filename_ext(path);
         if (strcasecmp(ext, "bin") == 0
             || strcasecmp(ext, "dat") == 0) {
             return load_bin(path, offset);
-#ifndef ARM9
         } else if (strcasecmp(ext, "3dsx") == 0) {
             return load_3dsx(path);
-#endif
         } else {
             debug("Invalid file: %s\n", path);
             return -1;
