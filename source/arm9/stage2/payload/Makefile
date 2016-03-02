@@ -16,45 +16,35 @@ include $(DEVKITARM)/ds_rules
 # INCLUDES is a list of directories containing header files
 # SPECS is the directory containing the important build and link files
 #---------------------------------------------------------------------------------
-export TARGET	:=	CtrBootManager9
+TARGET 		:=	$(notdir $(CURDIR))
 BUILD		:=	build
-SOURCES		:=	source source/fatfs
+SOURCES		:=	source
 DATA		:=	data
-INCLUDES	:=	include source source/fatfs
+INCLUDES	:=	source
 
 #---------------------------------------------------------------------------------
-# THEME: if set to anything, name of the themes file folder inside resources
+# Setup some defines
 #---------------------------------------------------------------------------------
-THEME	:=	
 
 #---------------------------------------------------------------------------------
 # options for code generation
 #---------------------------------------------------------------------------------
 ARCH	:=	-mthumb -mthumb-interwork
 
-CFLAGS	:=	-g -Wall -O2\
-			-march=armv5te -mtune=arm946e-s -fomit-frame-pointer\
-			-ffast-math -std=c99\
+CFLAGS	:=	-g -Wall -O2 \
+			-march=armv5te -mtune=arm946e-s -fomit-frame-pointer \
+			-ffast-math -std=c11 \
 			$(ARCH)
 
-CFLAGS	+=	$(INCLUDE) -DEXEC_$(EXEC_METHOD) -DARM9 -DINI_USE_STACK
-
-CFLAGS	+=	-DBUILD_NAME="\"$(TARGET) (`date +'%Y/%m/%d'`)\""
-
-ifneq ($(strip $(THEME)),)
-CFLAGS	+=	-DUSE_THEME=\"\/$(THEME)\"
-endif
+CFLAGS	+=	$(INCLUDE)
 
 CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions
 
-ASFLAGS	:=	-g $(ARCH) -DEXEC_$(EXEC_METHOD)
+ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-nostartfiles -g $(ARCH) -Wl,-Map,$(TARGET).map
 
-ifeq ($(EXEC_METHOD),GATEWAY)
-	LDFLAGS += --specs=../gateway.specs
-else ifeq ($(EXEC_METHOD),BOOTSTRAP)
-	LDFLAGS += --specs=../bootstrap.specs
-endif
+LDFLAGS +=	--specs=../payload_stage2.specs
+
 
 LIBS	:=
 
@@ -71,9 +61,8 @@ LIBDIRS	:=
 ifneq ($(BUILD),$(notdir $(CURDIR)))
 #---------------------------------------------------------------------------------
 
-export OUTPUT_D	:=	$(CURDIR)/output
-export OUTPUT	:=	$(OUTPUT_D)/$(TARGET)
-export RELEASE	:=	$(CURDIR)/release
+export OUTPUT	:=	$(CURDIR)/$(TARGET)
+export DATA     :=      data
 
 export VPATH	:=	$(foreach dir,$(SOURCES),$(CURDIR)/$(dir)) \
 			$(foreach dir,$(DATA),$(CURDIR)/$(dir))
@@ -100,7 +89,7 @@ endif
 #---------------------------------------------------------------------------------
 
 export OFILES	:= $(addsuffix .o,$(BINFILES)) \
-			$(CPPFILES:.cpp=.o) $(CFILES:.c=.o) $(SFILES:.s=.o)
+			$(SFILES:.s=.o) $(CPPFILES:.cpp=.o) $(CFILES:.c=.o) 
 
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 			$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
@@ -108,39 +97,21 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 
-.PHONY: common clean all stage2 bootstrap release
+.PHONY: $(BUILD) all clean
 
 #---------------------------------------------------------------------------------
-all: bootstrap stage2
+all: $(BUILD)
 
-common:
+$(BUILD):
 	@[ -d $(OUTPUT_D) ] || mkdir -p $(OUTPUT_D)
 	@[ -d $(BUILD) ] || mkdir -p $(BUILD)
 	@[ -d $(DATA) ] || mkdir -p $(DATA)
-	
-stage2: common
-	@make --no-print-directory -C stage2
-	@cp stage2/stage2.bin data
-	
-bootstrap: common stage2
-	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile EXEC_METHOD=BOOTSTRAP
-	
-release:
-	@rm -fr $(BUILD) $(OUTPUT_D) $(RELEASE)
-	@rm -fr $(BUILD) $(OUTPUT).bin $(OUTPUT).elf $(CURDIR)/$(LOADER)/data
-	@-make --no-print-directory bootstrap
-	@[ -d $(RELEASE) ] || mkdir -p $(RELEASE)
-	@[ -d $(RELEASE)/$(TARGET) ] || mkdir -p $(RELEASE)/$(TARGET)
-	@-cp $(OUTPUT).bin $(RELEASE)
-	@cp $(CURDIR)/README.md $(RELEASE)
-	@-7z a $(RELEASE)/$(TARGET)-`date +'%Y%m%d-%H%M%S'`.zip $(RELEASE)/*
-	
+	@make --no-print-directory -C $(BUILD) -f $(CURDIR)/Makefile
+
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@rm -fr $(BUILD) $(OUTPUT_D) $(RELEASE)
-	@make --no-print-directory -C stage2 clean
-
+	@rm -fr $(DATA) $(BUILD) $(OUTPUT).elf $(OUTPUT).bin
 
 #---------------------------------------------------------------------------------
 else
@@ -153,14 +124,16 @@ DEPENDS	:=	$(OFILES:.o=.d)
 $(OUTPUT).bin	:	$(OUTPUT).elf
 $(OUTPUT).elf	:	$(OFILES)
 
-
 #---------------------------------------------------------------------------------
 %.bin: %.elf
 	@$(OBJCOPY) --set-section-flags .bss=alloc,load,contents -O binary $< $@
 	@echo built ... $(notdir $@)
 
 #---------------------------------------------------------------------------------
+# you need a rule like this for each extension you use as binary data
+#---------------------------------------------------------------------------------
 %.bin.o	:	%.bin
+#---------------------------------------------------------------------------------
 	@echo $(notdir $<)
 	@$(bin2o)
 

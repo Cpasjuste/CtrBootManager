@@ -1,5 +1,5 @@
 %rename link                old_link
 
 *link:
-%(old_link) -T ../stub.ld%s
+%(old_link) -T ../payload_stage2.ld%s
 
