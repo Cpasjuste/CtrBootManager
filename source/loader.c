@@ -3,7 +3,6 @@
 #include <3ds.h>
 #include "brahma.h"
 #else
-#include "gfx.h"
 #include "arm9/source/common.h"
 #include "stage2_bin.h"
 #endif
@@ -20,10 +19,8 @@ int load_bin(char *path, long offset) {
     if(fileReadOffset(path, (void*)PAYLOAD_DATA, size, offset) != 0) {
         return -1;
     }
-
     memcpy((void*)PAYLOAD_STAGE2, stage2_bin, stage2_bin_size);
     ((void (*)())PAYLOAD_STAGE2)();
-
     return 0;
 }
 #else

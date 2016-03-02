@@ -12,10 +12,9 @@
 #define TOP_SCREEN1 (u8*)(0x18300000)
 #define BOT_SCREEN0 (u8*)(0x18346500)
 #define BOT_SCREEN1 (u8*)(0x18346500)
-#define BG_TOP (u8*)(0x21000000)
-#define BG_BOT (u8*)(0x21046500)
+#define BG_TOP (u8*)(0x24000000)
+#define BG_BOT (u8*)(0x24046500)
 u8* gfxGetFramebuffer(gfxScreen_t screen, gfx3dSide_t side, u16* width, u16* height);
-
 #else
 #include <3ds.h>
 #endif
