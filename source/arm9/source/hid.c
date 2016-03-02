@@ -16,7 +16,7 @@ u32 hidKeysDown() {
             break;
     }
 
-    for (t = 0; t < 0x200000; t++) {}
+    for (t = 0; t < 0x150000; t++) {}
 
     return ~key;
 }
@@ -40,7 +40,7 @@ u32 hidKeysDownTimeout(int seconds) {
                 break;
         }
     }
-    for (t = 0; t < 0x200000; t++) {}
+    for (t = 0; t < 0x150000; t++) {}
 
     return ~key;
 }
