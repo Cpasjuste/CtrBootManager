@@ -21,8 +21,7 @@ file(GLOB_RECURSE SOURCE_FILES_ARM9
 file(GLOB FILTER_FILES
     ${SOURCE_FILES_ARM9}
     source/config.c
-    source/arm9/stage2/payload/source/*
-    source/arm9/stage2/screen_init/source/screen_init/*
+    source/arm9/stage2/source/*
     source/CakeBrah/source/main.c
     source/CakeBrah/source/hid.c
     source/CakeBrah/source/libkhax/demo/*
@@ -67,8 +66,6 @@ file(GLOB FILTER_FILES_ARM9
         source/arm9/source/fatfs/option/ccsbcs.c
         source/arm9/source/fatfs/option/syscall.c
         source/arm9/source/fatfs/option/unicode.c
-        source/arm9/stage2/payload/source/*
-        source/arm9/stage2/screen_init/source/screen_init/*
         source/CakeBrah/source/*
         source/CakeBrah/source/libkhax/*
         source/hb_menu/*
@@ -90,5 +87,5 @@ set_source_files_properties(source/arm9/source/bs-start.s PROPERTIES COMPILE_FLA
 set_target_properties(CtrBootManager9 PROPERTIES LINK_FLAGS
         "-nostartfiles -g -mthumb -mthumb-interwork -Wl,-Map,CtrBootManager9.map -T ${CMAKE_SOURCE_DIR}/source/arm9/bootstrap.ld ")
 target_include_directories(CtrBootManager9 PUBLIC source/arm9/source source/arm9/source/fatfs)
-target_embed_file(CtrBootManager9 source/arm9/stage2/data/stage2.bin)
+target_embed_file(CtrBootManager9 source/arm9/data/stage2.bin)
 add_a9lh_target(CtrBootManager_a9lh CtrBootManager9)

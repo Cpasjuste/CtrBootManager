@@ -17,14 +17,12 @@
 #define vu32 volatile u32
 #define vu64 volatile u64
 
-#define max(a,b) \
-    ({ __typeof__ (a) _a = (a); \
-       __typeof__ (b) _b = (b); \
-       _a > _b ? _a : _b; })
-#define min(a,b) \
-    ({ __typeof__ (a) _a = (a); \
-       __typeof__ (b) _b = (b); \
-       _a < _b ? _a : _b; })
+inline int maxi(int a, int b) {
+    return a > b ? a : b;
+}
+inline int mini(int a, int b) {
+    return a < b ? a : b;
+}
 
 inline char* strupper(const char* str) {
     char* buffer = (char*)malloc(strlen(str) + 1);
