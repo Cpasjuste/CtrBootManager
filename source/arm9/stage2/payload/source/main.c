@@ -12,6 +12,16 @@ int main()
 {
 	memcpy((void*)PTR_PAYLOAD_MAIN, (void*)PTR_PAYLOAD_MAIN_DATA, PTR_PAYLOAD_SIZE_MAX);
 
+	//gateway
+	*(volatile uint32_t*)0x80FFFC0 = 0x18300000;    // framebuffer 1 top left
+	*(volatile uint32_t*)0x80FFFC4 = 0x18300000;    // framebuffer 2 top left
+	*(volatile uint32_t*)0x80FFFC8 = 0x18300000;    // framebuffer 1 top right
+	*(volatile uint32_t*)0x80FFFCC = 0x18300000;    // framebuffer 2 top right
+	*(volatile uint32_t*)0x80FFFD0 = 0x18346500;    // framebuffer 1 bottom
+	*(volatile uint32_t*)0x80FFFD4 = 0x18346500;    // framebuffer 2 bottom
+	*(volatile uint32_t*)0x80FFFD8 = 1;    // framebuffer select top
+	*(volatile uint32_t*)0x80FFFDC = 1;    // framebuffer select bottom
+
 	//cakehax
 	*(u32*)0x23FFFE00 = PTR_TOP_SCREEN;
 	*(u32*)0x23FFFE04 = PTR_TOP_SCREEN;
