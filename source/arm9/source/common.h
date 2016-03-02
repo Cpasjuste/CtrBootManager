@@ -39,11 +39,6 @@
 #define align(v,a) \
     (((v) % (a)) ? ((v) + (a) - ((v) % (a))) : (v))
 
-#define PAYLOAD_ADDRESS		0x23F00000
-#define PAYLOAD_DATA		0x20000000
-#define PAYLOAD_STAGE2		0x08006000
-#define PAYLOAD_SIZE		0x00100000
-
 typedef enum
 {
     GFX_TOP = 0,   ///< Top screen

@@ -14,14 +14,6 @@
 static bool timer = true;
 
 int autoBootFix(int index) {
-#ifdef ARM9
-    return load(config->entries[index].path, config->entries[index].offset);
-#else
-    int delay = config->autobootfix;
-    while (aptMainLoop() && delay > 0) {
-        gfxSwap();
-        delay--;
-    }
 
     hidScanInput();
     u32 k = hidKeysHeld();
@@ -33,6 +25,14 @@ int autoBootFix(int index) {
                 break;
             }
         }
+    }
+#ifdef ARM9
+    return load(config->entries[index].path, config->entries[index].offset);
+#else
+    int delay = config->autobootfix;
+    while (aptMainLoop() && delay > 0) {
+        gfxSwap();
+        delay--;
     }
 
     return load(config->entries[index].path,
@@ -69,7 +69,11 @@ static void draw(int boot_index, time_t elapsed) {
 
 int menu_boot() {
 
+#ifdef ARM9
+    time_t elapsed = 0;
+#else
     time_t start, end, elapsed = 0;
+#endif
     int boot_index = config->index;
 
     hidScanInput();

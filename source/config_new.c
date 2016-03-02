@@ -7,6 +7,7 @@
 #include "config.h"
 #include "font.h"
 #include "utility.h"
+#include "memory.h"
 
 #ifdef ARM9
 #include "arm9/source/fatfs/ff.h"
@@ -223,10 +224,10 @@ void loadBg(gfxScreen_t screen) {
         return;
     }
 
-#ifndef ARM9
-    u8 *bg = malloc(size);
+#ifdef ARM9
+    u8 *bg = screen == GFX_TOP ? PTR_BG_TOP : PTR_BG_BOT;
 #else
-    u8 *bg = screen == GFX_TOP ? BG_TOP : BG_BOT;
+    u8 *bg = malloc(size);
 #endif
     if(fileRead(path, bg, size) != 0) {
         return;

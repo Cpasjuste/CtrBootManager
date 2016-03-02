@@ -14,7 +14,9 @@
 #include "menu.h"
 #include "utility.h"
 
-#ifndef ARM9
+#ifdef ARM9
+void waitcycles(uint32_t val);
+#else
 FS_Archive sdmcArchive;
 extern void __appExit();
 

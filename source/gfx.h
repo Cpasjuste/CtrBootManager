@@ -2,18 +2,6 @@
 
 #ifdef ARM9
 #include "arm9/source/common.h"
-/*
-#define TOP_SCREEN0 (u8*)(0x20000000)
-#define TOP_SCREEN1 (u8*)(0x20046500)
-#define BOT_SCREEN0 (u8*)(0x2008CA00)
-#define BOT_SCREEN1 (u8*)(0x200C4E00)
-*/
-#define TOP_SCREEN0 (u8*)(0x18300000)
-#define TOP_SCREEN1 (u8*)(0x18300000)
-#define BOT_SCREEN0 (u8*)(0x18346500)
-#define BOT_SCREEN1 (u8*)(0x18346500)
-#define BG_TOP (u8*)(0x21000000)
-#define BG_BOT (u8*)(0x21046500)
 u8* gfxGetFramebuffer(gfxScreen_t screen, gfx3dSide_t side, u16* width, u16* height);
 
 #else

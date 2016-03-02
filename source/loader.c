@@ -8,6 +8,7 @@
 #include "stage2_bin.h"
 #endif
 #include "utility.h"
+#include "memory.h"
 
 #ifdef ARM9
 int load_bin(char *path, long offset) {
@@ -17,12 +18,12 @@ int load_bin(char *path, long offset) {
         return -1;
     }
 
-    if(fileReadOffset(path, (void*)PAYLOAD_DATA, size, offset) != 0) {
+    if(fileReadOffset(path, (void*)PTR_PAYLOAD_MAIN_DATA, size, offset) != 0) {
         return -1;
     }
 
-    memcpy((void*)PAYLOAD_STAGE2, stage2_bin, stage2_bin_size);
-    ((void (*)())PAYLOAD_STAGE2)();
+    memcpy((void*)PTR_PAYLOAD_STAGE2, stage2_bin, stage2_bin_size);
+    ((void (*)())PTR_PAYLOAD_STAGE2)();
 
     return 0;
 }

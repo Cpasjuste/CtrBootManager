@@ -28,4 +28,5 @@
 
 u32 hidKeysDown();
 u32 hidKeysHeld();
+u32 hidKeysDownTimeout(int seconds);
 void hidScanInput();

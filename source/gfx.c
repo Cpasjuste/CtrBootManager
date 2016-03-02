@@ -9,15 +9,16 @@
 #include <stdarg.h>
 #include "gfx.h"
 #include "text.h"
+#include "memory.h"
 
 #ifdef ARM9
 u8* gfxGetFramebuffer(gfxScreen_t screen, gfx3dSide_t side, u16* width, u16* height) {
     if(screen == GFX_TOP) {
         *width = 240; *height = 400;
-        return side == GFX_LEFT ? TOP_SCREEN0 : TOP_SCREEN1;
+        return PTR_TOP_SCREEN;
     } else {
         *width = 240; *height = 320;
-        return side == GFX_LEFT ? BOT_SCREEN0 : BOT_SCREEN1;
+        return PTR_BOT_SCREEN;
     }
 }
 #endif
