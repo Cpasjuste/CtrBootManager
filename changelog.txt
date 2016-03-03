@@ -3,7 +3,7 @@
 1.0: add a few more help/information to the bottom screen
 
 b09: add simple boot configuration screen ("More... -> Settings" menu)
-b09: (re-re-re-re) fix netloading code
+b09: (re-re-re-reddd) fix netloading code
 
 b08:
 - fix broken wifi on a lot of 3dsx
