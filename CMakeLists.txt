@@ -92,5 +92,3 @@ set_target_properties(CtrBootManager9 PROPERTIES LINK_FLAGS
 target_include_directories(CtrBootManager9 PUBLIC source/arm9/source source/arm9/source/fatfs)
 target_embed_file(CtrBootManager9 source/arm9/stage2/data/stage2.bin)
 add_a9lh_target(CtrBootManager_a9lh CtrBootManager9)
-
-cmake --build . --target CtrBootManager_a9lh
