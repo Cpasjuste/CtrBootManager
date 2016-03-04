@@ -16,7 +16,9 @@
 
 static bool timer = true;
 
-int autoBootFix(int index) {
+static void draw(int boot_index, time_t elapsed);
+
+int key_override(int index) {
 
     hidScanInput();
     u32 k = hidKeysHeld();
@@ -24,13 +26,20 @@ int autoBootFix(int index) {
         int i = 0;
         for (i = 0; i < config->count; i++) {
             if (k & BIT(config->entries[i].key)) {
-                index = i;
-                break;
+                return i;
             }
         }
     }
+    return index;
+}
+
+int boot(int index) {
+
+    index = key_override(index);
+
 #ifdef ARM9
-    return load(config->entries[index].path, config->entries[index].offset);
+    return load(config->entries[index].path,
+                config->entries[index].offset);
 #else
     int delay = config->autobootfix;
     while (aptMainLoop() && delay > 0) {
@@ -43,10 +52,87 @@ int autoBootFix(int index) {
 #endif
 }
 
+int menu_boot() {
+
+#ifdef ARM9
+    time_t elapsed = 0;
+#else
+    time_t start, end, elapsed = 0;
+#endif
+    int boot_index = config->index;
+
+    hidScanInput();
+    u32 key = hidKeysHeld();
+    if (key & BIT(config->recovery)) { // disable autoboot
+        timer = false;
+    } else if (config->timeout == 0 || key_override(-1) != -1) { // autoboot
+        return boot(boot_index);
+    }
+
+#ifndef ARM9
+    time(&start);
+#endif
+
+    while (aptMainLoop()) {
+
+        if (timer) {
+#ifndef ARM9
+            time(&end);
+            elapsed = end - start;
+#endif
+            if (elapsed >= config->timeout && config->count > boot_index) {
+                return boot(boot_index);
+            }
+        }
+
+        hidScanInput();
+        u32 kDown = hidKeysDown();
+
+        if (kDown & KEY_DOWN) {
+            timer = false;
+            boot_index++;
+            if (boot_index > config->count)
+                boot_index = 0;
+        }
+        else if (kDown & KEY_UP) {
+            timer = false;
+            boot_index--;
+            if (boot_index < 0)
+                boot_index = config->count;
+        }
+        else if (kDown & KEY_A) {
+            timer = false;
+            if (boot_index == config->count) {
+                if(menu_more() == 0) {
+                    break;
+                }
+            } else if (boot(boot_index)) {
+                break;
+            }
+        }
+#ifndef ARM9
+        else if (kDown & KEY_X) {
+            timer = false;
+            if (boot_index != config->count) {
+                if (confirm(3, "Delete boot entry: \"%s\" ?\n", config->entries[boot_index].title)) {
+                    configRemoveEntry(boot_index);
+                    boot_index--;
+                }
+            }
+        }
+#endif
+        draw(boot_index, elapsed);
+    }
+
+    return 0;
+}
+
 static void draw(int boot_index, time_t elapsed) {
+
     int i = 0;
 
     drawBg();
+
     if (!timer) {
         drawTitle("*** Select a boot entry ***");
     } else {
@@ -68,93 +154,4 @@ static void draw(int boot_index, time_t elapsed) {
     }
 
     gfxSwap();
-}
-
-int menu_boot() {
-
-#ifdef ARM9
-    time_t elapsed = 0;
-#else
-    time_t start, end, elapsed = 0;
-#endif
-    int boot_index = config->index;
-
-    hidScanInput();
-    if (config->timeout < 0 || hidKeysHeld() & BIT(config->recovery)) { // disable autoboot
-        timer = false;
-    } else if (config->timeout == 0) { // autoboot
-        return autoBootFix(boot_index);
-    }
-
-#ifndef ARM9
-    time(&start);
-#endif
-
-    while (aptMainLoop()) {
-
-        if (timer) {
-#ifndef ARM9
-            time(&end);
-            elapsed = end - start;
-#endif
-            if (elapsed >= config->timeout
-                && config->count > boot_index) {
-                return autoBootFix(boot_index);
-            }
-        }
-
-        draw(boot_index, elapsed);
-
-        hidScanInput();
-#ifdef ARM9
-        // fake timer
-        u32 kDown = 0;
-        if (timer) {
-            kDown = hidKeysDownTimeout(1);
-            elapsed++;
-        } else {
-            kDown = hidKeysDown();
-        }
-#else
-        u32 kDown = hidKeysDown();
-#endif
-
-        if (kDown & KEY_DOWN) {
-            timer = false;
-            boot_index++;
-            if (boot_index > config->count)
-                boot_index = 0;
-        }
-        else if (kDown & KEY_UP) {
-            timer = false;
-            boot_index--;
-            if (boot_index < 0)
-                boot_index = config->count;
-        }
-        else if (kDown & KEY_A) {
-            timer = false;
-            if (boot_index == config->count) {
-                if (menu_more() == 0) {
-                    break;
-                }
-            } else {
-                if (load(config->entries[boot_index].path,
-                         config->entries[boot_index].offset) == 0) {
-                    break;
-                }
-            }
-        }
-#ifndef ARM9
-        else if (kDown & KEY_X) {
-            timer = false;
-            if (boot_index != config->count) {
-                if (confirm(3, "Delete boot entry: \"%s\" ?\n", config->entries[boot_index].title)) {
-                    configRemoveEntry(boot_index);
-                    boot_index--;
-                }
-            }
-        }
-#endif
-    }
-    return 0;
 }

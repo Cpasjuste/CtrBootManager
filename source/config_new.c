@@ -15,7 +15,7 @@
 #include "config.h"
 #include "gfx.h"
 
-boot_config_s sconf;
+//boot_config_s sconf;
 #else
 #include <3ds.h>
 #endif
@@ -138,7 +138,7 @@ int configInit() {
 
     // init config
 #ifdef ARM9
-    config = &sconf;
+    config = (boot_config_s *)PTR_CFG;
 #else
     config = malloc(sizeof(boot_config_s));
 #endif
@@ -222,7 +222,7 @@ void loadBg(gfxScreen_t screen) {
     }
 
 #ifdef ARM9
-    u8 *bg = screen == GFX_TOP ? PTR_TOP_BG_BUF : PTR_BOT_BG_BUF;
+    u8 *bg = screen == GFX_TOP ? PTR_TOP_BG : PTR_BOT_BG;
 #else
     u8 *bg = malloc(size);
 #endif

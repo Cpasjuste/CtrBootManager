@@ -4,6 +4,8 @@
 
 #define HID_STATE (*(volatile u32*)0x10146000)
 
+#define BIT(n) (1U<<(n))
+
 #define KEY_A      (1 << 0)
 #define KEY_B      (1 << 1)
 #define KEY_SELECT (1 << 2)
@@ -22,11 +24,7 @@
 #define KEY_L     KEY_L1
 #define KEY_X      (1 << 10)
 #define KEY_Y      (1 << 11)
-#define KEY_ANY    0x00000FFF
-
-#define BIT(n) (1U<<(n))
 
 u32 hidKeysDown();
 u32 hidKeysHeld();
-u32 hidKeysDownTimeout(int seconds);
 void hidScanInput();

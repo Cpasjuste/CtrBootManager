@@ -107,18 +107,16 @@ void debug(const char *fmt, ...) {
     vsprintf(s, fmt, args);
     va_end(args);
 
-    drawBg();
-    gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, s, MENU_MIN_X + 16, MENU_MIN_Y + 16);
-    gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "Press any key to continue...", MENU_MIN_X + 16, MENU_MIN_Y + 64);
-    gfxSwap();
-
     while (aptMainLoop()) {
-#ifndef ARM9
-        svcSleep(100);
-#endif
+
         hidScanInput();
-        if (hidKeysDown())
+        if (hidKeysDown() & KEY_A)
             break;
+
+        drawBg();
+        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, s, MENU_MIN_X + 16, MENU_MIN_Y + 16);
+        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "Press (A) key to continue...", MENU_MIN_X + 16, MENU_MIN_Y + 64);
+        gfxSwap();
     }
 }
 
@@ -130,24 +128,22 @@ bool confirm(int confirmButton, const char *fmt, ...) {
     vsprintf(s, fmt, args);
     va_end(args);
 
-    drawBg();
-    gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, s, MENU_MIN_X + 16, MENU_MIN_Y + 16);
-    gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "Press any key to cancel...", MENU_MIN_X + 16, MENU_MIN_Y + 64);
-    gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontDefault, MENU_MIN_X + 16, MENU_MIN_Y + 84, "Press (%s) to confirm...",
-                 get_button(confirmButton));
-    gfxSwap();
-
     while (aptMainLoop()) {
-#ifndef ARM9
-        svcSleep(100);
-#endif
+
         hidScanInput();
         u32 key = hidKeysDown();
         if (key & BIT(confirmButton)) {
             return true;
-        } else if (key) {
+        } else if (key & KEY_B) {
             return false;
         }
+
+        drawBg();
+        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, s, MENU_MIN_X + 16, MENU_MIN_Y + 16);
+        gfxDrawText(GFX_TOP, GFX_LEFT, &fontDefault, "Press (B) key to cancel...", MENU_MIN_X + 16, MENU_MIN_Y + 64);
+        gfxDrawTextf(GFX_TOP, GFX_LEFT, &fontDefault, MENU_MIN_X + 16, MENU_MIN_Y + 84, "Press (%s) to confirm...",
+                     get_button(confirmButton));
+        gfxSwap();
     }
     return false;
 }

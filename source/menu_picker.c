@@ -9,9 +9,6 @@
 #include <sys/dirent.h>
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include <sys/stat.h>
 
 #include "gfx.h"
@@ -19,6 +16,7 @@
 #include "utility.h"
 #include "config.h"
 #include "menu.h"
+#include "memory.h"
 
 #ifdef ARM9
 #define    DT_DIR         4
@@ -87,7 +85,8 @@ void get_dir(const char *path) {
 #ifdef ARM9
     DIR fd;
     FILINFO fno;
-    struct dirent *file = (struct dirent *) 0x21080000;
+    struct dirent *file = (struct dirent *) PTR_PICKER_FILE;
+    memset(file, 0, sizeof(struct dirent));
 #else
     DIR *fd;
     struct dirent *file;
@@ -98,9 +97,8 @@ void get_dir(const char *path) {
 #ifdef ARM9
     if (f_opendir(&fd, path) != FR_OK) {
 #else
-        if ((fd = opendir(new_path)) == NULL) {
+    if ((fd = opendir(new_path)) == NULL) {
 #endif
-        //printf("\xb[3;1HDirectory empty...");
         return;
     }
     strncpy(picker->now_path, new_path, 256);
@@ -157,7 +155,7 @@ static void draw() {
 void pick_file(file_s *picked, const char *path) {
 
 #ifdef ARM9
-    picker = (picker_s *) 0x21000000;
+    picker = (picker_s *) PTR_PICKER;
 #else
     picker = malloc(sizeof(picker_s));
 #endif

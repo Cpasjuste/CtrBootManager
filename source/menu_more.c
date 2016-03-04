@@ -23,7 +23,9 @@ static char menu_item[3][64] = {"File browser", "Reboot", "PowerOff"};
 static char menu_item[6][64] = {"File browser", "Netload 3dsx",
                                  "Netload arm9", "Settings", "Reboot", "PowerOff"};
 #endif
+
 static int menu_index = 0;
+static void draw();
 
 int menu_choose() {
 
@@ -38,7 +40,59 @@ int menu_choose() {
     return -1;
 }
 
+int menu_more() {
+
+    menu_index = 0;
+
+    while (aptMainLoop()) {
+
+        hidScanInput();
+        u32 kDown = hidKeysDown();
+
+        if (kDown & KEY_DOWN) {
+            menu_index++;
+            if (menu_index >= MENU_COUNT)
+                menu_index = 0;
+        }
+        else if (kDown & KEY_UP) {
+            menu_index--;
+            if (menu_index < 0)
+                menu_index = MENU_COUNT - 1;
+        }
+        else if (kDown & KEY_A) {
+            if (menu_index == 0 && menu_choose() == 0) {
+                return 0;
+#ifdef ARM9
+            } else if (menu_index == 1) {
+                reboot();
+            } else if (menu_index == 2) {
+                poweroff();
+            }
+#else
+            } else if (menu_index == 1 && menu_netloader() == 0) {
+                return 0;
+            } else if (menu_index == 2 && menu_netloaderarm9() == 0) {
+                return 0;
+            } else if (menu_index == 3) {
+                menu_config();
+            } else if (menu_index == 4) {
+                reboot();
+            } else if (menu_index == 5) {
+                poweroff();
+            }
+#endif
+        }
+        else if (kDown & KEY_B) {
+            return -1;
+        }
+
+        draw();
+    }
+    return -1;
+}
+
 static void draw() {
+
     int i = 0;
 
     drawBg();
@@ -85,55 +139,4 @@ static void draw() {
     }
 
     gfxSwap();
-}
-
-int menu_more() {
-
-    menu_index = 0;
-
-    while (aptMainLoop()) {
-
-        draw();
-
-        hidScanInput();
-        u32 kDown = hidKeysDown();
-
-        if (kDown & KEY_DOWN) {
-            menu_index++;
-            if (menu_index >= MENU_COUNT)
-                menu_index = 0;
-        }
-        else if (kDown & KEY_UP) {
-            menu_index--;
-            if (menu_index < 0)
-                menu_index = MENU_COUNT - 1;
-        }
-        else if (kDown & KEY_A) {
-            if (menu_index == 0 && menu_choose() == 0) {
-                return 0;
-#ifdef ARM9
-            } else if (menu_index == 1) {
-                reboot();
-            } else if (menu_index == 2) {
-                poweroff();
-            }
-#else
-            } else if (menu_index == 1 && menu_netloader() == 0) {
-                return 0;
-            } else if (menu_index == 2 && menu_netloaderarm9() == 0) {
-                return 0;
-            } else if (menu_index == 3) {
-                menu_config();
-            } else if (menu_index == 4) {
-                reboot();
-            } else if (menu_index == 5) {
-                poweroff();
-            }
-#endif
-        }
-        else if (kDown & KEY_B) {
-            return -1;
-        }
-    }
-    return -1;
 }

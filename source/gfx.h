@@ -35,4 +35,6 @@ void gfxClearTop(u8 top1[3], u8 top2[3]);
 
 void gfxClearBot(u8 bot[8]);
 
+void gfxClear();
+
 void gfxSwap();

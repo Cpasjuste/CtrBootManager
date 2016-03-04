@@ -5,7 +5,7 @@
 #else
 
 #include "gfx.h"
-#include "arm9/source/common.h"
+#include "arm9/source/fatfs/ff.h"
 #include "stage2_bin.h"
 
 #endif
@@ -22,9 +22,11 @@ int load_bin(char *path, long offset) {
         return -1;
     }
 
-    if (fileReadOffset(path, (void *) PTR_PAYLOAD_MAIN_DATA, size, offset) != 0) {
+    if (fileReadOffset(path, (void *) PTR_PAYLOAD_MAIN_DATA, PTR_PAYLOAD_SIZE_MAX, offset) != 0) {
         return -1;
     }
+
+    gfxClear();
 
     memcpy((void *) PTR_PAYLOAD_STAGE2, stage2_bin, stage2_bin_size);
     ((void (*)()) PTR_PAYLOAD_STAGE2)();

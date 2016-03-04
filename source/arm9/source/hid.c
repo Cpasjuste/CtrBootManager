@@ -1,48 +1,18 @@
 #include "hid.h"
 
 void hidScanInput() {}
-
+u32 key_old = 0x00000000;
 
 u32 hidKeysDown() {
 
-    u32 key = 0;
-    vu32 t = 0;
+    u32 key = HID_STATE;
 
-    while (HID_STATE != 0x00000FFF);
-    while (true) {
-
-        key = HID_STATE;
-        if(key != 0x00000FFF)
-            break;
+    if(key_old != key) {
+        key_old = key;
+        return ~key;
     }
 
-    for (t = 0; t < 0x150000; t++) {}
-
-    return ~key;
-}
-
-u32 hidKeysDownTimeout(int seconds) {
-
-    u32 key = 0;
-    vu32 t = 0;
-    u64 timeout = 0; // fake timer
-
-    while (HID_STATE != 0x00000FFF);
-    while (true) {
-
-        key = HID_STATE;
-        if(key != 0x00000FFF)
-            break;
-
-        if(seconds > 0) {
-            timeout++;
-            if ((int)(timeout/200000) > seconds)
-                break;
-        }
-    }
-    for (t = 0; t < 0x150000; t++) {}
-
-    return ~key;
+    return 0x00000000;
 }
 
 u32 hidKeysHeld() {

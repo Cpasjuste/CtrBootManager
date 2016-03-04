@@ -179,6 +179,15 @@ void gfxClearBot(u8 bot[8]) {
     gfxFillColor(GFX_BOTTOM, GFX_LEFT, bot);
 }
 
+void gfxClear() {
+    memset(PTR_TOP_SCREEN, 0, TOP_SCREEN_SIZE);
+    memset(PTR_BOT_SCREEN, 0, BOT_SCREEN_SIZE);
+    memset(PTR_TOP_SCREEN_BUF, 0, TOP_SCREEN_SIZE);
+    memset(PTR_BOT_SCREEN_BUF, 0, BOT_SCREEN_SIZE);
+    memset(PTR_TOP_BG, 0, TOP_SCREEN_SIZE);
+    memset(PTR_BOT_BG, 0, BOT_SCREEN_SIZE);
+}
+
 void gfxSwap() {
 #ifdef ARM9
     memcpy(PTR_TOP_SCREEN, PTR_TOP_SCREEN_BUF, TOP_SCREEN_SIZE);
