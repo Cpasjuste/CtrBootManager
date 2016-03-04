@@ -1,10 +1,13 @@
 #ifdef ARM9
+
 #include "arm9/source/common.h"
 #include "arm9/source/hid.h"
+
 #else
 #include <3ds.h>
 #include <time.h>
 #endif
+
 #include "loader.h"
 #include "gfx.h"
 #include "utility.h"
@@ -96,7 +99,7 @@ int menu_boot() {
 #endif
             if (elapsed >= config->timeout
                 && config->count > boot_index) {
-                    return autoBootFix(boot_index);
+                return autoBootFix(boot_index);
             }
         }
 
@@ -106,7 +109,7 @@ int menu_boot() {
 #ifdef ARM9
         // fake timer
         u32 kDown = 0;
-        if(timer) {
+        if (timer) {
             kDown = hidKeysDownTimeout(1);
             elapsed++;
         } else {

@@ -25,32 +25,29 @@ https://github.com/benhoyt/inih
 #define MAX_NAME 50
 
 /* Strip whitespace chars off end of given string, in place. Return s. */
-static char* rstrip(char* s)
-{
-    char* p = s + strlen(s);
-    while (p > s && isspace((unsigned char)(*--p)))
+static char *rstrip(char *s) {
+    char *p = s + strlen(s);
+    while (p > s && isspace((unsigned char) (*--p)))
         *p = '\0';
     return s;
 }
 
 /* Return pointer to first non-whitespace char in given string. */
-static char* lskip(const char* s)
-{
-    while (*s && isspace((unsigned char)(*s)))
+static char *lskip(const char *s) {
+    while (*s && isspace((unsigned char) (*s)))
         s++;
-    return (char*)s;
+    return (char *) s;
 }
 
 /* Return pointer to first char (of chars) or inline comment in given string,
    or pointer to null at end of string if neither found. Inline comment must
    be prefixed by a whitespace character to register as a comment. */
-static char* find_chars_or_comment(const char* s, const char* chars)
-{
+static char *find_chars_or_comment(const char *s, const char *chars) {
 #if INI_ALLOW_INLINE_COMMENTS
     int was_space = 0;
     while (*s && (!chars || !strchr(chars, *s)) &&
            !(was_space && strchr(INI_INLINE_COMMENT_PREFIXES, *s))) {
-        was_space = isspace((unsigned char)(*s));
+        was_space = isspace((unsigned char) (*s));
         s++;
     }
 #else
@@ -58,21 +55,19 @@ static char* find_chars_or_comment(const char* s, const char* chars)
         s++;
     }
 #endif
-    return (char*)s;
+    return (char *) s;
 }
 
 /* Version of strncpy that ensures dest (size bytes) is null-terminated. */
-static char* strncpy0(char* dest, const char* src, size_t size)
-{
+static char *strncpy0(char *dest, const char *src, size_t size) {
     strncpy(dest, src, size);
     dest[size - 1] = '\0';
     return dest;
 }
 
 /* See documentation in header file. */
-int ini_parse_stream(ini_reader reader, void* stream, ini_handler handler,
-                     void* user)
-{
+int ini_parse_stream(ini_reader reader, void *stream, ini_handler handler,
+                     void *user) {
     /* Uses a fair bit of stack (use heap instead if you need to) */
 #if INI_USE_STACK
     char line[INI_MAX_LINE];
@@ -82,10 +77,10 @@ int ini_parse_stream(ini_reader reader, void* stream, ini_handler handler,
     char section[MAX_SECTION] = "";
     char prev_name[MAX_NAME] = "";
 
-    char* start;
-    char* end;
-    char* name;
-    char* value;
+    char *start;
+    char *end;
+    char *name;
+    char *value;
     int lineno = 0;
     int error = 0;
 
@@ -102,9 +97,9 @@ int ini_parse_stream(ini_reader reader, void* stream, ini_handler handler,
 
         start = line;
 #if INI_ALLOW_BOM
-        if (lineno == 1 && (unsigned char)start[0] == 0xEF &&
-                           (unsigned char)start[1] == 0xBB &&
-                           (unsigned char)start[2] == 0xBF) {
+        if (lineno == 1 && (unsigned char) start[0] == 0xEF &&
+            (unsigned char) start[1] == 0xBB &&
+            (unsigned char) start[2] == 0xBF) {
             start += 3;
         }
 #endif
@@ -174,15 +169,13 @@ int ini_parse_stream(ini_reader reader, void* stream, ini_handler handler,
 }
 
 /* See documentation in header file. */
-int ini_parse_file(FILE* file, ini_handler handler, void* user)
-{
-    return ini_parse_stream((ini_reader)fgets, file, handler, user);
+int ini_parse_file(FILE *file, ini_handler handler, void *user) {
+    return ini_parse_stream((ini_reader) fgets, file, handler, user);
 }
 
 /* See documentation in header file. */
-int ini_parse(const char* filename, ini_handler handler, void* user)
-{
-    FILE* file;
+int ini_parse(const char *filename, ini_handler handler, void *user) {
+    FILE *file;
     int error;
 
     file = fopen(filename, "r");

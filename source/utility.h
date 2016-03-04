@@ -6,7 +6,9 @@ extern "C" {
 #endif
 
 #ifdef ARM9
+
 bool aptMainLoop();
+
 #else
 #include "descriptor.h"
 

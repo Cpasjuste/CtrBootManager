@@ -1,21 +1,27 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdarg.h>
+
 #ifdef ARM9
+
 #include "arm9/source/common.h"
 #include "arm9/source/hid.h"
 #include "arm9/source/i2c.h"
 #include "arm9/source/fatfs/ff.h"
+
 #else
 #include <3ds.h>
 #include <CakeBrah/source/libkhax/khax.h>
 #endif
+
 #include "gfx.h"
 #include "menu.h"
 #include "utility.h"
 
 #ifdef ARM9
+
 void waitcycles(uint32_t val);
+
 #else
 FS_Archive sdmcArchive;
 extern void __appExit();
@@ -35,7 +41,7 @@ void svcSleep(u32 millis) {
 #ifndef ARM9
     svcSleepThread(nano);
 #else
-    waitcycles((u32)nano);
+    waitcycles((u32) nano);
 #endif
 }
 
@@ -176,7 +182,7 @@ size_t fileSize(const char *path) {
     size_t size = -1;
 #ifdef ARM9
     FIL file;
-    if(f_open(&file, path, FA_READ | FA_OPEN_EXISTING) != FR_OK) {
+    if (f_open(&file, path, FA_READ | FA_OPEN_EXISTING) != FR_OK) {
         return size;
     }
     size = f_size(&file);
@@ -197,12 +203,12 @@ int fileReadOffset(const char *path, void *data, size_t size, u32 offset) {
 #ifdef ARM9
     FIL file;
     UINT bytes_read = 0;
-    if(f_open(&file, path, FA_READ | FA_OPEN_EXISTING) != FR_OK) {
+    if (f_open(&file, path, FA_READ | FA_OPEN_EXISTING) != FR_OK) {
         return -1;
     }
     f_lseek(&file, offset);
     u32 newSize = size - offset;
-    if(f_read(&file, data, newSize, &bytes_read) != FR_OK) {
+    if (f_read(&file, data, newSize, &bytes_read) != FR_OK) {
         f_close(&file);
         return -1;
     }
@@ -248,7 +254,7 @@ int load_homemenu() {
 void reboot() {
 #ifdef ARM9
     i2cWriteRegister(I2C_DEV_MCU, 0x20, 1 << 2);
-    while(true);
+    while (true);
 #else
     aptInit();
     aptOpenSession();
@@ -289,7 +295,9 @@ void poweroff() {
 }
 
 #ifdef ARM9
+
 bool aptMainLoop() {
     return true;
 }
+
 #endif

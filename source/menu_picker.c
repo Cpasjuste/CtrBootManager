@@ -1,11 +1,14 @@
 #ifdef ARM9
+
 #include "arm9/source/common.h"
 #include "arm9/source/hid.h"
 #include "arm9/source/fatfs/ff.h"
+
 #else
 #include <3ds.h>
 #include <sys/dirent.h>
 #endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,13 +21,13 @@
 #include "menu.h"
 
 #ifdef ARM9
-#define	DT_DIR		 4
-#define	DT_BLK		 6
+#define    DT_DIR         4
+#define    DT_BLK         6
 struct dirent {
-		ino_t	d_ino;
-		unsigned char  d_type;
-		char	d_name[512];
-	};
+    ino_t d_ino;
+    unsigned char d_type;
+    char d_name[512];
+};
 #endif
 
 #define MAX_LINE 12
@@ -84,7 +87,7 @@ void get_dir(const char *path) {
 #ifdef ARM9
     DIR fd;
     FILINFO fno;
-    struct dirent *file = (struct dirent*)0x21080000;
+    struct dirent *file = (struct dirent *) 0x21080000;
 #else
     DIR *fd;
     struct dirent *file;
@@ -95,7 +98,7 @@ void get_dir(const char *path) {
 #ifdef ARM9
     if (f_opendir(&fd, path) != FR_OK) {
 #else
-    if ((fd = opendir(new_path)) == NULL) {
+        if ((fd = opendir(new_path)) == NULL) {
 #endif
         //printf("\xb[3;1HDirectory empty...");
         return;
@@ -112,7 +115,7 @@ void get_dir(const char *path) {
         strncpy(file->d_name, fno.fname, 256);
         file->d_type = fno.fattrib & AM_DIR ? DT_DIR : DT_BLK;
 #else
-    while ((file = readdir(fd))) {
+        while ((file = readdir(fd))) {
 #endif
         parse_file(file);
     }
@@ -154,7 +157,7 @@ static void draw() {
 void pick_file(file_s *picked, const char *path) {
 
 #ifdef ARM9
-    picker = (picker_s*)0x21000000;
+    picker = (picker_s *) 0x21000000;
 #else
     picker = malloc(sizeof(picker_s));
 #endif

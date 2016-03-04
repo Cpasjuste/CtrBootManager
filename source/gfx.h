@@ -1,13 +1,17 @@
 #pragma once
 
 #ifdef ARM9
+
 #include "arm9/source/common.h"
-u8* gfxGetFramebuffer(gfxScreen_t screen, gfx3dSide_t side, u16* width, u16* height);
+
+u8 *gfxGetFramebuffer(gfxScreen_t screen, gfx3dSide_t side, u16 *width, u16 *height);
+
 #define TOP_SCREEN_SIZE (400*240*3)
 #define BOT_SCREEN_SIZE (320*240*3)
 #else
 #include <3ds.h>
 #endif
+
 #include "font.h"
 
 //rendering stuff

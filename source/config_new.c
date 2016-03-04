@@ -10,9 +10,11 @@
 #include "memory.h"
 
 #ifdef ARM9
+
 #include "arm9/source/fatfs/ff.h"
 #include "config.h"
 #include "gfx.h"
+
 boot_config_s sconf;
 #else
 #include <3ds.h>
@@ -20,9 +22,8 @@ boot_config_s sconf;
 
 #define MATCH(s, n) strcmp(section, s) == 0 && strcmp(name, n) == 0
 
-typedef struct
-{
-    const char* ptr;
+typedef struct {
+    const char *ptr;
     int bytes_left;
 } buffer_ctx;
 
@@ -33,17 +34,15 @@ void setColor(u8 *cfgColor, const char *color) {
     cfgColor[2] = (u8) (l & 0xFF);
 }
 
-static char* ini_buffer_reader(char* str, int num, void* stream)
-{
-    buffer_ctx* ctx = (buffer_ctx*)stream;
+static char *ini_buffer_reader(char *str, int num, void *stream) {
+    buffer_ctx *ctx = (buffer_ctx *) stream;
     int idx = 0;
     char newline = 0;
 
     if (ctx->bytes_left <= 0)
         return NULL;
 
-    for (idx = 0; idx < num - 1; ++idx)
-    {
+    for (idx = 0; idx < num - 1; ++idx) {
         if (idx == ctx->bytes_left)
             break;
 
@@ -63,29 +62,28 @@ static char* ini_buffer_reader(char* str, int num, void* stream)
     ctx->bytes_left -= idx + 1;
 
     if (newline && ctx->bytes_left > 0 &&
-            ((newline == '\r' && ctx->ptr[0] == '\n') ||
-             (newline == '\n' && ctx->ptr[0] == '\r'))) {
+        ((newline == '\r' && ctx->ptr[0] == '\n') ||
+         (newline == '\n' && ctx->ptr[0] == '\r'))) {
         ctx->bytes_left--;
         ctx->ptr++;
     }
     return str;
 }
 
-static int handler(void* user, const char* section, const char* name,
-                   const char* value)
-{
-	// general
+static int handler(void *user, const char *section, const char *name,
+                   const char *value) {
+    // general
     if (MATCH("general", "timeout")) {
-		config->timeout = atoi(value);
+        config->timeout = atoi(value);
     } else if (MATCH("general", "recovery")) {
-		config->recovery = atoi(value);
+        config->recovery = atoi(value);
     } else if (MATCH("general", "default")) {
-		config->index = atoi(value);
+        config->index = atoi(value);
     } else if (MATCH("general", "autobootfix")) {
         config->autobootfix = atoi(value);
     }
 
-    // theme
+        // theme
     else if (MATCH("theme", "bgTop1")) {
         setColor(config->bgTop1, value);
     } else if (MATCH("theme", "bgTop2")) {
@@ -106,7 +104,7 @@ static int handler(void* user, const char* section, const char* name,
         strncpy(config->bgImgBot, value, 128);
     }
 
-    // entries
+        // entries
     else if (MATCH("entry", "title")) {
         strncpy(config->entries[config->count].title, value, 64);
     } else if (MATCH("entry", "path")) {
@@ -115,7 +113,7 @@ static int handler(void* user, const char* section, const char* name,
         config->entries[config->count].offset = strtoul(value, NULL, 16);
     } else if (MATCH("entry", "key")) {
         config->entries[config->count].key = atoi(value);
-		config->count++;
+        config->count++;
     }
     else {
         return 0;
@@ -135,8 +133,7 @@ void configThemeInit() {
     memcpy(config->fntSel, (u8[3]) {0x00, 0x00, 0x00}, sizeof(u8[3]));
 }
 
-int configInit()
-{
+int configInit() {
     buffer_ctx ctx;
 
     // init config
@@ -156,18 +153,18 @@ int configInit()
 
     // read config file to buffer
     size_t size = fileSize("/a9lh.cfg");
-    if(!size) {
+    if (!size) {
         return -1;
     }
-	char buffer[size];
-	memset(buffer, 0, size);
-    if(fileRead("/a9lh.cfg", buffer, size) != 0) {
+    char buffer[size];
+    memset(buffer, 0, size);
+    if (fileRead("/a9lh.cfg", buffer, size) != 0) {
         return -1;
     }
     ctx.ptr = buffer;
     ctx.bytes_left = strlen(ctx.ptr);
 
-    if (ini_parse_stream((ini_reader)ini_buffer_reader, &ctx, handler, config) < 0) {
+    if (ini_parse_stream((ini_reader) ini_buffer_reader, &ctx, handler, config) < 0) {
         return -1;
     }
 
@@ -220,7 +217,7 @@ void loadBg(gfxScreen_t screen) {
 
     const char *path = screen == GFX_TOP ? config->bgImgTop : config->bgImgBot;
     size_t size = fileSize(path);
-    if(!size) {
+    if (!size) {
         return;
     }
 
@@ -229,11 +226,11 @@ void loadBg(gfxScreen_t screen) {
 #else
     u8 *bg = malloc(size);
 #endif
-    if(fileRead(path, bg, size) != 0) {
+    if (fileRead(path, bg, size) != 0) {
         return;
     }
 
-    if(screen == GFX_TOP) {
+    if (screen == GFX_TOP) {
         config->bgImgTopSize = size;
         config->bgImgTopBuff = bg;
         config->imgError = false;

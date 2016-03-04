@@ -6,9 +6,11 @@
 #include "menu.h"
 
 #ifdef ARM9
+
 #include "arm9/source/common.h"
 #include "arm9/source/hid.h"
 #include "arm9/source/fatfs/ff.h"
+
 #else
 #include <3ds.h>
 #include "hb_menu/netloader.h"
@@ -56,8 +58,8 @@ int main() {
 #ifdef ARM9
 #ifndef EXEC_GATEWAY
     // TODO: Magic?
-    *(u32*)0x10000020 = 0;
-    *(u32*)0x10000020 = 0x340;
+    *(u32 *) 0x10000020 = 0;
+    *(u32 *) 0x10000020 = 0x340;
 #endif
     FATFS fs;
     f_mount(&fs, "0:", 0);
@@ -76,24 +78,24 @@ int main() {
 
     if (!boot_app_enabled) { // fix SOC_Initialize
 #endif
-        if (configInit() != 0 || config->count <= 0) { // recovery
+    if (configInit() != 0 || config->count <= 0) { // recovery
 #ifdef ARM9
-            drawBg();
-            debug("configInit failed");
-            hidKeysDown();
-            reboot();
+        drawBg();
+        debug("configInit failed");
+        hidKeysDown();
+        reboot();
 #else
-            while (aptMainLoop()) {
-                if (menu_more() == 0)
-                    break;
-            }
-#endif
-        } else {
-            while (aptMainLoop()) {
-                if (menu_boot() == 0)
-                    break;
-            }
+        while (aptMainLoop()) {
+            if (menu_more() == 0)
+                break;
         }
+#endif
+    } else {
+        while (aptMainLoop()) {
+            if (menu_boot() == 0)
+                break;
+        }
+    }
 #ifndef ARM9
     }
 

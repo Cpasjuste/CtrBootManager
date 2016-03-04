@@ -1,26 +1,34 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
 #ifdef ARM9
+
 #include "arm9/source/common.h"
+
 #else
 #include <3ds.h>
 #endif
+
 #include <stdarg.h>
 #include "gfx.h"
 #include "text.h"
 #include "memory.h"
 
 #ifdef ARM9
-u8* gfxGetFramebuffer(gfxScreen_t screen, gfx3dSide_t side, u16* width, u16* height) {
-    if(screen == GFX_TOP) {
-        *width = 240; *height = 400;
-        return PTR_TOP_SCREEN_BUF; //PTR_TOP_SCREEN;
+
+u8 *gfxGetFramebuffer(gfxScreen_t screen, gfx3dSide_t side, u16 *width, u16 *height) {
+    if (screen == GFX_TOP) {
+        *width = 240;
+        *height = 400;
+        return PTR_TOP_SCREEN_BUF;
     } else {
-        *width = 240; *height = 320;
-        return PTR_BOT_SCREEN_BUF;//PTR_BOT_SCREEN;
+        *width = 240;
+        *height = 320;
+        return PTR_BOT_SCREEN_BUF;
     }
 }
+
 #endif
 
 void drawPixel(int x, int y, char r, char g, char b, u8 *screen) {

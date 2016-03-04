@@ -1,10 +1,14 @@
 #include <stdlib.h>
 #include <string.h>
+
 #ifdef ARM9
+
 #include "arm9/source/common.h"
+
 #else
 #include <3ds.h>
 #endif
+
 #include "text.h"
 //#include "font_bin.h"
 #include "font.h"

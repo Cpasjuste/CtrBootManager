@@ -1,9 +1,12 @@
 #ifdef ARM9
+
 #include "arm9/source/common.h"
 #include "arm9/source/hid.h"
+
 #else
 #include <3ds.h>
 #endif
+
 #include <string.h>
 #include "gfx.h"
 #include "utility.h"

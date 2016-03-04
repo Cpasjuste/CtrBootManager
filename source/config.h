@@ -6,7 +6,9 @@ extern "C" {
 #endif
 
 #ifdef ARM9
+
 #include "arm9/source/common.h"
+
 #define CONFIG_PATH "/a9lh.cfg"
 #else
 #include <3ds.h>
@@ -42,14 +44,8 @@ typedef struct {
     char bgImgBot[128];
     bool imgError;
     bool imgErrorBot;
-//#ifndef ARM9
     u8 *bgImgTopBuff;
     u8 *bgImgBotBuff;
-//#endif
-/*
-    u8 bgImgTopBuff[400*240*3];
-    u8 bgImgBotBuff[320*240*3];
-*/
     off_t bgImgTopSize;
     off_t bgImgBotSize;
 } boot_config_s;
