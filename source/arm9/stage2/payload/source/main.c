@@ -1,12 +1,9 @@
 #include "common.h"
 
-#define PTR_TOP_SCREEN				0x18300000
-#define PTR_BOT_SCREEN				0x18346500
-
 #define PTR_PAYLOAD_MAIN        0x23F00000
 #define PTR_PAYLOAD_MAIN_DATA   0x20000000
 #define PTR_PAYLOAD_SIZE_MAX    0x00100000
-#define PTR_PAYLOAD_STAGE2      0x08006000
+#define PTR_PAYLOAD_STAGE2      0x21000000
 
 int main() 
 {
@@ -23,9 +20,9 @@ int main()
 	*(volatile uint32_t*)0x80FFFDC = 1;    // framebuffer select bottom
 
 	//cakehax
-	*(u32*)0x23FFFE00 = PTR_TOP_SCREEN;
-	*(u32*)0x23FFFE04 = PTR_TOP_SCREEN;
-	*(u32*)0x23FFFE08 = PTR_BOT_SCREEN;
+	*(u32*)0x23FFFE00 = 0x18300000;
+	*(u32*)0x23FFFE04 = 0x18300000;
+	*(u32*)0x23FFFE08 = 0x18346500;
 
 	((void (*)())PTR_PAYLOAD_MAIN)();
 

@@ -15,10 +15,10 @@
 u8* gfxGetFramebuffer(gfxScreen_t screen, gfx3dSide_t side, u16* width, u16* height) {
     if(screen == GFX_TOP) {
         *width = 240; *height = 400;
-        return PTR_TOP_SCREEN;
+        return PTR_TOP_SCREEN_BUF; //PTR_TOP_SCREEN;
     } else {
         *width = 240; *height = 320;
-        return PTR_BOT_SCREEN;
+        return PTR_BOT_SCREEN_BUF;//PTR_BOT_SCREEN;
     }
 }
 #endif
@@ -167,20 +167,15 @@ void gfxClearTop(u8 top1[3], u8 top2[3]) {
     gfxFillColorGradient(GFX_TOP, GFX_LEFT, top1, top2);
 }
 
-void gfxClearTopRight(u8 top1[3], u8 top2[3]) {
-    gfxFillColorGradient(GFX_TOP, GFX_RIGHT, top1, top2);
-}
-
 void gfxClearBot(u8 bot[8]) {
     gfxFillColor(GFX_BOTTOM, GFX_LEFT, bot);
 }
 
-void gfxClearBotRight(u8 bot[8]) {
-    gfxFillColor(GFX_BOTTOM, GFX_RIGHT, bot);
-}
-
 void gfxSwap() {
-#ifndef ARM9
+#ifdef ARM9
+    memcpy(PTR_TOP_SCREEN, PTR_TOP_SCREEN_BUF, TOP_SCREEN_SIZE);
+    memcpy(PTR_BOT_SCREEN, PTR_BOT_SCREEN_BUF, BOT_SCREEN_SIZE);
+#else
     gfxFlushBuffers();
     gfxSwapBuffers();
     gspWaitForVBlank();

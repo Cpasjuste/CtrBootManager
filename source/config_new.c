@@ -225,7 +225,7 @@ void loadBg(gfxScreen_t screen) {
     }
 
 #ifdef ARM9
-    u8 *bg = screen == GFX_TOP ? PTR_BG_TOP : PTR_BG_BOT;
+    u8 *bg = screen == GFX_TOP ? PTR_TOP_BG_BUF : PTR_BOT_BG_BUF;
 #else
     u8 *bg = malloc(size);
 #endif

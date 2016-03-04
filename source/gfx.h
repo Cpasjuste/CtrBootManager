@@ -3,7 +3,8 @@
 #ifdef ARM9
 #include "arm9/source/common.h"
 u8* gfxGetFramebuffer(gfxScreen_t screen, gfx3dSide_t side, u16* width, u16* height);
-
+#define TOP_SCREEN_SIZE (400*240*3)
+#define BOT_SCREEN_SIZE (320*240*3)
 #else
 #include <3ds.h>
 #endif
@@ -27,10 +28,6 @@ void gfxFillColorGradient(gfxScreen_t screen, gfx3dSide_t side, u8 rgbColorStart
 void gfxDrawRectangle(gfxScreen_t screen, gfx3dSide_t side, u8 rgbColor[3], s16 x, s16 y, u16 width, u16 height);
 
 void gfxClearTop(u8 top1[3], u8 top2[3]);
-
-void gfxClearTopRight(u8 top1[3], u8 top2[3]);
-
-void gfxClearBotRight(u8 bot[8]);
 
 void gfxClearBot(u8 bot[8]);
 
