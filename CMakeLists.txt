@@ -29,24 +29,28 @@ list(REMOVE_ITEM SOURCE_FILES
     ${FILTER_FILES}
 )
 
+
+###############################
+# Fix Clion define manually...
+###############################
+set(CMAKE_C_FLAGS "")
+set(CMAKE_C_FLAGS "-DARM9")
+#set(CMAKE_C_FLAGS "-DARM11")
+
 ###################
 # CtrBootManager
 ###################
 
 add_executable(CtrBootManager ${SOURCE_FILES}) # Create the elf file
-set(CMAKE_C_FLAGS "-DARM9")
-#set(CMAKE_C_FLAGS "-DARM11")
 set(ARCH "-march=armv6k -mtune=mpcore -mfloat-abi=hard")
 set_target_properties(CtrBootManager PROPERTIES COMPILE_FLAGS
-        "-mword-relocations ${ARCH} -fomit-frame-pointer -ffast-math -O2 -mtp=soft -D_3DS -DHAVE_CONFIG_H")
+        "-mword-relocations ${ARCH} -fomit-frame-pointer -ffast-math -O2 -mtp=soft -D_3DS -DARM11 -DHAVE_CONFIG_H")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DKA_SUGGESTED_CXX_FLAGS}")
 
 find_package(CTRULIB REQUIRED) # Look for ctrulib
 target_link_libraries(CtrBootManager 3ds::ctrulib)
-target_include_directories(CtrBootManager PUBLIC source/libconfig)
 target_include_directories(CtrBootManager PUBLIC ${DEVKITPRO}/portlibs/armv6k/include)
 target_link_libraries(CtrBootManager ${DEVKITPRO}/portlibs/armv6k/lib/libz.a)
-
 target_include_directories(CtrBootManager PUBLIC source source/hb_menu source/CakeBrah/include)
 target_include_directories(CtrBootManager PUBLIC source/CakeBrah/source/libkhax)
 
@@ -77,9 +81,8 @@ list(REMOVE_ITEM SOURCE_FILES_ARM9
 
 add_executable(CtrBootManager9 ${SOURCE_FILES_ARM9})
 set(ARCH9 "-march=armv5te -mtune=arm946e-s")
-set(ARM9_FLAGS "-DARM9 -mthumb -mthumb-interwork -g ${ARCH9} -Wall -O2 -fomit-frame-pointer -ffast-math -std=c99 -DARM9 -DINI_USE_STACK -DEXEC_BOOTSTRAP -DHAVE_CONFIG_H")
+set(ARM9_FLAGS "-mthumb -mthumb-interwork -g ${ARCH9} -Wall -O2 -fomit-frame-pointer -ffast-math -std=c99 -DARM9 -DINI_USE_STACK -DEXEC_BOOTSTRAP -DHAVE_CONFIG_H")
 set_target_properties(CtrBootManager9 PROPERTIES COMPILE_FLAGS ${ARM9_FLAGS})
-target_compile_options(CtrBootManager9 PUBLIC -DARM9)
 set_source_files_properties(source/arm9/source/bs-start.s PROPERTIES COMPILE_FLAGS "-x assembler-with-cpp ${ARM9_FLAGS}")
 set_target_properties(CtrBootManager9 PROPERTIES LINK_FLAGS
         "-nostartfiles -g -mthumb -mthumb-interwork -Wl,-Map,CtrBootManager9.map -T ${CMAKE_SOURCE_DIR}/source/arm9/bootstrap.ld ")
