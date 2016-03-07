@@ -63,9 +63,8 @@ int menu_boot() {
     u32 key = hidKeysHeld();
     if (key & BIT(config->recovery) || config->timeout < 0) { // disable autoboot
         timer = false;
-    } else if (config->timeout == 0) { // autoboot
-        int index = key_override(boot_index);
-        return boot(index);
+    } else if (config->timeout == 0 || key_override(boot_index) != boot_index) { // autoboot
+        return boot(key_override(boot_index));
     }
 
 #ifndef ARM9
