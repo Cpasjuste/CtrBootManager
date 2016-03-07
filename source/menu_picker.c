@@ -3,20 +3,21 @@
 #include "arm9/source/common.h"
 #include "arm9/source/hid.h"
 #include "arm9/source/fatfs/ff.h"
-
+#include "memory.h"
 #else
 #include <3ds.h>
 #include <sys/dirent.h>
-#endif
+#include <string.h>
+#include <stdio.h>
+#include <stdlib.h>
 
-#include <sys/stat.h>
+#endif
 
 #include "gfx.h"
 #include "picker.h"
 #include "utility.h"
 #include "config.h"
 #include "menu.h"
-#include "memory.h"
 
 #ifdef ARM9
 #define    DT_DIR         4
@@ -70,10 +71,12 @@ void parse_file(struct dirent *file) {
     // dir vs file
     if (file->d_type != DT_DIR) {
         picker->files[picker->file_count].isDir = false;
+#ifndef ARM9
         // file size
         struct stat st;
         stat(picker->files[picker->file_count].path, &st);
         picker->files[picker->file_count].size = (u64) st.st_size;
+#endif
     } else {
         picker->files[picker->file_count].isDir = true;
     }
@@ -241,7 +244,11 @@ void pick_file(file_s *picked, const char *path) {
             int index = picker->file_index;
             if (!picker->files[index].isDir) {
                 const char *ext = get_filename_ext(picker->files[index].name);
+#ifdef ARM9
+                if (strcasecmp(ext, "bin") == 0 || strcasecmp(ext, "dat") == 0) {
+#else
                 if (strcasecmp(ext, "3dsx") == 0) {
+#endif
                     if (confirm(3, "Add entry to boot menu: \"%s\" ?", picker->files[index].name)) {
                         if (config->count > CONFIG_MAX_ENTRIES - 1) {
                             debug("Maximum entries reached (%i)\n", CONFIG_MAX_ENTRIES);

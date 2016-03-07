@@ -5,19 +5,18 @@
 
 #else
 #include <3ds.h>
-#endif
-
 #include <string.h>
+#include "menu_netloaderarm9.h"
+#endif
 #include "gfx.h"
 #include "utility.h"
 #include "loader.h"
 #include "menu.h"
-#include "menu_netloaderarm9.h"
 #include "picker.h"
 
 #ifdef ARM9
-#define MENU_COUNT 3
-static char menu_item[3][64] = {"File browser", "Reboot", "PowerOff"};
+#define MENU_COUNT 4
+static char menu_item[4][64] = {"File browser", "Settings", "Reboot", "PowerOff"};
 #else
 #define MENU_COUNT 6
 static char menu_item[6][64] = {"File browser", "Netload 3dsx",
@@ -64,8 +63,10 @@ int menu_more() {
                 return 0;
 #ifdef ARM9
             } else if (menu_index == 1) {
-                reboot();
+                menu_config();
             } else if (menu_index == 2) {
+                reboot();
+            } else if (menu_index == 3) {
                 poweroff();
             }
 #else
@@ -109,9 +110,12 @@ static void draw() {
             drawInfo("Browse for a file to boot");
             break;
         case 1:
-            drawInfo("Reboot the 3ds...");
+            drawInfo("Edit boot settings");
             break;
         case 2:
+            drawInfo("Reboot the 3ds...");
+            break;
+        case 3:
             drawInfo("Shutdown the 3ds...");
             break;
 #else

@@ -3,7 +3,7 @@ project(CtrBootManager)
 enable_language(ASM)
 
 #set(CMAKE_VERBOSE_MAKEFILE on)
-set(NETLOAD_IP "172.20.138.8")
+set(NETLOAD_IP "192.168.1.14")
 
 # Note that you must copy the cmake folder and the DevkitArm3DS.cmake file in this directory
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake) # Add the cmake folder to the modules paths, so that we can use the tools and find_package for ctrulib
@@ -20,13 +20,10 @@ file(GLOB_RECURSE SOURCE_FILES_ARM9
 # Filter
 file(GLOB FILTER_FILES
     ${SOURCE_FILES_ARM9}
-    source/config.c
     source/arm9/stage2/payload/source/*
-    source/arm9/stage2/screen_init/source/screen_init/*
     source/CakeBrah/source/main.c
     source/CakeBrah/source/hid.c
     source/CakeBrah/source/libkhax/demo/*
-    source/libconfig/*
 )
 list(REMOVE_ITEM SOURCE_FILES
     ${FILTER_FILES}
@@ -37,10 +34,11 @@ list(REMOVE_ITEM SOURCE_FILES
 ###################
 
 add_executable(CtrBootManager ${SOURCE_FILES}) # Create the elf file
-set(CMAKE_C_FLAGS "")
+set(CMAKE_C_FLAGS "-DARM9")
+#set(CMAKE_C_FLAGS "-DARM11")
 set(ARCH "-march=armv6k -mtune=mpcore -mfloat-abi=hard")
 set_target_properties(CtrBootManager PROPERTIES COMPILE_FLAGS
-        "-mword-relocations ${ARCH} -fomit-frame-pointer -ffast-math -O2 -mtp=soft -DARM9 -D_3DS -DHAVE_CONFIG_H")
+        "-mword-relocations ${ARCH} -fomit-frame-pointer -ffast-math -O2 -mtp=soft -D_3DS -DHAVE_CONFIG_H")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DKA_SUGGESTED_CXX_FLAGS}")
 
 find_package(CTRULIB REQUIRED) # Look for ctrulib
@@ -67,15 +65,11 @@ file(GLOB FILTER_FILES_ARM9
         source/arm9/source/fatfs/option/syscall.c
         source/arm9/source/fatfs/option/unicode.c
         source/arm9/stage2/payload/source/*
-        source/arm9/stage2/screen_init/source/screen_init/*
         source/CakeBrah/source/*
         source/CakeBrah/source/libkhax/*
         source/hb_menu/*
         source/menu_netloader.c
         source/menu_netloaderarm9.c
-        source/menu_config.c
-        source/config.c
-        source/libconfig/*
 )
 list(REMOVE_ITEM SOURCE_FILES_ARM9
     ${FILTER_FILES_ARM9}

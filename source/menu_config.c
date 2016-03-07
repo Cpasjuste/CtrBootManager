@@ -1,10 +1,15 @@
+#ifdef ARM9
+#include "arm9/source/common.h"
+#include "arm9/source/hid.h"
+#else
 #include <3ds.h>
+#endif
 #include <time.h>
 
 #include "config.h"
 #include "gfx.h"
-#include "utility.h"
 #include "menu.h"
+#include "utility.h"
 
 void keyLeft(int index) {
 
@@ -20,14 +25,14 @@ void keyLeft(int index) {
                 config->index = config->count - 1;
             break;
         case 2:
-            if (config->autobootfix > 0)
-                config->autobootfix--;
-            break;
-        case 3:
             if (config->recovery > 0)
                 config->recovery--;
             else
                 config->recovery = 11;
+            break;
+        case 3:
+            if (config->autobootfix > 0)
+                config->autobootfix--;
             break;
     }
 }
@@ -45,20 +50,23 @@ void keyRight(int index) {
                 config->index = 0;
             break;
         case 2:
-            config->autobootfix++;
-            break;
-        case 3:
             if (config->recovery < 11)
                 config->recovery++;
             else
                 config->recovery = 0;
             break;
+        case 3:
+            config->autobootfix++;
+            break;
     }
 }
 
 int menu_config() {
-
+#ifdef ARM9
+    int menu_count = 3, menu_index = 0;
+#else
     int menu_count = 4, menu_index = 0;
+#endif
     // key repeat timer
     time_t t_start = 0, t_end = 0, t_elapsed = 0;
 
@@ -68,10 +76,11 @@ int menu_config() {
         u32 kHeld = hidKeysHeld();
         u32 kDown = hidKeysDown();
 
+#ifndef ARM9
         if (hidKeysUp()) {
             time(&t_start); // reset held timer
         }
-
+#endif
         if (kDown & KEY_DOWN) {
             menu_index++;
             if (menu_index >= menu_count)
@@ -108,7 +117,7 @@ int menu_config() {
         }
 
         if (kDown & KEY_B) {
-            configUpdateSettings();
+            configSave();
             return 0;
         }
 
@@ -117,9 +126,10 @@ int menu_config() {
 
         drawItem(menu_index == 0, 0, "Timeout:  %i", config->timeout);
         drawItem(menu_index == 1, 16, "Default:  %s", config->entries[config->index].title);
-        drawItem(menu_index == 2, 32, "Bootfix:  %i", config->autobootfix);
-        drawItem(menu_index == 3, 48, "Recovery key:  %s", get_button(config->recovery));
-
+        drawItem(menu_index == 2, 32, "Recovery key:  %s", get_button(config->recovery));
+#ifndef ARM9
+        drawItem(menu_index == 3, 48, "Bootfix:  %i", config->autobootfix);
+#endif
         gfxSwap();
     }
     return -1;

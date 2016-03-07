@@ -17,6 +17,7 @@
 #include "gfx.h"
 #include "menu.h"
 #include "utility.h"
+#include "memory.h"
 
 #ifdef ARM9
 
@@ -150,13 +151,11 @@ bool confirm(int confirmButton, const char *fmt, ...) {
 
 bool fileExists(char *path) {
 #ifdef ARM9
-    /*
-    if(FileOpen(path)) {
-        FileClose(path);
-        return true;
+    FIL file;
+    if (f_open(&file, path, FA_READ) != FR_OK) {
+        return false;
     }
-    */
-    return true;
+    f_close(&file);
 #else
     if (!path)return false;
 
@@ -165,13 +164,12 @@ bool fileExists(char *path) {
 
     ret = FSUSER_OpenFile(&fileHandle, sdmcArchive, fsMakePath(PATH_ASCII, path),
                           FS_OPEN_READ, 0);
-    if (ret != 0)return false;
+    if (ret != 0) return false;
 
     ret = FSFILE_Close(fileHandle);
-    if (ret != 0)return false;
-
-    return true;
+    if (ret != 0) return false;
 #endif
+    return true;
 }
 
 size_t fileSize(const char *path) {
@@ -196,6 +194,7 @@ size_t fileSize(const char *path) {
 }
 
 int fileReadOffset(const char *path, void *data, size_t size, u32 offset) {
+
 #ifdef ARM9
     FIL file;
     UINT bytes_read = 0;

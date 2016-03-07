@@ -58,9 +58,7 @@ int configAddEntry(char *title, char *path, long offset);
 
 int configRemoveEntry(int index);
 
-void configUpdateSettings();
-
-void configWrite();
+void configSave();
 
 void configExit();
 

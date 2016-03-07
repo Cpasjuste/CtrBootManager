@@ -35,8 +35,6 @@ int key_override(int index) {
 
 int boot(int index) {
 
-    index = key_override(index);
-
 #ifdef ARM9
     return load(config->entries[index].path,
                 config->entries[index].offset);
@@ -46,7 +44,6 @@ int boot(int index) {
         gfxSwap();
         delay--;
     }
-
     return load(config->entries[index].path,
                 config->entries[index].offset);
 #endif
@@ -56,6 +53,7 @@ int menu_boot() {
 
 #ifdef ARM9
     time_t elapsed = 0;
+    vu32 now = 0;
 #else
     time_t start, end, elapsed = 0;
 #endif
@@ -63,10 +61,11 @@ int menu_boot() {
 
     hidScanInput();
     u32 key = hidKeysHeld();
-    if (key & BIT(config->recovery)) { // disable autoboot
+    if (key & BIT(config->recovery) || config->timeout < 0) { // disable autoboot
         timer = false;
-    } else if (config->timeout == 0 || key_override(-1) != -1) { // autoboot
-        return boot(boot_index);
+    } else if (config->timeout == 0) { // autoboot
+        int index = key_override(boot_index);
+        return boot(index);
     }
 
 #ifndef ARM9
@@ -76,12 +75,16 @@ int menu_boot() {
     while (aptMainLoop()) {
 
         if (timer) {
-#ifndef ARM9
+#ifdef ARM9
+            now++;
+            elapsed = (int)(now/25); // fake/crappy timer
+#else
             time(&end);
             elapsed = end - start;
 #endif
             if (elapsed >= config->timeout && config->count > boot_index) {
-                return boot(boot_index);
+                int index = key_override(boot_index);
+                return boot(index);
             }
         }
 
@@ -110,17 +113,16 @@ int menu_boot() {
                 break;
             }
         }
-#ifndef ARM9
         else if (kDown & KEY_X) {
             timer = false;
             if (boot_index != config->count) {
                 if (confirm(3, "Delete boot entry: \"%s\" ?\n", config->entries[boot_index].title)) {
                     configRemoveEntry(boot_index);
-                    boot_index--;
+                    boot_index = config->index;
                 }
             }
         }
-#endif
+
         draw(boot_index, elapsed);
     }
 

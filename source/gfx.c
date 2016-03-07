@@ -5,7 +5,7 @@
 #ifdef ARM9
 
 #include "arm9/source/common.h"
-
+#include "memory.h"
 #else
 #include <3ds.h>
 #endif
@@ -13,7 +13,6 @@
 #include <stdarg.h>
 #include "gfx.h"
 #include "text.h"
-#include "memory.h"
 
 #ifdef ARM9
 
@@ -180,12 +179,17 @@ void gfxClearBot(u8 bot[8]) {
 }
 
 void gfxClear() {
+#ifdef ARM9
     memset(PTR_TOP_SCREEN, 0, TOP_SCREEN_SIZE);
     memset(PTR_BOT_SCREEN, 0, BOT_SCREEN_SIZE);
     memset(PTR_TOP_SCREEN_BUF, 0, TOP_SCREEN_SIZE);
     memset(PTR_BOT_SCREEN_BUF, 0, BOT_SCREEN_SIZE);
     memset(PTR_TOP_BG, 0, TOP_SCREEN_SIZE);
     memset(PTR_BOT_BG, 0, BOT_SCREEN_SIZE);
+#else
+    gfxFillColor(GFX_TOP, GFX_LEFT, (u8[3]) {0x00, 0x00, 0x00});
+    gfxFillColor(GFX_BOTTOM, GFX_LEFT, (u8[3]) {0x00, 0x00, 0x00});
+#endif
 }
 
 void gfxSwap() {
