@@ -64,10 +64,7 @@ add_citra_target(CtrBootManager_Citra CtrBootManager)
 ###################
 set(SOURCE_FILES_ARM9 ${SOURCE_FILES} ${SOURCE_FILES_ARM9})
 file(GLOB FILTER_FILES_ARM9
-        source/arm9/source/fatfs/option/cc932.c
-        source/arm9/source/fatfs/option/ccsbcs.c
         source/arm9/source/fatfs/option/syscall.c
-        source/arm9/source/fatfs/option/unicode.c
         source/arm9/stage2/payload/source/*
         source/CakeBrah/source/*
         source/CakeBrah/source/libkhax/*
