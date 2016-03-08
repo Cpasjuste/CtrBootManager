@@ -1,7 +1,9 @@
 #ifndef ARM9
+
 #include <string.h>
 #include <3ds.h>
 #include "brahma.h"
+
 #else
 
 #include "gfx.h"
@@ -64,6 +66,7 @@ int load_bin(char *path, long offset) {
 
     return 0;
 }
+
 #endif
 
 int load(char *path, long offset) {
@@ -73,8 +76,8 @@ int load(char *path, long offset) {
     } else if (strcasecmp(path, "shutdown") == 0) {
         poweroff();
 #ifndef ARM9
-        } else if (strcasecmp(path, "homemenu") == 0) {
-            return load_homemenu();
+    } else if (strcasecmp(path, "homemenu") == 0) {
+        return load_homemenu();
 #endif
     } else {
         const char *ext = get_filename_ext(path);
@@ -82,8 +85,8 @@ int load(char *path, long offset) {
             || strcasecmp(ext, "dat") == 0) {
             return load_bin(path, offset);
 #ifndef ARM9
-            } else if (strcasecmp(ext, "3dsx") == 0) {
-                return load_3dsx(path);
+        } else if (strcasecmp(ext, "3dsx") == 0) {
+            return load_3dsx(path);
 #endif
         } else {
             debug("Invalid file: %s\n", path);

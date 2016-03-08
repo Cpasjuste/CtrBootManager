@@ -3,7 +3,7 @@ project(CtrBootManager)
 enable_language(ASM)
 
 #set(CMAKE_VERBOSE_MAKEFILE on)
-set(NETLOAD_IP "192.168.1.14")
+set(NETLOAD_IP "172.20.138.31")
 
 # Note that you must copy the cmake folder and the DevkitArm3DS.cmake file in this directory
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake) # Add the cmake folder to the modules paths, so that we can use the tools and find_package for ctrulib
@@ -44,7 +44,7 @@ set(CMAKE_C_FLAGS "-DARM9")
 add_executable(CtrBootManager ${SOURCE_FILES}) # Create the elf file
 set(ARCH "-march=armv6k -mtune=mpcore -mfloat-abi=hard")
 set_target_properties(CtrBootManager PROPERTIES COMPILE_FLAGS
-        "-mword-relocations ${ARCH} -fomit-frame-pointer -ffast-math -O2 -mtp=soft -D_3DS -DARM11 -DHAVE_CONFIG_H")
+        "-mword-relocations ${ARCH} -fomit-frame-pointer -ffast-math -O2 -mtp=soft -D_3DS -DARM11 -DHAVE_CONFIG_H -DINI_USE_STACK")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${DKA_SUGGESTED_CXX_FLAGS}")
 
 find_package(CTRULIB REQUIRED) # Look for ctrulib

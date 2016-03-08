@@ -108,7 +108,7 @@ int menu_boot() {
                 if(menu_more() == 0) {
                     break;
                 }
-            } else if (boot(boot_index)) {
+            } else if (boot(boot_index) == 0) {
                 break;
             }
         }

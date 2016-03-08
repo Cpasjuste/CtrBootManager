@@ -114,8 +114,10 @@ static int handler(void *user, const char *section, const char *name,
     } else if (MATCH("entry", "offset")) {
         config->entries[config->count].offset = strtoul(item, NULL, 16);
     } else if (MATCH("entry", "key")) {
-        config->entries[config->count].key = atoi(item);
-        config->count++;
+        if(strlen(config->entries[config->count].title) > 0) {
+            config->entries[config->count].key = atoi(item);
+            config->count++;
+        }
     }
     else {
         return 0;
@@ -147,7 +149,7 @@ int configInit() {
     memset(config, 0, sizeof(boot_config_s));
 
     config->timeout = 3;
-    config->autobootfix = 100;
+    config->autobootfix = 8;
     config->index = 0;
     config->recovery = 2;
     config->count = 0;
@@ -158,9 +160,11 @@ int configInit() {
     if (!size) {
         return -1;
     }
+
     char buffer[size];
     memset(buffer, 0, size);
     if (fileRead(CONFIG_PATH, buffer, size) != 0) {
+        debug("Could not read config file, creating one...");
         configSave(); // write new config file
         return -1;
     }
@@ -168,6 +172,7 @@ int configInit() {
     ctx.bytes_left = strlen(ctx.ptr);
 
     if (ini_parse_stream((ini_reader) ini_buffer_reader, &ctx, handler, config) < 0) {
+        debug("Could not parse config file, creating one...");
         configSave(); // write new config file
         return -1;
     }
